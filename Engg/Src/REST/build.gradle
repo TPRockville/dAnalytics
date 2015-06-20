@@ -1,0 +1,38 @@
+// Customize this file for your project as needed
+def version;
+// Load the build properties
+def buildProps = new Properties()
+file("build.properties").withInputStream { stream -> buildProps.load(stream) }
+
+allprojects {
+  version = buildProps.getProperty("impl.version")
+}
+
+// apply the common openfda gradle tasks to setup artifact repos, etc.
+apply from: file('gradle/openfda.gradle')
+
+mainClassName = ext.serviceClassName
+
+ext.slf4jVer = '[1.7.7,1.9.0)'
+ext.logbackVer = '[1.0.10,1.1.0)'
+ext.jacksonVer = '2.3.3'
+ext.lombokVer = '1.16.2'
+
+
+allprojects {
+  dependencies {
+    // logging
+    compile "org.slf4j:slf4j-api:$slf4jVer"
+
+    //Jackson.
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVer"
+
+    //lombok
+    compile "org.projectlombok:lombok:$lombokVer"
+
+    testCompile 'junit:junit:4.11'
+    //testCompile 'org.mockito:mockito-all:1.9.5'
+    testRuntime "ch.qos.logback:logback-core:$logbackVer"
+    testRuntime "ch.qos.logback:logback-classic:$logbackVer"
+  }
+}

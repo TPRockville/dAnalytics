@@ -1,0 +1,15 @@
+.svn
+.git
+build
+.gradle
+*.log
+.classpath
+.project
+.settings
+build-eclipse
+*.iml
+*.ipr
+*.iws
+*.DS_Store
+libs
+.idea
