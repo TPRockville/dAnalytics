@@ -1,0 +1,45 @@
+// Customize this file for your project as needed
+/////////////////////////////////////////////////
+
+// If you rename your packages, feel free to rename this..
+mainClassName = ext.serviceClassName
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVer}")
+    classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
+  }
+}
+
+//Spring boot plugin.
+apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
+
+// Add dependencies below..
+// For help with gradle, consult: http://www.gradle.org/docs/current/userguide/userguide_single.html
+dependencies {
+  compile project(':openfda-api')
+
+  //compile 'org.springframework.boot:spring-boot-starter-jetty:1.2.3.RELEASE'
+  //compile 'org.springframework.boot:spring-boot-starter-undertow:1.2.4.RELEASE'
+  compile "org.springframework.boot:spring-boot-starter-tomcat:${springBootVer}"
+
+  compile "org.springframework.boot:spring-boot-starter-data-rest:${springBootVer}"
+  compile "org.springframework.boot:spring-boot-starter-parent:${springBootVer}"
+  compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVer}"
+
+  //JPA.
+  compile "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVer}"
+  compile 'com.h2database:h2:1.4.187'
+
+  //Spring boot HateOAS.
+  compile "org.springframework.boot:spring-boot-starter-hateoas:${springBootVer}"
+
+  //Testing.
+  testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVer}"
+  testCompile "info.cukes:cucumber-java:${cucumberVer}"
+  testCompile "info.cukes:cucumber-junit:${cucumberVer}"
+}

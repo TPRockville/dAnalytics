@@ -1,0 +1,179 @@
+/**
+ *  Some description.
+ */
+task createWrapper(type: Wrapper) {
+  description = "Create a gradle wrapper for you project"
+  gradleVersion = '2.3'
+}
+
+
+defaultTasks ''
+
+//apply from: file('gradle/version.gradle')
+apply from: file('gradle/docs.gradle')
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'maven'
+  apply plugin: 'signing'
+  apply from: rootProject.file('gradle/cucumber.gradle')
+
+  // update runtime classpath to include conf dir BEFORE applying application to make this easy
+  def conf_dir = project.file("conf")
+  sourceSets.all {
+    if (conf_dir.isDirectory()) {
+      it.runtimeClasspath = it.runtimeClasspath + files('conf') + fileTree(dir: 'conf') + files(project.projectDir)
+    }
+  }
+
+  dependencies {
+    if (conf_dir.isDirectory()) {
+      runtime files('conf')
+    }
+  }
+
+  apply plugin: 'application'
+
+  // IDE support
+  apply from: rootProject.file('gradle/ide.gradle')
+
+  // code checks
+  apply from: rootProject.file('gradle/codechecks.gradle')
+
+  // best guess ..
+  project.ext.serviceClassName = "org.jderive.OpenFdaApplication"
+  //project.ext.serviceClassName = "com.tpgsi.OpenFdaApplication"
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  repositories {
+      mavenCentral()
+  }
+
+  configurations {
+    service
+    optional // added optional scope
+  }
+
+  task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+  }
+
+  task docJar(type: Jar, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+  }
+
+  artifacts { // define the artifacts for a service
+    archives sourcesJar { classifier "sources" }
+    archives docJar { classifier "javadoc" }
+  }
+
+  // optional dependencies
+  sourceSets.main.compileClasspath += [configurations.optional]
+  idea {
+    module{
+      testSourceDirs += project.projectDir
+      scopes.PROVIDED.plus += [configurations.optional]
+    }
+  }
+
+  eclipse {
+    classpath {
+      plusConfigurations += [configurations.optional]
+    }
+  }
+
+  group = 'org.jderive'
+  def vendor = 'Tpgsi, Pvt Ltd.'
+
+  jar.doFirst {
+    manifest {
+        // (project.version != "unspecified" ? project.version : rootProject.version)  - Should we do this?
+
+        attributes 'Implementation-Title': "${project.name}",
+                   'Implementation-Version': "${project.version}",
+                   'Implementation-Vendor': "${vendor}",
+                   provider: 'gradle'
+    }
+  }
+
+  // application support
+  //////////////////////
+
+  distZip.doFirst {
+    delete {
+      fileTree(dir:"src/dist/conf")
+      fileTree(dir:"src/dist/bin")
+    }
+    // copy in the conf dir
+    copy {
+      from file("conf")
+      into file("src/dist/conf")
+      includeEmptyDirs = true
+    }
+    copy {
+      from('bin') {
+        include '**/*'
+      }
+      into file("src/dist/bin")
+      fileMode = 0755
+    }
+  }
+
+  // update start scripts
+  startScripts{
+    doLast{
+      copy {
+        from('bin') {
+          include '**/*'
+        }
+        into outputDir
+      }
+
+      // setup the heap dump path
+      unixScript.text = unixScript.text.replace('\nCLASSPATH=', '\nCLASSPATH=$APP_HOME/conf:')
+      windowsScript.text = windowsScript.text.replace('set CLASSPATH=', 'set CLASSPATH=%APP_HOME%\\conf;')
+//      unixScript.text = unixScript.text.replace('\nCLASSPATH=', '\n. $APP_HOME/bin/proj_opts.sh\n\nCLASSPATH=')
+//      windowsScript.text = windowsScript.text.replace('%DEFAULT_JVM_OPTS% ', '%DEFAULT_JVM_OPTS% -XX:HeapDumpPath="%APP_HOME%\\log" ')
+    }
+  }
+}
+
+
+task showRepos << {
+  description = "List the current repositories"
+  println "Repositories: "
+  println repositories.collect { it.name }
+}
+
+// compile target for java, should narrow this to just java type projects..
+task compile << {
+  dependsOn compileJava, compileTestJava
+}
+
+// Update Checking ...
+buildscript {
+   repositories {
+       mavenCentral()
+   }
+   dependencies {
+       classpath group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.5.1'
+   }
+}
+
+
+// Utility method
+/////////////////
+def loadProperties(String sourceFileName) {
+    def config = new Properties()
+    def propFile = new File(sourceFileName)
+    if (propFile.canRead()) {
+        config.load(new FileInputStream(propFile))
+        for (Map.Entry property in config) {
+            ext[property.key] = property.value;
+        }
+        return true
+    }
+    return false
+}

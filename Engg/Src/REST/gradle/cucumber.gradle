@@ -1,0 +1,228 @@
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+/**
+ * Cucumber plugin definition.  This class initializes the plugin, sets up the convention mapping and adds
+ * the cucumber task as an available gradle task.
+ */
+
+apply plugin: CucumberPlugin
+ 
+class CucumberPlugin  implements Plugin<Project> {
+    static final String CLASSPATH = 'classpath'
+    static final String CUCUMBER_RUNTIME_CONFIGURATION_NAME = 'cucumberRuntime'
+
+    @Override
+    void apply(Project project) {
+        project.plugins.apply(JavaPlugin)
+
+        project.configurations.create(CUCUMBER_RUNTIME_CONFIGURATION_NAME).setVisible(false).setTransitive(true)
+                .setDescription('The Cucumber libraries to be used for this project.')
+                .extendsFrom(project.configurations.getByName('testRuntime'))
+
+        CucumberConvention cucumberConvention = new CucumberConvention(project)
+        project.convention.plugins.cucumber = cucumberConvention
+
+        configureCucumberTask(project, cucumberConvention)
+    }
+
+    private def configureCucumberTask(final Project project, CucumberConvention cucumberConvention) {
+        project.tasks.withType(CucumberTask).whenTaskAdded { CucumberTask cucumberTask ->
+            cucumberTask.conventionMapping.map('buildscriptClasspath') { project.buildscript.configurations.getByName(CLASSPATH).asFileTree }
+            cucumberTask.conventionMapping.map('cucumberClasspath') { project.configurations.getByName(CUCUMBER_RUNTIME_CONFIGURATION_NAME).asFileTree }
+            cucumberTask.conventionMapping.map('gluePackages') { cucumberConvention.gluePackages }
+            cucumberTask.conventionMapping.map('featureDirs') { cucumberConvention.featureDirs }
+            cucumberTask.conventionMapping.map('tags') { cucumberConvention.tags }
+            cucumberTask.conventionMapping.map('formats') { cucumberConvention.formats }
+            cucumberTask.conventionMapping.map('strict') { cucumberConvention.strict }
+            cucumberTask.conventionMapping.map('monochrome') { cucumberConvention.monochrome }
+            cucumberTask.conventionMapping.map('dryRun') { cucumberConvention.dryRun }
+            
+            project.dependencies.add(CUCUMBER_RUNTIME_CONFIGURATION_NAME, "info.cukes:cucumber-junit:$cucumberConvention.cucumberJvmVersion")
+            project.dependencies.add(CUCUMBER_RUNTIME_CONFIGURATION_NAME, "info.cukes:cucumber-java:$cucumberConvention.cucumberJvmVersion")
+            project.dependencies.add(CUCUMBER_RUNTIME_CONFIGURATION_NAME, "info.cukes:cucumber-core:$cucumberConvention.cucumberJvmVersion")
+            
+            project.dependencies.add('testCompile', "info.cukes:cucumber-junit:$cucumberConvention.cucumberJvmVersion")
+            project.dependencies.add('testCompile', "info.cukes:cucumber-java:$cucumberConvention.cucumberJvmVersion")
+        }
+
+        CucumberTask cucumberTask = project.tasks.create(name: 'cucumber', dependsOn: ['assemble', 'compileTestJava'], type: CucumberTask)
+        cucumberTask.description = "Run cucumber acceptance tests."
+        cucumberTask.group = "Verification"
+        project.tasks.getByName('build').dependsOn(cucumberTask)
+    }
+}
+
+
+/**
+ * Parameters used in the cucumber task.  Convention pattern used to pass these parameters to the cucumber
+ * runner.
+ *
+ *
+ * @author: Samuel Brown
+ * @since: 0.1
+ * @version 0.1
+ *
+ */
+class CucumberConvention {
+
+    /**
+     *  Directories to use as source for step definitions. Defaults to [src/test/resources]
+     */
+    List<String> gluePackages = ['org.jderive']
+	
+	 /**
+    * Directories to look for feature files.
+    */
+    List<String> featureDirs = ['src/test/resources']
+
+    /**
+     * Tags used to filter which scenarios should be run.
+     */
+    List<String> tags
+
+    /**
+     * Output formats for cucumber test results. Defaults to 'pretty'
+     */
+    List<String> formats
+
+    /**
+     * Execute a test dry run without actually executing tests. Defaults to false
+     */
+    boolean dryRun = false
+
+    /**
+     * Strict mode, fail if there are pending or skipped tests. Defaults to false
+     */
+    boolean strict = false
+
+    /**
+     * Format output in single color.  Defaults to false
+     */
+    boolean monochrome = false
+
+    /**
+     * Version of cucumber-jvm to use to execute cucumber tests
+     */
+    String cucumberJvmVersion = '1.1.1'//don't use '1.1.3' - http://stackoverflow.com/questions/15552861/cucumber-jvm-java-helloworld-example-outofboundsexception-error
+    //also, don't use version '1.1.2', because this causes '@Before' annotation to throw NullPointerException
+    
+    private Project project
+
+    CucumberConvention(Project project) {
+        this.project = project
+        this.formats = ['pretty', 
+          "junit:${project.reporting.baseDir.absolutePath}/cucumber/cucumber-junit-report.xml",
+          "html:${project.reporting.baseDir.absolutePath}/cucumber/cucumber-html-report",
+          "json:${project.reporting.baseDir.absolutePath}/cucumber/cucumber-json-report.json"]
+    }
+
+    def cucumber(Closure closure) {
+        closure.setDelegate this
+        closure.call()
+    }
+
+}
+
+
+
+// Defines the cucumber task that can be used in a gradle build file. 
+
+class CucumberTask extends DefaultTask  {
+    static final Logger LOGGER = LoggerFactory.getLogger(CucumberTask.class)
+
+    List<String> gluePackages
+    List<String> featureDirs
+    List<String> tags
+    List<String> formats
+    boolean strict
+    boolean monochrome
+    boolean dryRun
+    FileCollection buildscriptClasspath
+    FileCollection cucumberClasspath
+    
+    def cliArgs
+    def cliClasspath
+    def featuresExist = false
+
+    public CucumberTask() {
+      super()
+      doLast { 
+        //try {
+        if (featuresExist) {
+          getProject().javaexec {
+            args = cliArgs
+            main = 'cucumber.api.cli.Main'
+            classpath cliClasspath
+          }
+        } else {
+          LOGGER.info("Cucumber Feature Dirs Missing: " + getFeatureDirs());
+        }
+        //} catch (e) {
+        //  LOGGER.error "Cucumber failed, but continuing with build"
+        //}
+      }
+    }
+
+    @TaskAction
+    def cucumber() {
+        LOGGER.info "Configuring Cucumber for ${getProject()}"
+        executeCucumberRunner()
+    }
+
+    private void executeCucumberRunner(){
+        List<String> args = new ArrayList<String>();
+
+        if (getFormats() != null) {
+            for(String format : getFormats()){
+                args.add("--format");
+                args.add(format);
+            }
+        }
+
+        if (getGluePackages() != null) {
+            for(String dir : getGluePackages()){
+                args.add("--glue");
+                args.add(dir);
+            }
+        }
+
+        if (getTags() != null) {
+            args.add("--tags");
+            for(String tag : getTags()){
+                args.add(tag);
+            }
+        }
+
+        if (getStrict()){
+            args.add("--strict");
+        }
+
+        if (getMonochrome()){
+            args.add("--monochrome");
+        }
+
+        if (getDryRun()){
+            args.add("--dry-run");
+        }
+
+        if (getFeatureDirs() != null) {
+          for(String dir : getFeatureDirs()) {
+            args.add(dir);
+            def featureFiles = getProject().fileTree(dir) {
+              include '**/*.feature'
+            }
+            featuresExist = featuresExist || !featureFiles.isEmpty()
+          }
+        }
+        cliArgs = args
+        cliClasspath = getProject().configurations.cucumberRuntime + 
+          getProject().sourceSets.main.output + getProject().sourceSets.test.output
+           
+        LOGGER.info("Cucumber args: $cliArgs");
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.debug("Cucumber classpath: $cliClasspath.asPath")
+        }
+    }    
+}
+
+
