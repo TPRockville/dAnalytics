@@ -8,8 +8,9 @@
 2. Install Grunt and Bower
 > Once Node is installed, do:
  
-		npm install -g grunt-cli bower
-		bower install
+	npm install -g grunt-cli bower
+	npm install
+	bower install
 
 Grunt Tasks
 -------------
