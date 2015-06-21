@@ -43,11 +43,11 @@ public class AgeGroupController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> list() {
         List<AgeGroupDomain> ageGroupDomains = ageGroupService.findAll();
-        return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
+        return new ResponseEntity<JDeriveResponse>(JDeriveResponse
+                .builder()
                 .withStatusCode(HttpStatus.OK.toString())
-                .withAgeGroupList(ageGroupDomains.stream()
-                        .map(ageGroupDomain -> AgeGroupDTO.ageGroup(ageGroupDomain))
-                        .collect(Collectors.toList())).build(),
-                HttpStatus.OK);
+                .withAgeGroupList(
+                        ageGroupDomains.stream().map(ageGroupDomain -> AgeGroupDTO.ageGroup(ageGroupDomain))
+                                .collect(Collectors.toList())).build(), HttpStatus.OK);
     }
 }
