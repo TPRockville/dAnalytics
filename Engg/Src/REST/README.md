@@ -8,4 +8,10 @@ gradlew cleanEclipse eclipse (To generate the Eclipse IDE specific files)
 gradlew clean build
 
 ## Run locally
+
+#### Prerequisites
+-  Java 8 
+-  Gradle 2.2.1
+
+#### Command
 gradlew bootRun 
