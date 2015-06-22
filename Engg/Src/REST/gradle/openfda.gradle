@@ -41,8 +41,7 @@ allprojects {
   apply from: rootProject.file('gradle/codechecks.gradle')
 
   // best guess ..
-  project.ext.serviceClassName = "org.jderive.OpenFdaApplication"
-  //project.ext.serviceClassName = "com.tpgsi.OpenFdaApplication"
+  project.ext.serviceClassName = "org.jderive.JDeriveApplication"
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8

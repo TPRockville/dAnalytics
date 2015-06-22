@@ -6,9 +6,11 @@ import org.jderive.domain.CountryDomain;
 import org.jderive.dto.CountryDTO;
 import org.jderive.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,12 +38,12 @@ public class CountryController {
                     .withStatusCode(HttpStatus.OK.toString())
                     .withCountryList(ImmutableList.of(CountryDTO.country(countryDomain)))
                     .build();
-            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, headers(), HttpStatus.OK);
         } else {
             JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
                     .withStatusCode(HttpStatus.NOT_FOUND.toString())
                     .build();
-            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, headers(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -54,6 +56,13 @@ public class CountryController {
                         .map(countryDomain -> CountryDTO.country(countryDomain))
                         .collect(Collectors.toList()))
                 .build();
-        return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+        return new ResponseEntity<JDeriveResponse>(jDeriveResponse, headers(), HttpStatus.OK);
+    }
+
+    private MultiValueMap<String, String> headers() {
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Credentials", "true");
+        headers.add("Access-Control-Allow-Origin", "*");
+        return headers;
     }
 }

@@ -8,21 +8,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by Durga on 6/20/2015.
+ * Created by Durga on 6/21/2015.
  */
-
 @Data
 @Entity
-@Table(name = "COUNTRY_LIST")
-public class CountryDomain {
+@Table(name = "DRUG_LIST")
+public class DrugDomain {
 
     @Id
-    @Column(name = "COUNTRY_ID")
+    @Column(name = "DRUG_ID")
     private String id;
 
-    @Column(name = "COUNTRY_NAME")
+    @Column(name = "DRUG_NAME")
     private String name;
-
-    @Column(name = "COUNTRY_CODE")
-    private String code;
 }

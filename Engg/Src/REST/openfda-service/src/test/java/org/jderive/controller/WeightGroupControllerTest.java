@@ -2,7 +2,7 @@ package org.jderive.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.jderive.OpenFdaApplication;
+import org.jderive.JDeriveApplication;
 import org.jderive.service.WeightGroupService;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import context.TestContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = OpenFdaApplication.class)
+@SpringApplicationConfiguration(classes = JDeriveApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class, TestContext.class })
 @WebAppConfiguration
 public class WeightGroupControllerTest {
