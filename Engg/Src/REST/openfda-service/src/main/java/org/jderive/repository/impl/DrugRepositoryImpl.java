@@ -1,0 +1,79 @@
+package org.jderive.repository.impl;
+
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
+import org.jderive.domain.DrugDomain;
+import org.jderive.domain.DrugSummaryDomain;
+import org.jderive.repository.DrugRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by Durga on 6/21/2015.
+ */
+@Repository
+public class DrugRepositoryImpl implements DrugRepository {
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Override
+    public List<DrugDomain> findAll() {
+        return sessionFactory.getCurrentSession().createQuery("FROM DrugDomain").list();
+    }
+
+    @Override
+    public DrugDomain findById(String id) {
+        return (DrugDomain) sessionFactory.getCurrentSession().get(DrugDomain.class, id);
+    }
+
+    @Override
+    public List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummaryDomain) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugSummaryDomain.class, "dsm");
+        if (!StringUtils.isEmpty(drugSummaryDomain.getDrugId())) {
+            criteria.add(Restrictions.eq("dsm.drugId", drugSummaryDomain.getDrugId()));
+        }
+        if (!StringUtils.isEmpty(drugSummaryDomain.getAgeGroupId())) {
+            criteria.add(Restrictions.eq("dsm.ageGroupId", drugSummaryDomain.getAgeGroupId()));
+        }
+        if (!StringUtils.isEmpty(drugSummaryDomain.getWeightGroupId())) {
+            criteria.add(Restrictions.eq("dsm.weightGroupId", drugSummaryDomain.getWeightGroupId()));
+        }
+        if (!StringUtils.isEmpty(drugSummaryDomain.getCountryId())) {
+            criteria.add(Restrictions.eq("dsm.countryId", drugSummaryDomain.getCountryId()));
+        }
+        if (!StringUtils.isEmpty(drugSummaryDomain.getStartDate())) {
+            if (!StringUtils.isEmpty(drugSummaryDomain.getEndDate())) {
+                criteria.add(Restrictions.between("dsm.startDate",
+                        drugSummaryDomain.getStartDate(),
+                        drugSummaryDomain.getEndDate()));
+            } else {
+                criteria.add(Restrictions.between("dsm.startDate",
+                        drugSummaryDomain.getStartDate(),
+                        new Date(System.currentTimeMillis())));
+            }
+        }
+
+        criteria.setProjection(Projections.projectionList()
+                .add(Projections.sum("dsm.eventCount").as("eventCount"))
+                .add(Projections.groupProperty("dsm.startDate").as("startDate")));
+        criteria.setResultTransformer(Transformers.aliasToBean(DrugSummaryDomain.class));
+        return criteria.list();
+    }
+
+    @Override
+    public List<DrugDomain> findByName(String name) {
+        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '%" + name + "%' LIMIT 0, 100";
+        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
+        query.addEntity(DrugDomain.class);
+        return query.list();
+    }
+}

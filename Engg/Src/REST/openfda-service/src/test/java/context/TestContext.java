@@ -1,5 +1,12 @@
 package context;
 
+import static org.mockito.Mockito.withSettings;
+
+import javax.persistence.EntityManagerFactory;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.jpa.internal.EntityManagerImpl;
 import org.jderive.repository.AgeGroupRepository;
 import org.jderive.repository.WeightGroupRepository;
 import org.jderive.repository.impl.AgeGroupRepositoryImpl;
@@ -33,5 +40,10 @@ public class TestContext {
 	@Bean
 	public AgeGroupRepository ageGroupRepository() {
 		return Mockito.mock(AgeGroupRepositoryImpl.class);
+	}
+	
+	@Bean
+	public SessionFactory sessionFactory() {
+	    return Mockito.mock(SessionFactory.class, withSettings().extraInterfaces(SessionFactoryImplementor.class));
 	}
 }

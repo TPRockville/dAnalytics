@@ -21,6 +21,8 @@ public class JDeriveResponse {
     private final List<AgeGroup> ageGroupList;
     private final List<WeightGroup> weightGroupList;
     private final List<EventSeverity> eventSeverityList;
+    private final List<Drug> drugList;
+    private final List<DrugSummary> drugSummaryList;
 
     protected JDeriveResponse(Builder builder) {
         this.statusCode = builder.statusCode;
@@ -29,6 +31,8 @@ public class JDeriveResponse {
         this.ageGroupList = builder.ageGroupList;
         this.weightGroupList = builder.weightGroupList;
         this.eventSeverityList = builder.eventSeverityList;
+        this.drugList = builder.drugList;
+        this.drugSummaryList = builder.drugSummaryList;
     }
 
     public static Builder builder() {
@@ -42,6 +46,8 @@ public class JDeriveResponse {
         private List<AgeGroup> ageGroupList;
         private List<WeightGroup> weightGroupList;
         private List<EventSeverity> eventSeverityList;
+        private List<Drug> drugList;
+        private List<DrugSummary> drugSummaryList;
 
         public JDeriveResponse build() {
             return new JDeriveResponse(this);
@@ -74,6 +80,16 @@ public class JDeriveResponse {
 
         public Builder withEventSeverityList(List<EventSeverity> input) {
             this.eventSeverityList = input;
+            return this;
+        }
+
+        public Builder withDrugList(List<Drug> input) {
+            this.drugList = input;
+            return this;
+        }
+
+        public Builder withDrugSummaryList(List<DrugSummary> input) {
+            this.drugSummaryList = input;
             return this;
         }
     }

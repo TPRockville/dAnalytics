@@ -26,9 +26,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CountryDomain findById(String id) {
         return countryRepository.findById(id);
     }
-
-
 }

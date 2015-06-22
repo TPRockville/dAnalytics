@@ -6,9 +6,11 @@ import org.jderive.domain.AgeGroupDomain;
 import org.jderive.dto.AgeGroupDTO;
 import org.jderive.service.AgeGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,10 +35,11 @@ public class AgeGroupController {
         if (ageGroupDomain != null) {
             return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                     .withStatusCode(HttpStatus.OK.toString())
-                    .withAgeGroupList(ImmutableList.of(AgeGroupDTO.ageGroup(ageGroupDomain))).build(), HttpStatus.OK);
+                    .withAgeGroupList(ImmutableList.of(AgeGroupDTO.ageGroup(ageGroupDomain))).build(), headers(),
+                    HttpStatus.OK);
         } else {
             return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.OK.toString()).build(), HttpStatus.NOT_FOUND);
+                    .withStatusCode(HttpStatus.OK.toString()).build(), headers(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -49,5 +52,12 @@ public class AgeGroupController {
                 .withAgeGroupList(
                         ageGroupDomains.stream().map(ageGroupDomain -> AgeGroupDTO.ageGroup(ageGroupDomain))
                                 .collect(Collectors.toList())).build(), HttpStatus.OK);
+    }
+
+    private MultiValueMap<String, String> headers() {
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Credentials", "true");
+        headers.add("Access-Control-Allow-Origin", "*");
+        return headers;
     }
 }
