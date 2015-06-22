@@ -15,4 +15,6 @@ public interface DrugService {
     DrugDomain findById(String id);
 
     List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummary);
+
+    List<DrugDomain> findByName(String name);
 }

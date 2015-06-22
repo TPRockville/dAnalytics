@@ -1,8 +1,11 @@
 package org.jderive.repository.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.jderive.domain.DrugDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.repository.DrugRepository;
@@ -59,9 +62,18 @@ public class DrugRepositoryImpl implements DrugRepository {
             }
         }
 
-        /*criteria.setProjection(Projections.projectionList()
-                .add(Projections.property("dsm.eventCount"))
-                .add(Projections.property("dsm.startDate")));*/
+        criteria.setProjection(Projections.projectionList()
+                .add(Projections.sum("dsm.eventCount").as("eventCount"))
+                .add(Projections.groupProperty("dsm.startDate").as("startDate")));
+        criteria.setResultTransformer(Transformers.aliasToBean(DrugSummaryDomain.class));
         return criteria.list();
+    }
+
+    @Override
+    public List<DrugDomain> findByName(String name) {
+        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '%" + name + "%' LIMIT 0, 100";
+        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
+        query.addEntity(DrugDomain.class);
+        return query.list();
     }
 }

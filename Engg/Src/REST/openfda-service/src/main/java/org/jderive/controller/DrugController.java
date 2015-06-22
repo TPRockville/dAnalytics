@@ -61,12 +61,32 @@ public class DrugController {
             return new ResponseEntity<JDeriveResponse>(jDeriveResponse, headers(), HttpStatus.NOT_FOUND);
         }
     }
+    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    public ResponseEntity<JDeriveResponse> autoComplete(@PathVariable("name") String name) {
+        List<DrugDomain> drugDomainList = drugService.findByName(name);
+        if (drugDomainList != null) {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.OK.toString())
+                    .withDrugList(drugDomainList.stream()
+                            .map(dbDrugSummaryDomain -> DrugDTO.drug(dbDrugSummaryDomain))
+                            .collect(Collectors.toList()))
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, headers(), HttpStatus.OK);
+        } else {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.NOT_FOUND.toString())
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, headers(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @RequestMapping(value = "/eventcount", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> get(@RequestParam(value = "drugId", required = false) String drugId,
                                                @RequestParam(value = "countryId", required = false) String countryId,
                                                @RequestParam(value = "ageGroupId", required = false) String ageGroupId,
-                                               @RequestParam(value = "weightGroupId", required = false) String weightGroupId,
+                                               @RequestParam(value = "weightGroupId", required = false)
+                                                   String weightGroupId,
                                                @RequestParam(value = "startDate", required = false) String startDate,
                                                @RequestParam(value = "endDate", required = false) String endDate) {
         DrugSummaryDomain drugSummaryDomain = new DrugSummaryDomain();

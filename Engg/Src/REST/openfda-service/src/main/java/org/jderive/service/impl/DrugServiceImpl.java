@@ -36,4 +36,10 @@ public class DrugServiceImpl implements DrugService {
     public List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummary) {
         return drugRepository.summary(drugSummary);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DrugDomain> findByName(String name) {
+        return drugRepository.findByName(name);
+    }
 }

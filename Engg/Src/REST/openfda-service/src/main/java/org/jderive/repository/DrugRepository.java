@@ -15,4 +15,6 @@ public interface DrugRepository {
     DrugDomain findById(String id);
 
     List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummaryDomain);
+
+    List<DrugDomain> findByName(String name);
 }
