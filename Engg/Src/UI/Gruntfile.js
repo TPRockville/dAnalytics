@@ -386,6 +386,47 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+    replace: {
+        development: {
+            options: {
+                patterns: [{
+                    json: grunt.file.readJSON('./config/environments/development.json')
+                }]
+            },
+            files: [{
+                expand: true,
+                flatten: true,
+                src: ['./config/configservice.js'],
+                dest: './app/scripts/services'
+            }]
+        },
+        staging: {
+            options: {
+                patterns: [{
+                    json: grunt.file.readJSON('./config/environments/staging.json')
+                }]
+            },
+            files: [{
+                expand: true,
+                flatten: true,
+                src: ['./config/configservice.js'],
+                dest: './app/scripts/services'
+            }]
+        },
+        production: {
+            options: {
+                patterns: [{
+                    json: grunt.file.readJSON('./config/environments/production.json')
+                }]
+            },
+            files: [{
+                expand: true,
+                flatten: true,
+                src: ['./config/configservice.js'],
+                dest: './app/scripts/services'
+            }]
+        }
     }
   });
 
@@ -394,7 +435,7 @@ module.exports = function (grunt) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
-
+    grunt.task.run(['replace:development']);
     grunt.task.run([
       'clean:server',
       'wiredep',
@@ -419,22 +460,31 @@ module.exports = function (grunt) {
     'karma'
   ]);
 
-  grunt.registerTask('build', [
-    'clean:dist',
-    'wiredep',
-    'useminPrepare',
-    'concurrent:dist',
-    'autoprefixer',
-    'concat',
-    'ngAnnotate',
-    'copy:dist',
-    //'cdnify',
-    'cssmin',
-    'uglify',
-    'filerev',
-    'usemin',
-    //'htmlmin'
-  ]);
+  grunt.registerTask('build', function (target) {
+      if (target === 'staging') {
+          grunt.task.run(['replace:staging']);
+      } else if (target === 'production') {
+          grunt.task.run(['replace:production']);
+      } else{
+          grunt.task.run(['replace:development']);
+      }
+      grunt.task.run([
+        'clean:dist',
+        'wiredep',
+        'useminPrepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngAnnotate',
+        'copy:dist',
+        //'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin'
+      ]);
+  });
 
   grunt.registerTask('default', [
     'newer:jshint',

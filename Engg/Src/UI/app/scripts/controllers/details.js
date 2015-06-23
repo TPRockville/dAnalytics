@@ -9,6 +9,9 @@
  */
 angular.module('jDeriveApp')
   .controller('DetailsCtrl', function ($scope, basicService, $filter, $interval) {
+
+      var moment = window.moment;
+
       $scope.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
@@ -309,7 +312,7 @@ angular.module('jDeriveApp')
               //}).entries(eventsCount);
 
               eventsCount.map(function (a) {
-                  var currentDate = new Date(moment(a.time, "YYYYMMDD"));
+                  var currentDate = new Date(moment(a.time, 'YYYYMMDD'));
                   if (a.count > 8000) {
                       var currentStartDate = moment(currentDate).subtract(moment.duration(5, 'd'));
                       if ($scope.regions.length > 0 && new Date($scope.regions[$scope.regions.length - 1].end) >= new Date(currentStartDate)) {
@@ -345,8 +348,8 @@ angular.module('jDeriveApp')
       }
 
       $scope.datapoints = [];
-      $scope.datacolumns = [{ "id": "count", "type": "line", "name": "Events" }];
-      $scope.datax = { "id": "time", 'type': 'timeseries' };
+      $scope.datacolumns = [{ 'id': 'count', 'type': 'line', 'name': 'Events' }];
+      $scope.datax = { 'id': 'time', 'type': 'timeseries' };
 
       //$interval(function () {
       //     new DataService().loadData(function (data) {
@@ -359,7 +362,7 @@ angular.module('jDeriveApp')
 
           // API methods
           this.loadData = function (callback) {
-              callback({ "key": new Date(), "values": randomNumber() });
+              callback({ 'key': new Date(), 'values': randomNumber() });
           };
 
           function randomNumber() {

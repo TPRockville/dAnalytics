@@ -18,8 +18,34 @@ angular.module('jDeriveApp')
               .success(function (data) {
                   deferred.resolve(data);
               })
-              .error(function () {
-                  deferred.reject('Failed to get details.');
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugSubstance = function (drugname) {
+          var url = '{0}{1}'.format('https://api.fda.gov/drug/event.json?search=patient.drug.medicinalproduct:', drugname)
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugRecall = function (substance) {
+          var url = '{0}{1}'.format('https://api.fda.gov/drug/enforcement.json?search=openfda.substance_name:', substance)
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
               });
           return deferred.promise;
       };
@@ -44,8 +70,99 @@ angular.module('jDeriveApp')
               .success(function (data) {
                   deferred.resolve(data);
               })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getAgeGroups = function () {
+          var url = '{0}/{1}'.format(configService.apiUrl, 'jderive/agegroup/list');
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getWeightGroups = function () {
+          var url = '{0}/{1}'.format(configService.apiUrl, 'jderive/weightgroup/list');
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
               .error(function () {
                   deferred.reject('Failed to get details.');
+              });
+          return deferred.promise;
+      };
+
+      services.getEventCount = function (searchCriteria) {
+          var url = '{0}/{1}?{2}'.format(configService.apiUrl, 'jderive/drugs/eventcount', searchCriteria);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugsList = function () {
+          var url = '{0}/{1}/{2}'.format(configService.apiUrl, 'jderive/drugs/name', 'a');
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugEventSpikes = function (drugid) {
+          var url = '{0}/{1}/{2}/spike'.format(configService.apiUrl, 'jderive/drugs', drugid);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugCharacterization = function (drugid) {
+          var url = '{0}/{1}/{2}/characterization'.format(configService.apiUrl, 'jderive/drugs', drugid);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugReaction = function (drugid) {
+          var url = '{0}/{1}/{2}/reaction'.format(configService.apiUrl, 'jderive/drugs', drugid);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
               });
           return deferred.promise;
       };
