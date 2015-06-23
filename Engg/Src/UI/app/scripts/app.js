@@ -32,7 +32,8 @@ angular
     'ngTouch',
     'ui.bootstrap.datetimepicker',
     'ui.select2',
-    'gridshore.c3js.chart'
+    'gridshore.c3js.chart',
+    'angucomplete-alt'
   ])
   .config(function ($routeProvider) {
     $routeProvider

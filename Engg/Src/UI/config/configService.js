@@ -10,9 +10,9 @@
 angular.module('jDeriveApp')
   .service('configService', function () {
       var service = {
-          protocol: 'http',
-          host: 'localhost',
-          port: '8080'
+          protocol: '@@protocol',
+          host: '@@host',
+          port: '@@port'
       };
 
       service.apiUrl = '{0}://{1}:{2}'.format(service.protocol, service.host, service.port);

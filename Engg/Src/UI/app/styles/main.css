@@ -2,3 +2,21 @@
 .regionYellow {
     fill:#FE8418;
 }
+
+.angucomplete-dropdown {
+    overflow-y: auto;
+    max-height: 500px;
+    max-width: 400px
+}
+
+.autocomplete-match {
+    color:#2fa4e7;
+}
+
+.advanced-search{
+    color:#2fa4e7;
+}
+
+.less-search {
+    color:#b1dbf3;
+}
