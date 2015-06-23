@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project name="udf" default="jar" basedir=".">
+	<property name="project.base.dir" value="." />
+	<property name="build.dir" value="target/classes" />
+	<property name="lib.dir" value="${project.base.dir}/lib" />
+
+	<target name="jar" depends="compile">
+		<jar destfile="target/udf.jar" basedir="${build.dir}" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<javac srcdir="src" destdir="${build.dir}" classpathref="classpath" />
+	</target>
+
+	<target name="clean">
+		<delete dir="target/classes" />
+		<mkdir dir="target/classes" />
+	</target>
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+</project>
