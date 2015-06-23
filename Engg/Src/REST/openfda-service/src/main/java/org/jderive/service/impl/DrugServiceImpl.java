@@ -1,6 +1,12 @@
 package org.jderive.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
+import org.jderive.domain.DrugEventSpikeDomain;
+import org.jderive.domain.DrugMonthSummaryDomain;
+import org.jderive.domain.DrugReactionDomain;
+import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.repository.DrugRepository;
 import org.jderive.service.DrugService;
@@ -8,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,5 +48,67 @@ public class DrugServiceImpl implements DrugService {
     @Transactional(readOnly = true)
     public List<DrugDomain> findByName(String name) {
         return drugRepository.findByName(name);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DrugEventSpikeDomain> eventSpikeCount(String drugId) {
+        return drugRepository.eventSpikeCount(drugId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DrugCharSummaryDomain> characterSummary(String drugId) {
+        return drugRepository.characterSummary(drugId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DrugReactionSummaryDomain> reactionSummary(String drugId) {
+        List<DrugReactionSummaryDomain> drugReactionSummaryDomainList = drugRepository.reactionSummary(drugId);
+        //Aggregate the DrugReactionSummaryDomain from 2 index to list.size();
+        if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
+
+            if (drugReactionSummaryDomainList.size() > 2) {
+                List<DrugReactionSummaryDomain> finalDrugReactionSummaryDomainsList = new ArrayList<>();
+                //Loading on demand.
+                drugReactionSummaryDomainList.get(0).getReactionDomain().getCode();
+                drugReactionSummaryDomainList.get(1).getReactionDomain().getCode();
+
+                DrugReactionSummaryDomain aggregatedReactionSummary = aggregateReactionSummaryDomains(
+                        drugReactionSummaryDomainList.subList(2, drugReactionSummaryDomainList.size()), drugId);
+
+                finalDrugReactionSummaryDomainsList.add(drugReactionSummaryDomainList.get(0));
+                finalDrugReactionSummaryDomainsList.add(drugReactionSummaryDomainList.get(1));
+                finalDrugReactionSummaryDomainsList.add(aggregatedReactionSummary);
+                return finalDrugReactionSummaryDomainsList;
+            } else {
+                for (DrugReactionSummaryDomain domain : drugReactionSummaryDomainList) {
+                    domain.getReactionDomain();
+                }
+                return drugReactionSummaryDomainList;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DrugMonthSummaryDomain> summaryMonth(
+            DrugMonthSummaryDomain drugSummary) {
+        return drugRepository.summaryMonth(drugSummary);
+    }
+
+    private DrugReactionSummaryDomain aggregateReactionSummaryDomains(List<DrugReactionSummaryDomain>
+                                                                      drugReactionSummaryDomainList, String drugId) {
+        Long sumOfEventCounts = drugReactionSummaryDomainList.stream()
+                .mapToLong(DrugReactionSummaryDomain::getEventCount).sum();
+        DrugReactionSummaryDomain drugReactionSummaryDomain = new DrugReactionSummaryDomain();
+        drugReactionSummaryDomain.setEventCount(sumOfEventCounts);
+        DrugReactionDomain drugReactionDomain = new DrugReactionDomain();
+        drugReactionDomain.setCode("Others");
+        drugReactionSummaryDomain.setReactionDomain(drugReactionDomain);
+        drugReactionSummaryDomain.setDrugId(drugId);
+        return drugReactionSummaryDomain;
     }
 }

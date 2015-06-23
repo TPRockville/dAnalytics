@@ -9,17 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by Durga on 6/20/2015.
+ * Created by Durga on 6/23/2015.
  */
 @Entity
-@Table(name = "WEIGHT_GROUP_LIST")
+@Table(name = "REACTION_LIST")
 @Setter @Getter
-public class WeightGroupDomain {
+public class DrugReactionDomain {
 
     @Id
-    @Column(name = "WEIGHT_GROUP_ID")
-    private String id;
+    @Column(name = "REACTION_ID")
+    private Long id;
 
-    @Column(name = "WEIGHT_GROUP")
-    private String name;
+    @Column(name = "REACTION_CODE")
+    private String code;
 }

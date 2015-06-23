@@ -21,9 +21,4 @@ public class DrugDomain {
 
     @Column(name = "DRUG_NAME")
     private String name;
-    
-    
-    @Column(name = "AVERAGE")
-    private String average;
-    
 }

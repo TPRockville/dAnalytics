@@ -1,12 +1,17 @@
 package org.jderive.repository.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
+import org.jderive.domain.DrugEventSpikeDomain;
+import org.jderive.domain.DrugMonthSummaryDomain;
+import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.repository.DrugRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +80,65 @@ public class DrugRepositoryImpl implements DrugRepository {
         SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
         query.addEntity(DrugDomain.class);
         return query.list();
+    }
+
+    @Override
+    public List<DrugEventSpikeDomain> eventSpikeCount(String drugId) {
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId");
+        query.setString("drugId", drugId);
+        return query.list();
+    }
+
+    @Override
+    public List<DrugCharSummaryDomain> characterSummary(String drugId) {
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery("From DrugCharSummaryDomain dcsd where dcsd.drugId = :drugId");
+        query.setString("drugId", drugId);
+        return query.list();
+    }
+
+    @Override
+    public List<DrugReactionSummaryDomain> reactionSummary(String drugId) {
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery("From DrugReactionSummaryDomain drsd where drsd.drugId = :drugId " +
+                        "order by drsd.eventCount desc");
+        query.setString("drugId", drugId);
+        return query.list();
+    }
+
+    @Override
+    public List<DrugMonthSummaryDomain> summaryMonth(
+            DrugMonthSummaryDomain drugMonthSummaryDomain) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugMonthSummaryDomain.class, "dmsm");
+        if (!StringUtils.isEmpty(drugMonthSummaryDomain.getDrugId())) {
+            criteria.add(Restrictions.eq("dmsm.drugId", drugMonthSummaryDomain.getDrugId()));
+        }
+        if (!StringUtils.isEmpty(drugMonthSummaryDomain.getAgeGroupId())) {
+            criteria.add(Restrictions.eq("dmsm.ageGroupId", drugMonthSummaryDomain.getAgeGroupId()));
+        }
+        if (!StringUtils.isEmpty(drugMonthSummaryDomain.getWeightGroupId())) {
+            criteria.add(Restrictions.eq("dmsm.weightGroupId", drugMonthSummaryDomain.getWeightGroupId()));
+        }
+        if (!StringUtils.isEmpty(drugMonthSummaryDomain.getCountryId())) {
+            criteria.add(Restrictions.eq("dmsm.countryId", drugMonthSummaryDomain.getCountryId()));
+        }
+        if (!StringUtils.isEmpty(drugMonthSummaryDomain.getStartDate())) {
+            if (!StringUtils.isEmpty(drugMonthSummaryDomain.getEndDate())) {
+                criteria.add(Restrictions.between("dmsm.startDate",
+                        drugMonthSummaryDomain.getStartDate(),
+                        drugMonthSummaryDomain.getEndDate()));
+            } else {
+                criteria.add(Restrictions.between("dmsm.startDate",
+                        drugMonthSummaryDomain.getStartDate(),
+                        new Date(System.currentTimeMillis())));
+            }
+        }
+
+        criteria.setProjection(Projections.projectionList()
+                .add(Projections.sum("dmsm.eventCount").as("eventCount"))
+                .add(Projections.groupProperty("dmsm.startDate").as("startDate")));
+        criteria.setResultTransformer(Transformers.aliasToBean(DrugMonthSummaryDomain.class));
+        return criteria.list();
     }
 }

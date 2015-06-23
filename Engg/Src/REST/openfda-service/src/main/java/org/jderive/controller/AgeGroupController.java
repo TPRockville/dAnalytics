@@ -5,12 +5,13 @@ import org.jderive.api.JDeriveResponse;
 import org.jderive.domain.AgeGroupDomain;
 import org.jderive.dto.AgeGroupDTO;
 import org.jderive.service.AgeGroupService;
+import org.jsondoc.core.annotation.Api;
+import org.jsondoc.core.annotation.ApiMethod;
+import org.jsondoc.core.annotation.ApiResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Durga on 6/20/2015.
  */
+@Api(name = "AgeGroup Service.", description = "AgeGroup service to fetch the AgeGroup info.")
 @RestController
 @RequestMapping(value = "/agegroup", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AgeGroupController {
@@ -29,35 +31,30 @@ public class AgeGroupController {
     @Autowired
     private AgeGroupService ageGroupService;
 
+    @ApiMethod(path = "/{id}", description = "Fetch AgeGroup info by Id.", responsestatuscode = "200",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ApiResponseObject
     public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) {
         AgeGroupDomain ageGroupDomain = ageGroupService.findById(id);
         if (ageGroupDomain != null) {
             return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                     .withStatusCode(HttpStatus.OK.toString())
-                    .withAgeGroupList(ImmutableList.of(AgeGroupDTO.ageGroup(ageGroupDomain))).build(), headers(),
-                    HttpStatus.OK);
+                    .withAgeGroupList(ImmutableList.of(AgeGroupDTO.ageGroup(ageGroupDomain))).build(), HttpStatus.OK);
         } else {
             return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.OK.toString()).build(), headers(), HttpStatus.NOT_FOUND);
+                    .withStatusCode(HttpStatus.OK.toString()).build(), HttpStatus.NOT_FOUND);
         }
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> list() {
         List<AgeGroupDomain> ageGroupDomains = ageGroupService.findAll();
-        return new ResponseEntity<JDeriveResponse>(JDeriveResponse
-                .builder()
+        return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                 .withStatusCode(HttpStatus.OK.toString())
-                .withAgeGroupList(
-                        ageGroupDomains.stream().map(ageGroupDomain -> AgeGroupDTO.ageGroup(ageGroupDomain))
-                                .collect(Collectors.toList())).build(), HttpStatus.OK);
-    }
-
-    private MultiValueMap<String, String> headers() {
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Credentials", "true");
-        headers.add("Access-Control-Allow-Origin", "*");
-        return headers;
+                .withAgeGroupList(ageGroupDomains.stream()
+                        .map(ageGroupDomain -> AgeGroupDTO.ageGroup(ageGroupDomain))
+                        .collect(Collectors.toList())).build(), HttpStatus.OK);
     }
 }

@@ -22,10 +22,4 @@ public class AgeGroupDomain {
 
     @Column(name = "AGE_GROUP")
     private String name;
-
-    @Column(name = "MIN_AGE")
-    private int minAge;
-
-    @Column(name = "MAX_AGE")
-    private int maxAge;
 }
