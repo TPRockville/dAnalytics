@@ -27,6 +27,10 @@ allprojects {
     //Jackson.
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVer"
 
+    //JSONdoc.
+    compile 'org.jsondoc:spring-boot-starter-jsondoc:1.1.14'
+    compile 'org.jsondoc:jsondoc-ui-webjar:1.1.14'
+
     //lombok
     compile "org.projectlombok:lombok:$lombokVer"
 

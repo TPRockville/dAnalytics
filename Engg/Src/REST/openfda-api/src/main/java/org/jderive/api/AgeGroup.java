@@ -13,6 +13,4 @@ public class AgeGroup {
 
     private String id;
     private String name;
-    private int minAge;
-    private int maxAge;
 }

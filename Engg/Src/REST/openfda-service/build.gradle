@@ -23,6 +23,9 @@ apply plugin: 'io.spring.dependency-management'
 dependencies {
   compile project(':openfda-api')
 
+  //commons utility libraries.
+  compile 'commons-collections:commons-collections:3.2.1'
+
   //compile 'org.springframework.boot:spring-boot-starter-jetty:1.2.3.RELEASE'
   //compile 'org.springframework.boot:spring-boot-starter-undertow:1.2.4.RELEASE'
   compile "org.springframework.boot:spring-boot-starter-tomcat:${springBootVer}"

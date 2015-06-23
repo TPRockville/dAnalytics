@@ -2,6 +2,8 @@ package org.jderive;
 
 import lombok.Getter;
 import org.hibernate.SessionFactory;
+import org.jderive.filter.CorsFilter;
+import org.jsondoc.spring.boot.starter.EnableJSONDoc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,6 +22,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {"org.jderive"})
 @EntityScan(basePackages = "org.jderive.domain")
+@EnableJSONDoc
 public class JDeriveApplication {
 
     @Autowired
@@ -33,6 +36,11 @@ public class JDeriveApplication {
         } else {
             throw new IllegalStateException("DB Connectivity failed. check the configuration.");
         }
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter();
     }
 
     public static void main(String... args) {

@@ -2,6 +2,8 @@ package org.jderive.api;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jsondoc.core.annotation.ApiObject;
+import org.jsondoc.core.annotation.ApiObjectField;
 
 /**
  * VO design pattern.
@@ -11,44 +13,13 @@ import lombok.Setter;
 
 @Setter
 @Getter
+@ApiObject(show = true, description = "Project json structure.")
 public class Country {
 
+    @ApiObjectField(description = "specify the Country id.", required = false)
     private String id;
+    @ApiObjectField(description = "specify the Country name.", required = true)
     private String name;
+    @ApiObjectField(description = "specify the Country Code.", required = true)
     private String code;
-
-    /*private Country(Builder builder){
-        this.id = builder.id;
-        this.code = builder.code;
-        this.name = builder.name;
-    }
-
-    public static Builder builder(){
-        return new Builder();
-    }
-
-    private static class Builder {
-        private String id;
-        private String name;
-        private String code;
-
-        public final Country build() {
-            return new Country(this);
-        }
-
-        public Builder withId(String input){
-            this.id = input;
-            return this;
-        }
-
-        public Builder withName(String input){
-            this.name = input;
-            return this;
-        }
-
-        public Builder withCode(String input){
-            this.code = input;
-            return this;
-        }
-    }*/
 }

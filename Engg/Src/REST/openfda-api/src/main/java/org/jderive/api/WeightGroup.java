@@ -12,6 +12,4 @@ public class WeightGroup {
 
     private String id;
     private String name;
-    private int minWeight;
-    private int maxWeight;
 }
