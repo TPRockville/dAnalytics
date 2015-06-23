@@ -1,6 +1,9 @@
 package com.tpgsi.jderive;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
@@ -9,11 +12,13 @@ import org.apache.pig.data.Tuple;
  * 
  * @author Shridhar
  *
- * Pig UDF to format date yyymmdd to yyyy-mm-dd
+ * Pig UDF to format date yyymmdd to yyyy-mm-dd and get first date of the Month
  * 
  */
 public class DateRange extends EvalFunc<String>
 {
+	
+	private static final String DATE_FORMAT = "MM/dd/yyyy";
 
 	public String exec(Tuple input) throws IOException
 	{
@@ -21,12 +26,19 @@ public class DateRange extends EvalFunc<String>
 			return null;
 		try
 		{
-			String date = (String) input.get(0);
-			if (date != null)
+			String inputDate = (String) input.get(0);
+
+			if (inputDate != null && !inputDate.isEmpty())
 			{
-				String formatedDate = date.substring(0, 4) + "-" + date.substring(4, 6) + "-"
-						+ date.substring(6, 8);
-				return formatedDate;
+
+				String date = inputDate.substring(4, 6) + "/" + inputDate.substring(6, 8) + "/" + inputDate.substring(0, 4);
+				SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+				Date convertedDate = dateFormat.parse(date);
+				Calendar c = Calendar.getInstance();
+				c.setTime(convertedDate);
+				String startDate = inputDate.substring(0, 4) + "-" + inputDate.substring(4, 6) + "-" + c.getActualMinimum(Calendar.DAY_OF_MONTH);
+
+				return startDate;
 			} else
 			{
 				return null;
@@ -34,7 +46,7 @@ public class DateRange extends EvalFunc<String>
 
 		} catch (Exception e)
 		{
-			throw new IOException("Caught exception processing input row ", e);
+			throw new IOException("Caught exception processing input row " + input.get(0), e);
 		}
 	}
 
