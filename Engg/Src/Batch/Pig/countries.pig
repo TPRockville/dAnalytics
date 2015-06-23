@@ -4,7 +4,7 @@ inputfile = load '$input' USING PigStorage(',') as (SAFETYREPORTVERSION:chararra
 
 notnullcountries = FILTER inputfile by REPORTERCOUNTRY is not null OR REPORTERCOUNTRY != '';
 
-countries = foreach notnullcountries generate com.tpgsi.jderive.StringHashCode(TRIM(REPORTERCOUNTRY)),TRIM(REPORTERCOUNTRY);
+countries = foreach notnullcountries generate com.tpgsi.jderive.StringHashCode(UPPER(TRIM(REPORTERCOUNTRY))),UPPER(TRIM(REPORTERCOUNTRY));
 
 uniquecountry = DISTINCT countries;
 
