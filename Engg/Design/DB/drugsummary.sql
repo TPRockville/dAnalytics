@@ -225,3 +225,98 @@ CREATE TABLE `drug_spikes` (
   `spike_date` datetime DEFAULT NULL,
   PRIMARY KEY (`spike_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `medicaid` (
+  `id` int(11) NOT NULL,
+  `Year` varchar(4) NOT NULL,
+  `Primary_County` longtext NOT NULL,
+  `Dual_Eligible` longtext NOT NULL,
+  `Major_Diagnostic_Category` longtext NOT NULL,
+  `Episode_Disease_Category` longtext NOT NULL,
+  `Beneficiaries_with_Condition` bigint(10) NOT NULL,
+  `Beneficiaries_with_Admissions` bigint(10) NOT NULL,
+  `Total_Inpatient_Admissions` bigint(10) NOT NULL,
+  `Beneficiaries_with_ER_Visits` bigint(10) NOT NULL,
+  `Total_ER_Visits` bigint(10) NOT NULL
+);
+
+
+CREATE TABLE hospital_discharge_details
+(
+id int(11) not null,
+health_service_area longtext ,
+hospital_county longtext NOT NULL,
+operating_certificate_number bigint(10) ,
+facility_id bigint(10) ,
+facility_name longtext ,
+age_group varchar(10) ,
+zipcode_3digits varchar(10) ,
+gender varchar(10) ,
+race longtext ,
+ethnicity longtext ,
+length_of_stay bigint(10) ,
+admit_day_of_week varchar(10) ,
+type_of_admission longtext ,
+patient_disposition longtext ,
+discharge_year varchar(4),
+discharge_day_of_week varchar(10) ,
+ccs_diagnosis_code bigint(10) ,
+ccs_diagnosis_description longtext ,
+ccs_procedure_code bigint(10) ,
+ccs_procedure_description longtext ,
+apr_drg_code bigint(10) ,
+apr_drg_description longtext ,
+apr_mdc_code bigint(10) ,
+apr_mdc_description longtext ,
+apr_severity_of_illness_code bigint(10) ,
+apr_severity_of_illness_description longtext ,
+apr_risk_of_mortality varchar(10) ,
+apr_medical_surgical_description varchar(100) ,
+source_of_payment_1 varchar(100) ,
+source_of_payment_2 varchar(100) ,
+source_of_payment_3 varchar(100) ,
+attending_provider_license_number bigint(10) ,
+operating_Provider_License_number bigint(10) ,
+other_provider_license_Number bigint(10) ,
+birth_weight int(11) ,
+abortion_edit_indicator varchar(10),
+emergency_department_indicator varchar(10),
+total_charges longtext ,
+total_costs longtext 
+);
+
+
+create table er_summary
+(
+er_summary_id int not null,
+year varchar(4),
+episode_disease_category longtext,
+sum_total_er_visits bigint(10),
+primary key(er_summary_id)
+);
+
+
+create table discharge_summary
+(
+discharge_summary_id int not null,
+discharge_year varchar(4),
+apr_drg_description longtext,
+total_count bigint(10),
+primary key(discharge_summary_id)
+);
+
+
+CREATE INDEX DS_DRUG_IDX ON drug_summary(drug_id);
+CREATE INDEX DS_DRUG_AGE_IDX ON drug_summary(drug_id,age_group_id);
+CREATE INDEX DS_DRUG_COUNTRY_IDX ON drug_summary(drug_id,country_id);
+CREATE INDEX DS_DRUG_GENDER_IDX ON drug_summary(drug_id,gender_id);
+CREATE INDEX DS_DRUG_WEIGHT_IDX ON drug_summary(drug_id,weight_group_id);
+CREATE INDEX DS_DRUG_DATE_IDX ON drug_summary(drug_id,start_date);
+
+CREATE INDEX DS_M_DRUG_IDX ON drug_summary_month(drug_id);
+CREATE INDEX DS_M_DRUG_AGE_IDX ON drug_summary_month(drug_id,age_group_id);
+CREATE INDEX DS_M_DRUG_COUNTRY_IDX ON drug_summary_month(drug_id,country_id);
+CREATE INDEX DS_M_DRUG_GENDER_IDX ON drug_summary_month(drug_id,gender_id);
+CREATE INDEX DS_M_DRUG_WEIGHT_IDX ON drug_summary_month(drug_id,weight_group_id);
+CREATE INDEX DS_M_DRUG_DATE_IDX ON drug_summary_month(drug_id,start_date);
