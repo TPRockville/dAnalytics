@@ -32,7 +32,7 @@ Block1: BEGIN
 		DECLARE no_more_rows2 BOOLEAN;
 		DECLARE avg_count DOUBLE;
 		DECLARE median DOUBLE;
-		DECLARE cur CURSOR FOR SELECT start_date, SUM(event_count) event_count, AVG(event_count) event_avg FROM drug_summary dg WHERE drug_id=current_drug_id AND event_count > median GROUP BY dg.start_date ORDER BY dg.event_count DESC;
+		DECLARE cur CURSOR FOR SELECT start_date, SUM(event_count) event_count, AVG(event_count) event_avg FROM drug_summary_month dg WHERE drug_id=current_drug_id AND event_count > median GROUP BY dg.start_date ORDER BY dg.event_count DESC;
 		DECLARE CONTINUE HANDLER FOR NOT FOUND
 		SET no_more_rows2 := TRUE;
 		SELECT 
