@@ -38,7 +38,7 @@ allprojects {
   apply from: rootProject.file('gradle/ide.gradle')
 
   // code checks
-  apply from: rootProject.file('gradle/codechecks.gradle')
+  //apply from: rootProject.file('gradle/codechecks.gradle')
 
   // best guess ..
   project.ext.serviceClassName = "org.jderive.JDeriveApplication"

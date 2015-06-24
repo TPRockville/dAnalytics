@@ -11,9 +11,9 @@ import java.util.Date;
 @Setter @Getter
 public class DrugEventSpike {
 
-    private String id;
+    private Long id;
 
-    private String drugId;
+    private Long drugId;
 
     private Date spikeDate;
 

@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 public class Drug {
 
-    private String id;
+    private Long id;
     private String name;
 }

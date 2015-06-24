@@ -18,14 +18,14 @@ public class DrugCharSummaryDomain {
 
     @Id
     @Column(name = "DRUG_CHAR_SUMMARY_ID")
-    private String id;
+    private Long id;
 
     @Column(name = "DRUG_ID")
-    private String drugId;
+    private Long drugId;
 
     @Column(name = "DRUG_CHARACTERIZATION_ID")
-    private String characterizationId;
+    private Long characterizationId;
 
     @Column(name = "EVENT_COUNT")
-    private String eventCount;
+    private Long eventCount;
 }

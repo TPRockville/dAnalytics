@@ -108,7 +108,7 @@ public class DrugServiceImpl implements DrugService {
         DrugReactionDomain drugReactionDomain = new DrugReactionDomain();
         drugReactionDomain.setCode("Others");
         drugReactionSummaryDomain.setReactionDomain(drugReactionDomain);
-        drugReactionSummaryDomain.setDrugId(drugId);
+        drugReactionSummaryDomain.setDrugId(null);
         return drugReactionSummaryDomain;
     }
 }

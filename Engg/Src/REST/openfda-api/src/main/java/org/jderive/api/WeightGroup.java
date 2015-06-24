@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 public class WeightGroup {
 
-    private String id;
+    private Long id;
     private String name;
 }
