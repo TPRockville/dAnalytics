@@ -1,4 +1,4 @@
 language: java
 jdk:
   - oraclejdk8
-script: cd Engg/Src/REST/ && gradlew assemble && gradlew check
+script: cd Engg/Src/REST/ && ./gradlew assemble && ./gradlew check
