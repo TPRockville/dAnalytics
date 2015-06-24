@@ -305,3 +305,18 @@ apr_drg_description longtext,
 total_count bigint(10),
 primary key(discharge_summary_id)
 );
+
+
+CREATE INDEX DS_DRUG_IDX ON drug_summary(drug_id);
+CREATE INDEX DS_DRUG_AGE_IDX ON drug_summary(drug_id,age_group_id);
+CREATE INDEX DS_DRUG_COUNTRY_IDX ON drug_summary(drug_id,country_id);
+CREATE INDEX DS_DRUG_GENDER_IDX ON drug_summary(drug_id,gender_id);
+CREATE INDEX DS_DRUG_WEIGHT_IDX ON drug_summary(drug_id,weight_group_id);
+CREATE INDEX DS_DRUG_DATE_IDX ON drug_summary(drug_id,start_date);
+
+CREATE INDEX DS_M_DRUG_IDX ON drug_summary_month(drug_id);
+CREATE INDEX DS_M_DRUG_AGE_IDX ON drug_summary_month(drug_id,age_group_id);
+CREATE INDEX DS_M_DRUG_COUNTRY_IDX ON drug_summary_month(drug_id,country_id);
+CREATE INDEX DS_M_DRUG_GENDER_IDX ON drug_summary_month(drug_id,gender_id);
+CREATE INDEX DS_M_DRUG_WEIGHT_IDX ON drug_summary_month(drug_id,weight_group_id);
+CREATE INDEX DS_M_DRUG_DATE_IDX ON drug_summary_month(drug_id,start_date);
