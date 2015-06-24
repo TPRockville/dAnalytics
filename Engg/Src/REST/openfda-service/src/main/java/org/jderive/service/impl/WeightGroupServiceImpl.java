@@ -26,7 +26,7 @@ public class WeightGroupServiceImpl implements WeightGroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public WeightGroupDomain findById(String id) {
+    public WeightGroupDomain findById(Long id) {
         return weightGroupRepository.findById(id);
     }
 }

@@ -6,6 +6,7 @@ import org.jderive.domain.CountryDomain;
 import org.jderive.dto.CountryDTO;
 import org.jderive.exception.JDeriveException;
 import org.jderive.service.CountryService;
+import org.jderive.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,8 @@ public class CountryController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) throws Exception {
         try {
-            CountryDomain countryDomain = countryService.findById(id);
+            CountryDomain countryDomain = countryService.findById(NumberUtil.isNumeric(id) ? NumberUtil.parseLong(id)
+                    : null);
             if (countryDomain != null) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())

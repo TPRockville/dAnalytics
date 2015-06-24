@@ -6,6 +6,7 @@ import org.jderive.domain.WeightGroupDomain;
 import org.jderive.dto.WeightGroupDTO;
 import org.jderive.exception.JDeriveException;
 import org.jderive.service.WeightGroupService;
+import org.jderive.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,8 @@ public class WeightGroupController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) throws Exception {
         try {
-            WeightGroupDomain weightGroupDomain = weightGroupService.findById(id);
+            WeightGroupDomain weightGroupDomain = weightGroupService.findById(NumberUtil.isNumeric(id) ?
+                    NumberUtil.parseLong(id) : null);
             if (weightGroupDomain != null) {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())

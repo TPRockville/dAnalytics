@@ -1,6 +1,7 @@
 package org.jderive.controller;
 
 import com.google.common.collect.ImmutableList;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.jderive.api.JDeriveResponse;
 import org.jderive.domain.DrugCharSummaryDomain;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 @Api(name = "Drugs Service", description = "Drugs service to fetch the various drug information.")
 @RestController
 @RequestMapping(value = "/drugs", produces = MediaType.APPLICATION_JSON_VALUE)
+@Slf4j
 public class DrugController {
 
     @Autowired
@@ -67,7 +69,7 @@ public class DrugController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) throws Exception {
         try {
-            DrugDomain drugDomain = drugService.findById(id);
+            DrugDomain drugDomain = drugService.findById(NumberUtil.isNumeric(id) ? NumberUtil.parseLong(id) : null);
             if (drugDomain != null) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())
@@ -89,7 +91,7 @@ public class DrugController {
     public ResponseEntity<JDeriveResponse> autoComplete(@PathVariable("name") String name) throws Exception {
         try {
             List<DrugDomain> drugDomainList = drugService.findByName(name);
-            if (drugDomainList != null) {
+            if (CollectionUtils.isNotEmpty(drugDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())
                         .withDrugList(drugDomainList.stream()
@@ -145,7 +147,8 @@ public class DrugController {
     @RequestMapping(value = "/{drugId}/spike", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> spike(@PathVariable("drugId") String drugId) throws Exception {
         try {
-            List<DrugEventSpikeDomain> drugEventSpikeDomainList = drugService.eventSpikeCount(drugId);
+            List<DrugEventSpikeDomain> drugEventSpikeDomainList =
+                    drugService.eventSpikeCount(NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
             if (CollectionUtils.isNotEmpty(drugEventSpikeDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder().withStatusCode(HttpStatus.OK.toString())
                         .withDrugEventSpikeList(drugEventSpikeDomainList.stream()
@@ -166,7 +169,8 @@ public class DrugController {
     @RequestMapping(value = "/{drugId}/characterization", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> characterization(@PathVariable("drugId") String drugId) throws Exception {
         try {
-            List<DrugCharSummaryDomain> drugCharSummaryDomainList = drugService.characterSummary(drugId);
+            List<DrugCharSummaryDomain> drugCharSummaryDomainList =
+                    drugService.characterSummary(NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
             if (CollectionUtils.isNotEmpty(drugCharSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder().withStatusCode(HttpStatus.OK.toString())
                         .withDrugCharSummaryList(drugCharSummaryDomainList.stream()
@@ -188,7 +192,8 @@ public class DrugController {
     @RequestMapping(value = "/{drugId}/reaction", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> reactionSummary(@PathVariable("drugId") String drugId) throws Exception {
         try {
-            List<DrugReactionSummaryDomain> drugReactionSummaryDomainList = drugService.reactionSummary(drugId);
+            List<DrugReactionSummaryDomain> drugReactionSummaryDomainList
+                    = drugService.reactionSummary(NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
             if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder().withStatusCode(HttpStatus.OK.toString())
                         .withDrugReactionSummaryList(drugReactionSummaryDomainList.stream()
@@ -214,22 +219,21 @@ public class DrugController {
                                                            @RequestParam(value = "countryId", required = false)
                                                            String countryId,
                                                            @RequestParam(value = "ageGroupId", required = false)
-                                                               String ageGroupId,
+                                                           String ageGroupId,
                                                            @RequestParam(value = "weightGroupId", required = false)
                                                            String weightGroupId,
                                                            @RequestParam(value = "startDate", required = false)
-                                                               String startDate,
+                                                           String startDate,
                                                            @RequestParam(value = "endDate", required = false)
-                                                               String endDate)
+                                                           String endDate)
             throws Exception {
-
         try {
             DrugMonthSummaryDomain drugMonthSummaryDomain = new DrugMonthSummaryDomain();
             BeanUtils.copyProperties(drugSummaryDomain(drugId, countryId, ageGroupId, weightGroupId, startDate, endDate),
                     drugMonthSummaryDomain);
             List<DrugMonthSummaryDomain> drugMonthSummaryDomainList = drugService.summaryMonth(drugMonthSummaryDomain);
 
-            if (drugMonthSummaryDomainList != null) {
+            if (CollectionUtils.isNotEmpty(drugMonthSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())
                         .withDrugSummaryByMonthList(drugMonthSummaryDomainList.stream()
@@ -256,7 +260,8 @@ public class DrugController {
         drugSummaryDomain.setWeightGroupId(NumberUtil.isNumeric(weightGroupId) ? NumberUtil.parseLong(weightGroupId)
                 : null);
         drugSummaryDomain.setCountryId(NumberUtil.isNumeric(countryId) ? NumberUtil.parseLong(countryId) : null);
-        drugSummaryDomain.setStartDate(NumberUtil.isNumeric(startDate) ? new Date(NumberUtil.parseLong(startDate)) : null);
+        drugSummaryDomain.setStartDate(NumberUtil.isNumeric(startDate) ? new Date(NumberUtil.parseLong(startDate))
+                : null);
         drugSummaryDomain.setEndDate(NumberUtil.isNumeric(endDate) ? new Date(NumberUtil.parseLong(endDate)) : null);
         return drugSummaryDomain;
     }

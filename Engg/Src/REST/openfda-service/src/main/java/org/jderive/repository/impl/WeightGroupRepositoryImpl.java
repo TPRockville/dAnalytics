@@ -23,7 +23,7 @@ public class WeightGroupRepositoryImpl implements WeightGroupRepository {
     }
 
     @Override
-    public WeightGroupDomain findById(String id) {
+    public WeightGroupDomain findById(Long id) {
         return (WeightGroupDomain) sessionFactory.getCurrentSession().get(WeightGroupDomain.class, id);
     }
 }

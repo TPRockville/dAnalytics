@@ -14,5 +14,5 @@ public interface CountryService {
 
     List<CountryDomain> findAll();
 
-    CountryDomain findById(String id);
+    CountryDomain findById(Long id);
 }

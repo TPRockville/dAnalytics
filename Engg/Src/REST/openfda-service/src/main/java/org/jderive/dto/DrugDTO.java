@@ -32,7 +32,7 @@ public final class DrugDTO {
     public static DrugSummary drugSummary(DrugSummaryDomain drugSummaryDomain) {
         DrugSummary drugSummary = new DrugSummary();
         drugSummary.setEventCount(drugSummaryDomain.getEventCount());
-        drugSummary.setEventDate(drugSummaryDomain.getStartDate());
+        drugSummary.setStartDate(drugSummaryDomain.getStartDate());
         return drugSummary;
     }
 
@@ -60,7 +60,8 @@ public final class DrugDTO {
 
     public static DrugSummaryByMonth drugMonthSummary(DrugMonthSummaryDomain dbDrugMonthSummaryDomain) {
         DrugSummaryByMonth drugSummaryByMonth = new DrugSummaryByMonth();
-        BeanUtils.copyProperties(dbDrugMonthSummaryDomain, drugSummaryByMonth);
+        drugSummaryByMonth.setEventCount(dbDrugMonthSummaryDomain.getEventCount());
+        drugSummaryByMonth.setStartDate(dbDrugMonthSummaryDomain.getStartDate());
         return drugSummaryByMonth;
     }
 }
