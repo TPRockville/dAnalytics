@@ -32,7 +32,7 @@ public final class DrugDTO {
     public static DrugSummary drugSummary(DrugSummaryDomain drugSummaryDomain) {
         DrugSummary drugSummary = new DrugSummary();
         drugSummary.setEventCount(drugSummaryDomain.getEventCount());
-        drugSummary.setEventDate(drugSummaryDomain.getStartDate().toString());
+        drugSummary.setEventDate(drugSummaryDomain.getStartDate());
         return drugSummary;
     }
 

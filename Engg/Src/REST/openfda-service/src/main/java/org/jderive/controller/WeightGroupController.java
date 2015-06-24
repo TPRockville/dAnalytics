@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import org.jderive.api.JDeriveResponse;
 import org.jderive.domain.WeightGroupDomain;
 import org.jderive.dto.WeightGroupDTO;
+import org.jderive.exception.JDeriveException;
 import org.jderive.service.WeightGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,28 +29,39 @@ public class WeightGroupController {
     @Autowired
     private WeightGroupService weightGroupService;
 
+    @Value("${dAnalytics.exception.message}")
+    private String EXCEPTION_MESSAGE;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) {
-        WeightGroupDomain weightGroupDomain = weightGroupService.findById(id);
-        if (weightGroupDomain != null) {
-            return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.OK.toString())
-                    .withWeightGroupList(ImmutableList.of(WeightGroupDTO.weightGroup(weightGroupDomain))).build(),
-                    HttpStatus.OK);
-        } else {
-            return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.NOT_FOUND.toString()).build(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) throws Exception {
+        try {
+            WeightGroupDomain weightGroupDomain = weightGroupService.findById(id);
+            if (weightGroupDomain != null) {
+                return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
+                        .withStatusCode(HttpStatus.OK.toString())
+                        .withWeightGroupList(ImmutableList.of(WeightGroupDTO.weightGroup(weightGroupDomain))).build(),
+                        HttpStatus.OK);
+            } else {
+                return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
+                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).build(), HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            throw new JDeriveException(EXCEPTION_MESSAGE, e);
         }
 
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseEntity<JDeriveResponse> list() {
-        List<WeightGroupDomain> weightGroupDomains = weightGroupService.findAll();
-        return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                .withStatusCode(HttpStatus.OK.toString())
-                .withWeightGroupList(weightGroupDomains.stream()
-                        .map(weightGroupDomain -> WeightGroupDTO.weightGroup(weightGroupDomain))
-                        .collect(Collectors.toList())).build(), HttpStatus.OK);
+    public ResponseEntity<JDeriveResponse> list() throws Exception {
+        try {
+            List<WeightGroupDomain> weightGroupDomains = weightGroupService.findAll();
+            return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.OK.toString())
+                    .withWeightGroupList(weightGroupDomains.stream()
+                            .map(weightGroupDomain -> WeightGroupDTO.weightGroup(weightGroupDomain))
+                            .collect(Collectors.toList())).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new JDeriveException(EXCEPTION_MESSAGE, e);
+        }
     }
 }

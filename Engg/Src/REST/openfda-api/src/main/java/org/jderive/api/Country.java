@@ -17,7 +17,7 @@ import org.jsondoc.core.annotation.ApiObjectField;
 public class Country {
 
     @ApiObjectField(description = "specify the Country id.", required = false)
-    private String id;
+    private Long id;
     @ApiObjectField(description = "specify the Country name.", required = true)
     private String name;
     @ApiObjectField(description = "specify the Country Code.", required = true)

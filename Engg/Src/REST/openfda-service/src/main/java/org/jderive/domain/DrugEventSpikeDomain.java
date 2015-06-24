@@ -20,11 +20,11 @@ public class DrugEventSpikeDomain {
 
     @Id
     @Column(name = "SPIKE_ID")
-    private String id;
+    private Long id;
 
 
     @Column(name = "DRUG_ID")
-    private String drugId;
+    private Long drugId;
 
     @Column(name = "SPIKE_DATE")
     private Date spikeDate;

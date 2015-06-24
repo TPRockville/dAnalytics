@@ -18,7 +18,7 @@ public class CountryDomain {
 
     @Id
     @Column(name = "COUNTRY_ID")
-    private String id;
+    private Long id;
 
     @Column(name = "COUNTRY_NAME")
     private String name;

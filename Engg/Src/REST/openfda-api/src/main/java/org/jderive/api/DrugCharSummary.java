@@ -10,9 +10,12 @@ import lombok.Setter;
 @Setter @Getter
 public class DrugCharSummary {
 
-    private String id;
-    private String drugId;
-    private String characterizationId;
-    private String eventCount;
+    private Long id;
+
+    private Long drugId;
+
+    private Long characterizationId;
+
+    private Long eventCount;
 
 }

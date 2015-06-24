@@ -16,52 +16,26 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "DRUG_SUMMARY_MONTH")
+@Setter @Getter
 public class DrugMonthSummaryDomain {
     @Id
     @Column(name = "DRUG_SUMMARY_MONTH_ID")
-    @Setter
-    @Getter
-    private String id;
+    private Long id;
 
     @Column(name = "DRUG_ID")
-    @Setter
-    @Getter
-    private String drugId;
-
-    @Column(name = "DRUG_INDICATION")
-    @Setter
-    @Getter
-    private String drugIndication;
-
-    @Column(name = "DRUG_SUBSTANCE_ID")
-    @Setter
-    @Getter
-    private String drugSubstanceId;
-
-    @Column(name = "DRUG_REACTION_ID")
-    @Setter
-    @Getter
-    private String drugReactionId;
+    private Long drugId;
 
     @Column(name = "COUNTRY_ID")
-    @Setter
-    @Getter
-    private String countryId;
+    private Long countryId;
 
     @Column(name = "GENDER_ID")
-    @Setter
-    @Getter
-    private String genderId;
+    private Long genderId;
 
     @Column(name = "AGE_GROUP_ID")
-    @Setter
-    @Getter
-    private String ageGroupId;
+    private Long ageGroupId;
 
     @Column(name = "WEIGHT_GROUP_ID")
-    @Setter
-    @Getter
-    private String weightGroupId;
+    private Long weightGroupId;
 
     @Column(name = "START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -72,9 +46,7 @@ public class DrugMonthSummaryDomain {
     private Date endDate;
 
     @Column(name = "EVENT_COUNT")
-    @Setter
-    @Getter
-    private String eventCount;
+    private Long eventCount;
 
 
     public void setStartDate(Date startDate) {
