@@ -14,4 +14,4 @@ gradlew clean build
 -  Gradle 2.2.1
 
 #### Command
-gradlew bootRun 
+gradlew clean bootRun 
