@@ -102,8 +102,11 @@ angular.module('jDeriveApp')
           return deferred.promise;
       };
 
-      services.getEventCount = function (searchCriteria) {
+      services.getEventCount = function (searchCriteria, category) {
           var url = '{0}/{1}?{2}'.format(configService.apiUrl, 'jderive/drugs/eventcount', searchCriteria);
+          if (category && category === 'month') {
+              url = '{0}/{1}?{2}'.format(configService.apiUrl, 'jderive/drugs/eventcount/month', searchCriteria);
+          }
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -116,7 +119,7 @@ angular.module('jDeriveApp')
       };
 
       services.getDrugsList = function () {
-          var url = '{0}/{1}/{2}'.format(configService.apiUrl, 'jderive/drugs/name', 'a');
+          var url = '{0}/{1}/{2}'.format(configService.apiUrl, 'jderive/drugs/name', 'baclof');
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
