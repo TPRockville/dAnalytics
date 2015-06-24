@@ -13,7 +13,7 @@ public class DrugSummaryByMonth {
 
     private Date startDate;
 
-    private String eventCount;
+    private Long eventCount;
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate != null ? (Date) startDate.clone() : null;

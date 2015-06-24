@@ -17,7 +17,7 @@ public class DrugDomain {
 
     @Id
     @Column(name = "DRUG_ID")
-    private String id;
+    private Long id;
 
     @Column(name = "DRUG_NAME")
     private String name;

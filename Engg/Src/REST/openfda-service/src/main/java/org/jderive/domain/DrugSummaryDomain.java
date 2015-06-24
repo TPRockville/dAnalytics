@@ -17,51 +17,21 @@ import java.util.Date;
 
 @Entity
 @Table(name = "DRUG_SUMMARY")
-/*@NamedQueries(@NamedQuery(name = "DrugSummaryDomain.DrugEventCount",
-query = "select dsm.eventCount, dsm.startDate from DrugSummaryDomain dsm where dsm.drugId = :drugId and
-dsm. dsm.startDate BETWEEN STR_TO_DATE(:startDate, '') AND STR_TO_DATE(:endDate, '')"))*/
+@Setter @Getter
 public class DrugSummaryDomain {
 
     @Id
     @Column(name = "DRUG_SUMMARY_ID")
-    @Setter
-    @Getter
-    private String id;
-
-    @Column(name = "DRUG_INDICATION")
-    @Setter
-    @Getter
-    private String drugIndication;
-
-    @Column(name = "DRUG_SUBSTANCE_ID")
-    @Setter
-    @Getter
-    private String drugSubstanceId;
-
-    @Column(name = "DRUG_REACTION_ID")
-    @Setter
-    @Getter
-    private String drugReactionId;
-
-    @Column(name = "EVENT_SEVERITY_ID")
-    @Setter
-    @Getter
-    private String eventSeverityId;
+    private Long id;
 
     @Column(name = "DRUG_ID")
-    @Setter
-    @Getter
-    private String drugId;
+    private Long drugId;
 
     @Column(name = "AGE_GROUP_ID")
-    @Setter
-    @Getter
-    private String ageGroupId;
+    private Long ageGroupId;
 
     @Column(name = "WEIGHT_GROUP_ID")
-    @Setter
-    @Getter
-    private String weightGroupId;
+    private Long weightGroupId;
 
     @Column(name = "START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -71,20 +41,14 @@ public class DrugSummaryDomain {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
 
-    @Column(name = "COUNTRY_D")
-    @Setter
-    @Getter
-    private String countryId;
+    @Column(name = "COUNTRY_ID")
+    private Long countryId;
 
     @Column(name = "GENDER_ID")
-    @Setter
-    @Getter
-    private String genderId;
+    private Long genderId;
 
     @Column(name = "EVENT_COUNT")
-    @Setter
-    @Getter
-    private String eventCount;
+    private Long eventCount;
 
 
     public void setStartDate(Date startDate) {

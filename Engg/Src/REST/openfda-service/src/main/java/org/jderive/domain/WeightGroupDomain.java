@@ -18,7 +18,7 @@ public class WeightGroupDomain {
 
     @Id
     @Column(name = "WEIGHT_GROUP_ID")
-    private String id;
+    private Long id;
 
     @Column(name = "WEIGHT_GROUP")
     private String name;

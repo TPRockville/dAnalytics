@@ -21,10 +21,10 @@ public class DrugReactionSummaryDomain {
 
     @Id
     @Column(name = "DRUG_REACTION_SUMMARY_ID")
-    private String id;
+    private Long id;
 
     @Column(name = "DRUG_ID")
-    private String drugId;
+    private Long drugId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REACTION_ID", nullable = false)

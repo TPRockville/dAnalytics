@@ -22,10 +22,8 @@ public class JDeriveResponse {
     private final String statusCode;
     private final String message;
     private final List<Country> countryList;
-    private final List<Gender> genderList;
     private final List<AgeGroup> ageGroupList;
     private final List<WeightGroup> weightGroupList;
-    private final List<EventSeverity> eventSeverityList;
     private final List<Drug> drugList;
     private final List<DrugSummary> drugSummaryList;
     private final List<DrugEventSpike> drugEventSpikeList;
@@ -37,10 +35,8 @@ public class JDeriveResponse {
         this.statusCode = builder.statusCode;
         this.message = builder.message;
         this.countryList = builder.countryList;
-        this.genderList = builder.genderList;
         this.ageGroupList = builder.ageGroupList;
         this.weightGroupList = builder.weightGroupList;
-        this.eventSeverityList = builder.eventSeverityList;
         this.drugList = builder.drugList;
         this.drugSummaryList = builder.drugSummaryList;
         this.drugEventSpikeList = builder.drugEventSpikeList;
@@ -57,10 +53,8 @@ public class JDeriveResponse {
         private String statusCode;
         private String message;
         private List<Country> countryList;
-        private List<Gender> genderList;
         private List<AgeGroup> ageGroupList;
         private List<WeightGroup> weightGroupList;
-        private List<EventSeverity> eventSeverityList;
         private List<Drug> drugList;
         private List<DrugSummary> drugSummaryList;
         private List<DrugEventSpike> drugEventSpikeList;
@@ -87,11 +81,6 @@ public class JDeriveResponse {
             return this;
         }
 
-        public Builder withGenderList(List<Gender> input) {
-            this.genderList = input;
-            return this;
-        }
-
         public Builder withAgeGroupList(List<AgeGroup> input) {
             this.ageGroupList = input;
             return this;
@@ -99,11 +88,6 @@ public class JDeriveResponse {
 
         public Builder withWeightGroupList(List<WeightGroup> input) {
             this.weightGroupList = input;
-            return this;
-        }
-
-        public Builder withEventSeverityList(List<EventSeverity> input) {
-            this.eventSeverityList = input;
             return this;
         }
 

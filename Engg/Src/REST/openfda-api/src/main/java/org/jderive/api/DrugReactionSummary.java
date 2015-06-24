@@ -9,9 +9,9 @@ import lombok.Setter;
 @Setter @Getter
 public class DrugReactionSummary {
 
-    private String id;
+    private Long id;
 
-    private String drugId;
+    private Long drugId;
 
     private String reactionName;
 

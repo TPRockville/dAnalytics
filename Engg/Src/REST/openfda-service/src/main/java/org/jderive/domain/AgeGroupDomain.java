@@ -18,7 +18,7 @@ public class AgeGroupDomain {
 
     @Id
     @Column(name = "AGE_GROUP_ID")
-    private String id;
+    private Long id;
 
     @Column(name = "AGE_GROUP")
     private String name;
