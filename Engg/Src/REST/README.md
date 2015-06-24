@@ -4,14 +4,15 @@ A spring-boot application exposing Rest services to be consumed by the jDerive U
 ## Import to IDE
 gradlew cleanEclipse eclipse (To generate the Eclipse IDE specific files)
 
+
 ## Build the distribution
 gradlew clean build
 
 ## Run locally
-
 #### Prerequisites
 -  Java 8 
 -  Gradle 2.2.1
+-  Lombok for your IDE (https://projectlombok.org/)
 
 #### Command
-gradlew bootRun 
+gradlew clean bootRun 
