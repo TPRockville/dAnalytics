@@ -11,6 +11,5 @@ public class JDeriveException extends Exception {
 
     public JDeriveException(String message, Throwable cause) {
         super(message, cause);
-        cause.printStackTrace();
     }
 }
