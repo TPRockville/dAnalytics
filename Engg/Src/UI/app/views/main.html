@@ -7,6 +7,58 @@
                     <button type="button" class="btn btn-link less-search" ng-show="searchAdvanced" ng-click="searchAdvanced = !searchAdvanced"><i class="glyphicon glyphicon-chevron-up"></i> Show less</button>
                 </div>
             </div>
+            <div class="" ng-hide="searchAdvanced">
+                <div class="">
+                    <!--<div class="row">
+                        <div class="col-md-12">
+                            <b>Search Criteria</b>
+                        </div>
+                    </div>
+                    <br />-->
+                    <div class="row" ng-hide="!search.selectedDrug && !search.gender && !search.fromDate && !search.toDate && !search.age && !search.country">
+                        <!--<div class="col-md-3" ng-if="search.selectedDrug">
+                            <div class="col-md-5"><b>Drug name : </b></div><div class="col-md-7">{{search.selectedDrug.name}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.gender">
+                            <div class="col-md-5"><b>Gender : </b></div><div class="col-md-7">{{search.gender}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.fromDate">
+                            <div class="col-md-5"><b>From Date : </b></div><div class="col-md-7">{{search.fromDate | date:'MM/dd/yyyy'}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.toDate">
+                            <div class="col-md-5"><b>To Date : </b></div><div class="col-md-7">{{search.toDate | date:'MM/dd/yyyy'}}</div>
+                        </div>
+
+                        <div class="col-md-3" ng-if="search.age">
+                            <div class="col-md-5"><b>Age : </b></div><div class="col-md-7">{{search.age}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.country">
+                            <div class="col-md-5"><b>Country : </b></div><div class="col-md-7">{{search.country.code}}</div>
+                        </div>-->
+                        <span ng-if="search.selectedDrug" style="margin:20px">
+                            <b>Drug name : </b>{{search.selectedDrug.name}}
+                        </span>
+                        <span ng-if="search.gender" style="margin:20px">
+                            <b>Gender : </b>{{search.gender}}
+                        </span>
+                        <span ng-if="search.fromDate" style="margin:20px">
+                            <b>From Date : </b>{{search.fromDate | date:'MM/dd/yyyy'}}
+                        </span>
+                        <span ng-if="search.toDate" style="margin:20px">
+                            <b>To Date : </b>{{search.toDate | date:'MM/dd/yyyy'}}
+                        </span>
+
+                        <span ng-if="search.age" style="margin:20px">
+                            <b>Age : </b>{{search.age}}
+                        </span>
+                        <span ng-if="search.country" style="margin:20px">
+                            <b>Country : </b>{{search.country.code}}
+                        </span>
+
+                    </div>
+                    <br />
+                </div>
+            </div>
             <div class="panel panel-primary" ng-show="searchAdvanced">
                 <div class="panel-body">
                     <div class="row">
@@ -111,14 +163,16 @@
                     <div class="row">
                         <div class="col-md-offset-1 col-md-5">
                             <div class="radio" style="padding-left:50px">
-                                <label>
+                                <label title="Retrieved Data from Application Database">
                                     <input type="radio" name="dataPoints" id="dataPoints1" value="local" checked ng-model="apiDataPoint">
-                                    Local Data
+                                    Local API <i class="glyphicon glyphicon-info-sign"></i>
                                 </label>
-                                <label>
+                                <label title="This selection presents the graph using data obtained from the openFDA API endpoints. This tool may not display all available fields or data / is not intended for clinical use. Please visit the open.fda.gov website to review their disclaimer">
                                     <input type="radio" name="dataPoints" id="dataPoints2" value="openfda" ng-model="apiDataPoint">
-                                    Open FDA Data
+                                    Open FDA API
+                                    <i class="glyphicon glyphicon-info-sign"></i>
                                 </label>
+
                             </div>
                         </div>
                         <div class="col-md-2 pull-right">
@@ -133,41 +187,55 @@
 </div>
 <div class="row">
     <div class="col-md-10">
-        <div class="">
+        <div id="eventInformation">
             <div id="eventGraphPanel">
                 <div class="">
                     <div id="eventChart"></div>
                 </div>
-                <div id="dateSlider" style="margin-top:-40px;margin-left:50px;margin-right:15px"></div>
+                <div id="dateSlider" style="margin-top:-20px;margin-left:50px;margin-right:15px"></div>
+                <div class="text-left" style="font-size:9px;margin-left:50px;margin-top:-10px"><i>* Please adjust dates on the slider to focus on the graph</i></div>
             </div>
-            <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
-            <div class="text-center" style="position:relative;top:-370px;"><b>Adverse Event Reports</b></div>
+        </div>
+        <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
+        <div class="text-center" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph."><b>Adverse Event Reports</b> <i class="glyphicon glyphicon-info-sign"></i></div>
+        <div id="spikeInformation" style="display:none">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="hideSpikeInformatrion();" style="margin-top:-15px;font-size:14px;color:#000000"><span aria-hidden="true">&times; Close</span></button>
+            <div id="spikeSummaryChart"></div>
         </div>
     </div>
     <div class="col-md-2" ng-if="search.selectedDrug">
         <div class="row text-center">
-            <strong>Spike(s) On</strong>
+            <strong>Event spikes</strong>
         </div>
         <br />
         <div style="max-height:350px;overflow-y:auto">
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a href="#">{{ spike.spikeDate | date:'MM/dd/yyyy'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
-                <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span  ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No spikes</span></li>
+                <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion();">{{ spike.spikeDate | date:'MM/dd/yyyy'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
+                <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No spikes found</span></li>
             </ul>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12" ng-show="search.selectedDrug">
-        <div class="row" ng-show="recallNotfound">
-            No recall information found for this drug.
+        <div class="row text-info">
+            <div class="col-md-12">
+                <label title="This table provides the details of Recall information based on the drug selected. Recall reason provides the detailed information of why the Drug is recalled and on what date along with current status of recall."><b>Recall Information</b> <i class="glyphicon glyphicon-info-sign"></i></label>
+            </div>
         </div>
-        <div class="row" ng-hide="recallNotfound">
+        <div class="row text-primary" ng-hide="recallInformation && recallInformation.length > 0" style="margin:20px">
+            <div class="col-md-12">
+                No recall information found for this drug.
+            </div>
+        </div>
+        <div class="row" ng-show="recallInformation && recallInformation.length > 0">
+
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th class="col-xs-2">Recall Number</th>
+                            <th class="col-xs-2">Recall Date</th>
                             <th>Reason</th>
                             <th class="col-xs-1">Status</th>
                         </tr>
@@ -175,6 +243,7 @@
                     <tbody>
                         <tr ng-repeat="recall in recallInformation">
                             <td>{{recall.recall_number }}</td>
+                            <td>{{recall.recall_initiation_date | daDateformat:'YYYYMMDD':'MM/DD/YYYY'}}</td>
                             <td>{{recall.reason_for_recall}}</td>
                             <td>{{recall.status}}</td>
                         </tr>
@@ -186,7 +255,13 @@
 </div>
 <div class="row" ng-if="search.selectedDrug">
     <div class="col-md-6">
-        <div class="table-responsive">
+        <div class="row text-info">
+            <div class="col-md-12">
+                <label title="This table provides the details of reaction based on the drug selected with its respective counts."><b>Drug Reaction Details</b> <i class="glyphicon glyphicon-info-sign"></i></label>
+            </div>
+        </div>
+
+        <div class="table-responsive"  ng-show="drugReactionSummaryList && drugReactionSummaryList.length > 0">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -196,17 +271,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="char in drugReactionSummaryList">
+                    <tr ng-repeat="reac in drugReactionSummaryList">
                         <td ng-if="$index == 0" rowspan="{{drugReactionSummaryList.length}}">{{search.selectedDrug.name}}</td>
-                        <td>{{drug.reactionId}}</td>
-                        <td>{{drug.eventCount}}</td>
+                        <td>{{reac.reactionName}}</td>
+                        <td>{{reac.eventCount}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="table-responsive">
+        <div class="row text-info">
+            <div class="col-md-12">
+                <label title=" This table details the 3 different type Characterization of a Drug along with its respective counts"><b>FDA Drug Characterization Details</b> <i class="glyphicon glyphicon-info-sign"></i></label>
+            </div>
+        </div>
+        <div class="table-responsive"   ng-show="drugCharSummaryList && drugCharSummaryList.length > 0">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -225,4 +305,37 @@
             </table>
         </div>
     </div>
+</div>
+
+<div class="row" ng-if="search.selectedDrug && drugReactionSummaryList && drugReactionSummaryList.length > 0">
+    <div class="row text-info">
+        <div class="col-md-12">
+            <label title=""><b>Emergency Room/Discharge Data</b> <i class="glyphicon glyphicon-info-sign"></i></label>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Drug Indication</th>
+                    <th>Year</th>
+                    <th>Total ER Visits</th>
+                    <th>No. Of Patient Discharges</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="reac in drugReactionSummaryList">
+                    <td>{{search.selectedDrug.name}}</td>
+                    <td>{{reac.reactionName}}</td>
+                    <td>{{reac.eventCount}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container" ng-cloak>
+    <p><b style="font-size:11px">Disclaimer:</b> <span style="font-size:9px">The charts and reports displayed on this site are created using data obtained from the openFDA API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA api's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
+    <p style="font-size:11px;font-style:italic">This project is in beta using <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> and is not for clinical use.</p>
 </div>

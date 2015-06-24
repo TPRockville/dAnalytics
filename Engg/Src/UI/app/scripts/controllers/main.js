@@ -44,12 +44,12 @@ angular.module('jDeriveApp')
              console.log(data);
          });
 
-      basicService.getDrugsList()
-         .then(function (data) {
-             $scope.drugsList = data.drugList;
-         }, function (data) {
-             console.log(data);
-         });
+      //basicService.getDrugsList()
+      //   .then(function (data) {
+      //       $scope.drugsList = data.drugList;
+      //   }, function (data) {
+      //       console.log(data);
+      //   });
 
       //$scope.weightGroups = [];
       //basicService.getWeightGroups()
@@ -72,15 +72,46 @@ angular.module('jDeriveApp')
       //loadData();
 
       $scope.loadEventData = function (searchCriteria) {
-          basicService.getEventCount(searchCriteria)
+          basicService.getEventCount(searchCriteria, 'month')
          .then(function (data) {
-             var eventsCount = data.drugSummaryList;
-             $scope.dataResult = data.drugSummaryList;
+             //var eventsCount = data.drugSummaryList;
+             //$scope.dataResult = data.drugSummaryList;
+
+             $scope.dataResult = [];
+             var eventsCount = data.drugSummaryByMonthList;
+             $scope.dataResult = data.drugSummaryByMonthList;
+
              var eventData = [];
-             if (eventsCount.length > 0) {
+             //$scope.monthData = d3.nest().key(function (a) {
+             //    return moment(a.eventDate).format('YYYYMM');
+             //}).rollup(function (a) {
+             //    return d3.sum(a, function (a) {
+             //        return a.eventCount
+             //    })
+             //}).entries(eventsCount);
+
+             //$scope.monthData.map(function (a) {
+             //    if (currentVal < parseInt(a.eventCount)) {
+             //        currentVal = a.eventCount;
+             //        maxCountObject = a;
+             //    }
+             //    eventData.push({ 'time': new Date(moment(a.key, 'YYYYMM')), 'count': a.values });
+             //});
+             var currentVal = 0;
+
+             $scope.dataResult.map(function (a) {
+                 //console.log(currentVal, a.eventCount);
+                 if (currentVal < parseInt(a.eventCount)) {
+                     currentVal = a.eventCount;
+                     $scope.maxCountObject = a;
+                 }
+                 eventData.push({ 'time': new Date(a.startDate), 'count': a.eventCount });
+             });
+
+             if (eventData.length > 0) {
                  $('#eventGraphPanel').show();
-                 var minDate = new Date(moment(eventsCount[0].eventDate));
-                 var maxDate = new Date(moment(eventsCount[eventsCount.length - 1].eventDate));
+                 var minDate = new Date(moment(eventData[0].time));
+                 var maxDate = new Date(moment(eventData[eventData.length - 1].time));
 
                  $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
 
@@ -92,39 +123,29 @@ angular.module('jDeriveApp')
                  //$('#eventGraphPanel').hide();
                  var minDate = new Date();
                  var maxDate = new Date();
-                 $("#dateSlider").dateRangeSlider({
-                     bounds:
-                      {
-                          min: minDate,
-                          max: maxDate
-                      }
-                 });
+                 $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
 
                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
                  $('#noDataLabel').show();
              }
 
-             var currentVal = 0;
-             var maxCountObject = {};
-
-             eventsCount.map(function (a) {
-                 if (currentVal < parseInt(a.eventCount)) {
-                     currentVal = a.eventCount;
-                     maxCountObject = a;
-                 }
-                 eventData.push({ 'time': new Date(a.eventDate), 'count': a.eventCount });
-             });
-             if ($scope.regions.length > 0)
+             if ($scope.regions.length > 0) {
                  $scope.regions = [];
-             $scope.regions.push({ start: new Date(moment(maxCountObject.eventDate).subtract(moment.duration(22, 'd'))), end: new Date(moment(maxCountObject.eventDate).add(moment.duration(5, 'd'))), class: 'regionYellow' });
-             //$scope.regions.push({ start: new Date(2012, 0, 1), end: new Date(2013, 0, 1), class: 'regionYellow' });
-             chart.load({
-                 json: eventData,
-                 keys: {
-                     x: 'time',
-                     value: ['count'],
-                 }
-             });
+             }
+
+             if (eventData.length > 0) {
+                 //$scope.regions.push({ start: new Date(2012, 0, 1), end: new Date(2013, 0, 1), class: 'regionYellow' });
+                 bindChartEvent(eventData);
+             } else {
+                 bindChartEvent([]);
+                 $("#dateSlider").dateRangeSlider();
+             }
+
+             var maxCountObject = $scope.maxCountObject;
+             if (maxCountObject && maxCountObject.startDate) {
+                 $scope.duration = moment.duration(3, 'M');
+                 $scope.regions.push({ start: new Date(moment(maxCountObject.startDate).subtract(moment.duration(3, 'M'))), end: new Date(moment(maxCountObject.startDate).add(moment.duration(3, 'M'))), class: 'regionYellow' });
+             }
 
 
          }, function (data) {
@@ -145,7 +166,7 @@ angular.module('jDeriveApp')
       $scope.apiDataPoint = 'local';
       $scope.loadEventData('');
       //if ($scope.apiDataPoint == 'local') {
-          
+
       //} else {
       //    //loadData();
       //}
@@ -174,13 +195,15 @@ angular.module('jDeriveApp')
               var myKeys = [];
               var myvalues = [];
               var eventData = [];
-              //var eventData = d3.nest().key(function (a) {
-              //    return a.time.slice(0, 6)
-              //}).rollup(function (a) {
-              //    return d3.sum(a, function (a) {
-              //        return a.count
-              //    })
-              //}).entries(eventsCount);
+              $scope.monthData = d3.nest().key(function (a) {
+                  return a.time.slice(0, 6)
+              }).rollup(function (a) {
+                  return d3.sum(a, function (a) {
+                      return a.count
+                  })
+              }).entries(eventsCount);
+
+              //console.log(monthData);
 
               var currentVal = 0;
               var maxCountObject = {};
@@ -195,7 +218,7 @@ angular.module('jDeriveApp')
                   if ($scope.regions.length > 0)
                       $scope.regions = [];
                   $scope.regions.push({ start: new Date(moment(maxCountObject.eventDate).subtract(moment.duration(22, 'd'))), end: new Date(moment(maxCountObject.eventDate).add(moment.duration(5, 'd'))), class: 'regionYellow' });
-                  
+
               });
               $scope.datapoints = eventData;
 
@@ -209,7 +232,7 @@ angular.module('jDeriveApp')
           },
             function (data) {
                 alert('Failed to get details.');
-                console.log(data);
+                //console.log(data);
             });
 
       };
@@ -237,57 +260,72 @@ angular.module('jDeriveApp')
       //}, 1000, 10);
 
       $scope.regions = [];
-
-      var chart = c3.generate({
-          bindto: '#eventChart',
-          data: {
-              json: []
-          },
-          point: {
-              show: false
-          },
-          axis: {
-              x: {
-                  type: 'timeseries',
-                  tick: {
-                      format: '%m/%d/%Y',
-                      rotate: 40
-                  },
-                  label: {
-                      text: 'Received Date',
-                      position: 'outer-center'
-                      // inner-right : default
-                      // inner-center
-                      // inner-left
-                      // outer-right
-                      // outer-center
-                      // outer-left
+      var chart;
+      function bindChartEvent(eventData) {
+          chart = c3.generate({
+              bindto: '#eventChart',
+              data: {
+                  json: eventData,
+                  keys: {
+                      x: 'time',
+                      value: ['count'],
                   }
               },
-              y: {
-                  label: {
-                      text: 'Count',
-                      position: 'outer-top'
-                      // inner-top : default
-                      // inner-middle
-                      // inner-bottom
-                      // outer-top
-                      // outer-middle
-                      // outer-bottom
+              point: {
+                  show: false
+              },
+              axis: {
+                  x: {
+                      type: 'timeseries',
+                      tick: {
+                          format: '%b %y',
+                          rotate: 40,
+                          fit: true
+                      },
+                      label: {
+                          text: 'Received Date',
+                          position: 'inner-center'
+                          // inner-right : default
+                          // inner-center
+                          // inner-left
+                          // outer-right
+                          // outer-center
+                          // outer-left
+                      }
+                  },
+                  y: {
+                      label: {
+                          text: 'Count',
+                          position: 'outer-top'
+                          // inner-top : default
+                          // inner-middle
+                          // inner-bottom
+                          // outer-top
+                          // outer-middle
+                          // outer-bottom
+                      },
+                      tick: {
+                          fit: true
+                      }
                   }
+              },
+              regions: $scope.regions,
+              color: {
+                  pattern: ['#ff7f0e', '#1f77b4', '#aec7e8']
+              },
+              zoom: {
+                  enabled: false
+              },
+              legend: {
+                  show: false
+              },
+              onrendered: function () {
+
               }
-          },
-          regions: $scope.regions,
-          color: {
-              pattern: ['#ff7f0e', '#1f77b4', '#aec7e8']
-          },
-          zoom: {
-              enabled: true
-          },
-          legend: {
-              show: false
-          }
-      });
+          });
+      }
+
+      bindChartEvent([]);
 
       basicService.getDrungDetails()
          .then(function (data) {
@@ -304,7 +342,7 @@ angular.module('jDeriveApp')
          });
 
       $scope.searchDrugChanged = function (drug) {
-          if (drug.originalObject) {
+          if (drug && drug.originalObject) {
               $scope.search.selectedDrug = drug.originalObject;
           }
       };
@@ -330,26 +368,40 @@ angular.module('jDeriveApp')
                     .then(function (data) {
                         if (data) {
                             if (data.results.length > 0) {
-                                //var drugSubstance = data.results.patient.drug[0].substance_name[0];
-
-                                basicService.getDrugRecall('HYDROXYZINE HYDROCHLORIDE')
-                                .then(function (data) {
-                                    if (data) {
-                                        if (data.error) {
-                                            $scope.recallNotfound = ture;
-                                        } else {
-                                            $scope.recallInformation = data.results;
+                                var substanceNotfound = false;
+                                angular.forEach(data.results[0].patient.drug, function (value, key) {
+                                    if (value.medicinalproduct === $scope.search.selectedDrug.name) {
+                                        substanceNotfound = value.medicinalproduct;
+                                        if (value.openfda && value.openfda.substance_name && value.openfda.substance_name.length > 0) {
+                                            basicService.getDrugRecall(value.openfda.substance_name[0])
+                                            .then(function (subst) {
+                                                if (subst) {
+                                                    if (subst.error) {
+                                                        $scope.recallNotfound = ture;
+                                                    } else {
+                                                        $scope.recallInformation = subst.results;
+                                                    }
+                                                }
+                                            }, function (subst) {
+                                                if (data.statusCode && data.statusCode === '404') {
+                                                    $scope.recallNotfound = true;
+                                                    $scope.recallInformation = [];
+                                                }
+                                            });
                                         }
                                     }
-                                }, function (data) {
-
                                 });
+
+                                if (substanceNotfound !== false) {
+                                    $scope.recallNotfound = true;
+                                    $scope.recallInformation = [];
+                                }
                             }
                         }
                     }, function (data) {
 
                     });
-
+                  $scope.drugEventSpikeList = [];
                   basicService.getDrugEventSpikes($scope.search.selectedDrug.id)
                     .then(function (data) {
                         $scope.drugEventSpikeList = data.drugEventSpikeList;
@@ -392,7 +444,40 @@ angular.module('jDeriveApp')
           } else {
               loadData();
           }
-          
+
+      };
+
+
+
+      $scope.showSpikeInformatrion = function () {
+          angular.element('#spikeInformation').show();
+          angular.element('#eventInformation').hide();
+
+          var barChart = c3.generate({
+              bindto: '#spikeSummaryChart',
+              data: {
+                  json: [
+                          { name: 'Age', '0-10': 200, '11-20': 200, '21-30': 400 },
+                          { name: 'Weight', '0-10': 100, '11-20': 300, '21-30': 400 },
+                          { name: 'Gender', 'Unknown': 300, 'Male': 200, 'Female': 500 },
+                          { name: 'Country', '0-10': 400, '11-20': 100 }],
+                  keys: {
+                      x: 'name', // it's possible to specify 'x' when category axis
+                      value: ['0-10', '11-20', '21-30', 'Unknown', 'Male', 'Female'],
+                  },
+                  type: 'bar'
+              },
+              axis: {
+                  x: {
+                      type: 'category'
+                  }
+              }
+          });
+      };
+
+      $scope.hideSpikeInformatrion = function () {
+          angular.element('#spikeInformation').hide();
+          angular.element('#eventInformation').show();
       };
       //angular.element("#slider").dateRangeSlider();
   });

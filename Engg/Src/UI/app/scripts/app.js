@@ -33,7 +33,8 @@ angular
     'ui.bootstrap.datetimepicker',
     'ui.select2',
     'gridshore.c3js.chart',
-    'angucomplete-alt'
+    'angucomplete-alt',
+    'angularMoment'
   ])
   .config(function ($routeProvider) {
     $routeProvider
