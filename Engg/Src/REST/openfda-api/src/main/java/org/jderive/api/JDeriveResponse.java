@@ -3,6 +3,7 @@ package org.jderive.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
 
@@ -13,23 +14,24 @@ import java.util.List;
  */
 
 @Getter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiObject(show = true, description = "Project json structure.")
 public class JDeriveResponse {
 
     @ApiObjectField(description = "Status code returned by the server.", required = true)
-    private final String statusCode;
-    private final String message;
-    private final List<Country> countryList;
-    private final List<AgeGroup> ageGroupList;
-    private final List<WeightGroup> weightGroupList;
-    private final List<Drug> drugList;
-    private final List<DrugSummary> drugSummaryList;
-    private final List<DrugEventSpike> drugEventSpikeList;
-    private final List<DrugCharSummary> drugCharSummaryList;
-    private final List<DrugReactionSummary> drugReactionSummaryList;
-    private final List<DrugSummaryByMonth> drugSummaryByMonthList;
+    private String statusCode;
+    private String message;
+    private List<Country> countryList;
+    private List<AgeGroup> ageGroupList;
+    private List<WeightGroup> weightGroupList;
+    private List<Drug> drugList;
+    private List<DrugSummary> drugSummaryList;
+    private List<DrugEventSpike> drugEventSpikeList;
+    private List<DrugCharSummary> drugCharSummaryList;
+    private List<DrugReactionSummary> drugReactionSummaryList;
+    private List<DrugSummaryByMonth> drugSummaryByMonthList;
 
     protected JDeriveResponse(Builder builder) {
         this.statusCode = builder.statusCode;

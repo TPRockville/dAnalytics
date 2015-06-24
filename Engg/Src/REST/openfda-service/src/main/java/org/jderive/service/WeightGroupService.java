@@ -11,5 +11,5 @@ public interface WeightGroupService {
 
     List<WeightGroupDomain> findAll();
 
-    WeightGroupDomain findById(String id);
+    WeightGroupDomain findById(Long id);
 }

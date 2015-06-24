@@ -24,7 +24,7 @@ public class CountryRepositoryImpl implements CountryRepository {
     }
 
     @Override
-    public CountryDomain findById(String id) {
+    public CountryDomain findById(Long id) {
         return (CountryDomain) sessionFactory.getCurrentSession().get(CountryDomain.class, id);
     }
 }

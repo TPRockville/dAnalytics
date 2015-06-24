@@ -6,6 +6,7 @@ import org.jderive.domain.AgeGroupDomain;
 import org.jderive.dto.AgeGroupDTO;
 import org.jderive.exception.JDeriveException;
 import org.jderive.service.AgeGroupService;
+import org.jderive.util.NumberUtil;
 import org.jsondoc.core.annotation.Api;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiResponseObject;
@@ -43,7 +44,8 @@ public class AgeGroupController {
     @ApiResponseObject
     public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) throws Exception {
         try {
-            AgeGroupDomain ageGroupDomain = ageGroupService.findById(id);
+            AgeGroupDomain ageGroupDomain = ageGroupService.findById(NumberUtil.isNumeric(id) ? NumberUtil.parseLong(id)
+                    : null);
             if (ageGroupDomain != null) {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())

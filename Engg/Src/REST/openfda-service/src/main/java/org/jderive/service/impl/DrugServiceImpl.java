@@ -34,7 +34,7 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrugDomain findById(String id) {
+    public DrugDomain findById(Long id) {
         return drugRepository.findById(id);
     }
 
@@ -52,19 +52,19 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugEventSpikeDomain> eventSpikeCount(String drugId) {
+    public List<DrugEventSpikeDomain> eventSpikeCount(Long drugId) {
         return drugRepository.eventSpikeCount(drugId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugCharSummaryDomain> characterSummary(String drugId) {
+    public List<DrugCharSummaryDomain> characterSummary(Long drugId) {
         return drugRepository.characterSummary(drugId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugReactionSummaryDomain> reactionSummary(String drugId) {
+    public List<DrugReactionSummaryDomain> reactionSummary(Long drugId) {
         List<DrugReactionSummaryDomain> drugReactionSummaryDomainList = drugRepository.reactionSummary(drugId);
         //Aggregate the DrugReactionSummaryDomain from 2 index to list.size();
         if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
@@ -100,7 +100,7 @@ public class DrugServiceImpl implements DrugService {
     }
 
     private DrugReactionSummaryDomain aggregateReactionSummaryDomains(List<DrugReactionSummaryDomain>
-                                                                      drugReactionSummaryDomainList, String drugId) {
+                                                                      drugReactionSummaryDomainList, Long drugId) {
         Long sumOfEventCounts = drugReactionSummaryDomainList.stream()
                 .mapToLong(DrugReactionSummaryDomain::getEventCount).sum();
         DrugReactionSummaryDomain drugReactionSummaryDomain = new DrugReactionSummaryDomain();
@@ -108,7 +108,7 @@ public class DrugServiceImpl implements DrugService {
         DrugReactionDomain drugReactionDomain = new DrugReactionDomain();
         drugReactionDomain.setCode("Others");
         drugReactionSummaryDomain.setReactionDomain(drugReactionDomain);
-        drugReactionSummaryDomain.setDrugId(null);
+        drugReactionSummaryDomain.setDrugId(drugId);
         return drugReactionSummaryDomain;
     }
 }

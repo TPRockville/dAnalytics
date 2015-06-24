@@ -12,14 +12,14 @@ import java.util.Date;
 @Getter
 public class DrugSummary {
 
-    private Date eventDate;
+    private Date startDate;
     private Long eventCount;
 
     public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate != null ? (Date) eventDate.clone() : null;
+        this.startDate = eventDate != null ? (Date) startDate.clone() : null;
     }
 
     public Date getEventDate() {
-        return eventDate != null ? (Date) eventDate.clone() : null;
+        return startDate != null ? (Date) startDate.clone() : null;
     }
 }

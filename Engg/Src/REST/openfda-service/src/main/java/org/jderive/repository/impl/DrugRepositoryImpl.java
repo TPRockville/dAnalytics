@@ -36,7 +36,7 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public DrugDomain findById(String id) {
+    public DrugDomain findById(Long id) {
         return (DrugDomain) sessionFactory.getCurrentSession().get(DrugDomain.class, id);
     }
 
@@ -83,27 +83,27 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public List<DrugEventSpikeDomain> eventSpikeCount(String drugId) {
+    public List<DrugEventSpikeDomain> eventSpikeCount(Long drugId) {
         Query query = sessionFactory.getCurrentSession()
                 .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId");
-        query.setString("drugId", drugId);
+        query.setLong("drugId", drugId);
         return query.list();
     }
 
     @Override
-    public List<DrugCharSummaryDomain> characterSummary(String drugId) {
+    public List<DrugCharSummaryDomain> characterSummary(Long drugId) {
         Query query = sessionFactory.getCurrentSession()
                 .createQuery("From DrugCharSummaryDomain dcsd where dcsd.drugId = :drugId");
-        query.setString("drugId", drugId);
+        query.setLong("drugId", drugId);
         return query.list();
     }
 
     @Override
-    public List<DrugReactionSummaryDomain> reactionSummary(String drugId) {
+    public List<DrugReactionSummaryDomain> reactionSummary(Long drugId) {
         Query query = sessionFactory.getCurrentSession()
                 .createQuery("From DrugReactionSummaryDomain drsd where drsd.drugId = :drugId " +
                         "order by drsd.eventCount desc");
-        query.setString("drugId", drugId);
+        query.setLong("drugId", drugId);
         return query.list();
     }
 

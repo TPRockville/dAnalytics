@@ -16,17 +16,17 @@ public interface DrugService {
 
     List<DrugDomain> findAll();
 
-    DrugDomain findById(String id);
+    DrugDomain findById(Long id);
 
     List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummary);
 
     List<DrugDomain> findByName(String name);
 
-    List<DrugEventSpikeDomain> eventSpikeCount(String drugId);
+    List<DrugEventSpikeDomain> eventSpikeCount(Long drugId);
 
-    List<DrugCharSummaryDomain> characterSummary(String drugId);
+    List<DrugCharSummaryDomain> characterSummary(Long drugId);
 
-    List<DrugReactionSummaryDomain> reactionSummary(String drugId);
+    List<DrugReactionSummaryDomain> reactionSummary(Long drugId);
 
     List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain);
 }

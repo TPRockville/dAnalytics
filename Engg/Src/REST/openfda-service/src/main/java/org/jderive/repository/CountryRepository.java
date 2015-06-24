@@ -12,5 +12,5 @@ public interface CountryRepository {
 
     List<CountryDomain> findAll();
 
-    CountryDomain findById(String id);
+    CountryDomain findById(Long id);
 }

@@ -24,7 +24,7 @@ public class AgeGroupRepositoryImpl implements AgeGroupRepository {
     }
 
     @Override
-    public AgeGroupDomain findById(String id) {
+    public AgeGroupDomain findById(Long id) {
         return (AgeGroupDomain) sessionFactory.getCurrentSession().get(AgeGroupDomain.class, id);
     }
 }

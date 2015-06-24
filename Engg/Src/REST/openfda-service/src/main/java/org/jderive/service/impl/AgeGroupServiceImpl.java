@@ -27,7 +27,7 @@ public class AgeGroupServiceImpl implements AgeGroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public AgeGroupDomain findById(String id) {
+    public AgeGroupDomain findById(Long id) {
         return ageGroupRepository.findById(id);
     }
 }

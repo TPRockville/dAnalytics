@@ -11,5 +11,5 @@ public interface WeightGroupRepository {
 
     List<WeightGroupDomain> findAll();
 
-    WeightGroupDomain findById(String id);
+    WeightGroupDomain findById(Long id);
 }

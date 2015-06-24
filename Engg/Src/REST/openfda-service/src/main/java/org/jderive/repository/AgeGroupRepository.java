@@ -11,5 +11,5 @@ public interface AgeGroupRepository {
 
     List<AgeGroupDomain> findAll();
 
-    AgeGroupDomain findById(String id);
+    AgeGroupDomain findById(Long id);
 }
