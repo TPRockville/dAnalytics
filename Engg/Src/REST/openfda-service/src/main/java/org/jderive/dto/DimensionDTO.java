@@ -101,7 +101,8 @@ public class DimensionDTO {
             break;
         case GENDER_GROUP:
             for (DrugMonthSummaryDomain drugMonthSummaryDomain : drugSummaryList) {
-                if(drugMonthSummaryDomain.getGenderId().equals(dimensionId) && drugMonthSummaryDomain.getEventCount()!= null) {
+            	
+                if(drugMonthSummaryDomain.getGenderId() != null && drugMonthSummaryDomain.getGenderId().equals(dimensionId) && drugMonthSummaryDomain.getEventCount()!= null) {
                     count = count + drugMonthSummaryDomain.getEventCount();
                 }
             }
