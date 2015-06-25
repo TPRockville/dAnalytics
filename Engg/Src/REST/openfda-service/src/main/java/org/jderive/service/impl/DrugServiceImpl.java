@@ -95,8 +95,8 @@ public class DrugServiceImpl implements DrugService {
     @Override
     @Transactional(readOnly = true)
     public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugSummary) {
-        return drugRepository.summaryMonth(drugSummary);
+            DrugMonthSummaryDomain drugSummary, boolean applyProjection) {
+        return drugRepository.summaryMonth(drugSummary, applyProjection);
     }
 
     private DrugReactionSummaryDomain aggregateReactionSummaryDomains(List<DrugReactionSummaryDomain>

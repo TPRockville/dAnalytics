@@ -67,11 +67,14 @@ public class DrugRepositoryImpl implements DrugRepository {
             }
         }
 
-        criteria.setProjection(Projections.projectionList()
-                .add(Projections.sum("dsm.eventCount").as("eventCount"))
-                .add(Projections.groupProperty("dsm.startDate").as("startDate")));
-        criteria.setResultTransformer(Transformers.aliasToBean(DrugSummaryDomain.class));
-        return criteria.list();
+			criteria.setProjection(Projections
+					.projectionList()
+					.add(Projections.sum("dsm.eventCount").as("eventCount"))
+					.add(Projections.groupProperty("dsm.startDate").as(
+							"startDate")));
+			criteria.setResultTransformer(Transformers
+					.aliasToBean(DrugSummaryDomain.class));
+		return criteria.list();
     }
 
     @Override
@@ -109,7 +112,7 @@ public class DrugRepositoryImpl implements DrugRepository {
 
     @Override
     public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugMonthSummaryDomain) {
+            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugMonthSummaryDomain.class, "dmsm");
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getDrugId())) {
             criteria.add(Restrictions.eq("dmsm.drugId", drugMonthSummaryDomain.getDrugId()));
@@ -135,10 +138,15 @@ public class DrugRepositoryImpl implements DrugRepository {
             }
         }
 
-        criteria.setProjection(Projections.projectionList()
-                .add(Projections.sum("dmsm.eventCount").as("eventCount"))
-                .add(Projections.groupProperty("dmsm.startDate").as("startDate")));
-        criteria.setResultTransformer(Transformers.aliasToBean(DrugMonthSummaryDomain.class));
-        return criteria.list();
+        if (applyProjection) {
+			criteria.setProjection(Projections
+					.projectionList()
+					.add(Projections.sum("dmsm.eventCount").as("eventCount"))
+					.add(Projections.groupProperty("dmsm.startDate").as(
+							"startDate")));
+			criteria.setResultTransformer(Transformers
+					.aliasToBean(DrugMonthSummaryDomain.class));
+		}
+		return criteria.list();
     }
 }

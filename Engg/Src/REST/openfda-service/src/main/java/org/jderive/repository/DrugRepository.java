@@ -28,5 +28,5 @@ public interface DrugRepository {
 
     List<DrugReactionSummaryDomain>  reactionSummary(Long drugId);
 
-    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugSummary);
+    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugSummary, boolean applyProjection);
 }
