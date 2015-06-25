@@ -1,4 +1,4 @@
-# DAnalytics
+# dAnalytics
 
 ## Prerequisites
 

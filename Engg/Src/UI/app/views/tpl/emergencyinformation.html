@@ -1,0 +1,66 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <div class="row text-info">
+            <div class="col-md-12">
+                <label title=""><b>Emergency Room</b></label>
+            </div>
+        </div>
+        <div class="table-responsive" ng-if="ERSummaryList.legth > 0">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Drug Indication</th>
+                        <th>Year</th>
+                        <th>Total ER Visits</th>
+                        <th>No. Of Patient Discharges</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="reac in ERSummaryList">
+                        <td>{{search.selectedDrug.name}}</td>
+                        <td>{{reac.reactionName}}</td>
+                        <td>{{reac.eventCount}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row text-primary" ng-if="ERSummaryList.length <= 0" style="margin:20px">
+            <div class="col-md-12">
+                No Emergency room information found for this drug
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row text-info">
+            <div class="col-md-12">
+                <label title=""><b>Discharge Summary</b></label>
+            </div>
+        </div>
+        <div class="table-responsive" ng-if="dischargeSummaryList.legth > 0">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Drug Indication</th>
+                        <th>Year</th>
+                        <th>Total ER Visits</th>
+                        <th>No. Of Patient Discharges</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="reac in dischargeSummaryList">
+                        <td>{{search.selectedDrug.name}}</td>
+                        <td>{{reac.reactionName}}</td>
+                        <td>{{reac.eventCount}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row text-primary" ng-if="dischargeSummaryList.length <= 0" style="margin-top:20px;margin-bottom:20px;">
+            <div class="col-md-12">
+                No Emergency room information found for this drug
+            </div>
+        </div>
+    </div>
+</div>
