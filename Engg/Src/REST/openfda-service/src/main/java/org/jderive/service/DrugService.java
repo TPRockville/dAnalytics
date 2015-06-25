@@ -21,7 +21,7 @@ public interface DrugService {
 
     List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummary);
 
-    List<DrugDomain> findByName(String name);
+    List<DrugDomain> findByName(String name,boolean containsFlag);
 
     List<DrugEventSpikeDomain> eventSpikeCount(Long drugId);
 

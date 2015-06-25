@@ -48,7 +48,13 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugDomain> findByName(String name) {
+    public List<DrugDomain> findByName(String name,boolean containsFlag) {
+    	
+    	if(containsFlag)
+    	{
+    		name = "%"+name;
+    	}
+    	
         return drugRepository.findByName(name);
     }
 

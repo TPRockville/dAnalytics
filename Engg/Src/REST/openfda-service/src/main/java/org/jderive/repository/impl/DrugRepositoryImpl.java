@@ -82,7 +82,7 @@ public class DrugRepositoryImpl implements DrugRepository {
 
     @Override
     public List<DrugDomain> findByName(String name) {
-        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '" + name + "%' LIMIT 0, 100";
+        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '" + name + "%' ORDER BY drug_name LIMIT 0, 100";
         SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
         query.addEntity(DrugDomain.class);
         return query.list();
@@ -91,7 +91,7 @@ public class DrugRepositoryImpl implements DrugRepository {
     @Override
     public List<DrugEventSpikeDomain> eventSpikeCount(Long drugId) {
         Query query = sessionFactory.getCurrentSession()
-                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId");
+                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId ORDER BY eventCount");
         query.setLong("drugId", drugId);
         return query.list();
     }

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,21 @@ public class DrugController {
 
     @Autowired
     private DrugService drugService;
+    
+    public static final Comparator<DrugEventSpikeDomain> EVENT_COUNT_COMPARATOR = new Comparator<DrugEventSpikeDomain>() {
+    	public int compare(DrugEventSpikeDomain drugEventSpikeDomain1, DrugEventSpikeDomain drugEventSpikeDomain2) {
+    		if(drugEventSpikeDomain1.getEventCount() != null && drugEventSpikeDomain2.getEventCount() != null)
+    		{
+    			Integer num1 = Integer.parseInt(drugEventSpikeDomain1.getEventCount());
+        		Integer num2 = Integer.parseInt(drugEventSpikeDomain2.getEventCount());
+        		return num1.compareTo(num2);
+    		}else
+    		{
+    			return 0;
+    		}
+    		
+    	};
+	};
 
     @Value("${dAnalytics.exception.message}")
     private String EXCEPTION_MESSAGE;
@@ -96,10 +113,10 @@ public class DrugController {
         }
     }
 
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-    public ResponseEntity<JDeriveResponse> autoComplete(@PathVariable("name") String name) throws Exception {
+    @RequestMapping(value = "/name/{name}/{contains}", method = RequestMethod.GET)
+    public ResponseEntity<JDeriveResponse> autoComplete(@PathVariable("name") String name,@PathVariable("contains") boolean containsFlag) throws Exception {
         try {
-            List<DrugDomain> drugDomainList = drugService.findByName(name);
+            List<DrugDomain> drugDomainList = drugService.findByName(name,containsFlag);
             if (CollectionUtils.isNotEmpty(drugDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
                         .builder()
@@ -154,6 +171,9 @@ public class DrugController {
         try {
             List<DrugEventSpikeDomain> drugEventSpikeDomainList = drugService.eventSpikeCount(NumberUtil
                     .isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
+            
+            Collections.sort(drugEventSpikeDomainList, EVENT_COUNT_COMPARATOR);
+            
             if (CollectionUtils.isNotEmpty(drugEventSpikeDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
                         .builder()
