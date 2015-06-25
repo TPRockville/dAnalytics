@@ -1,7 +1,9 @@
 package org.jderive.controller;
 
 import com.google.common.collect.ImmutableList;
+
 import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,12 +11,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.jderive.api.Dimension;
-import org.jderive.api.DimensionResponse;
 import org.jderive.api.JDeriveResponse;
 import org.jderive.domain.DischargeSummaryDomain;
 import org.jderive.domain.DrugCharSummaryDomain;
@@ -23,12 +25,12 @@ import org.jderive.domain.DrugEventSpikeDomain;
 import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
-import org.jderive.dto.DimensionDTO;
 import org.jderive.domain.ERSummaryDomain;
-import org.jderive.dto.DrugDTO;
-import org.jderive.exception.JDeriveException;
-import org.jderive.dto.ERSummaryDTO;
+import org.jderive.dto.DimensionDTO;
 import org.jderive.dto.DischargeSummaryDTO;
+import org.jderive.dto.DrugDTO;
+import org.jderive.dto.ERSummaryDTO;
+import org.jderive.exception.JDeriveException;
 import org.jderive.service.DrugService;
 import org.jderive.util.NumberUtil;
 import org.jsondoc.core.annotation.Api;
@@ -45,7 +47,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Created by Durga on 6/21/2015.
@@ -285,15 +288,27 @@ public class DrugController {
     }
 
     @RequestMapping(value = "/{drugId}/dimensions", method = RequestMethod.GET)
-    public ResponseEntity<DimensionResponse> getDimensions(@PathVariable("drugId") String drugId,
+    public ResponseEntity<JDeriveResponse> getDimensions(@PathVariable("drugId") String drugId,
             @RequestParam(value = "date", required = false) String date) {
         DrugMonthSummaryDomain drugMonthSummaryDomain = new DrugMonthSummaryDomain();
         drugMonthSummaryDomain.setDrugId(Long.valueOf(drugId));
         drugMonthSummaryDomain.setStartDate(new Date(Long.valueOf(date) * 1000));
 
         List<DrugMonthSummaryDomain> drugSummaryList = drugService.summaryMonth(drugMonthSummaryDomain, false);
-        DimensionResponse dimensionResponseFromDB = DimensionDTO.transform(drugSummaryList);
-        return new ResponseEntity<DimensionResponse>(dimensionResponseFromDB, HttpStatus.OK);
+        if(CollectionUtils.isNotEmpty(drugSummaryList)) {
+            Map<String, List<Dimension>> dimensionResponseMap = DimensionDTO.transform(drugSummaryList);
+
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.OK.toString()).withDimensionResponse(dimensionResponseMap)
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+        }
+        else  {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.NOT_FOUND.toString()).withDimensionResponse(ImmutableMap.of())
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+        }
     }
 
     private DrugSummaryDomain drugSummaryDomain(String drugId, String countryId, String ageGroupId,

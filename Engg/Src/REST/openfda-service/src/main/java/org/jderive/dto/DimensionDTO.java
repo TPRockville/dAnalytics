@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jderive.api.Dimension;
-import org.jderive.api.DimensionResponse;
 import org.jderive.domain.DrugMonthSummaryDomain;
 
 import com.google.common.collect.Lists;
@@ -14,17 +13,15 @@ import com.google.common.collect.Sets;
 
 public class DimensionDTO {
 
-	public static DimensionResponse transform(
+	public static Map<String, List<Dimension>> transform(
 			List<DrugMonthSummaryDomain> drugSummaryList) {
-		DimensionResponse dimensionResponse = new DimensionResponse();
 		Map<String, List<Dimension>> dimensionResponseMap = Maps.newHashMap();
 		Map<DimensionType, Set<Long>> dimensionsSet = Maps.newHashMap();
 		populateDimensionSet(dimensionsSet, drugSummaryList);
 		populateAgeGroupDimension(dimensionsSet, drugSummaryList, dimensionResponseMap);
 		populateWeightGroupDimension(dimensionsSet, drugSummaryList, dimensionResponseMap);
 		populateGenderDimension(dimensionsSet, drugSummaryList, dimensionResponseMap);
-		dimensionResponse.setDimensionResponse(dimensionResponseMap);
-		return dimensionResponse;
+		return dimensionResponseMap;
 	}
 
     private static void populateDimensionSet(Map<DimensionType, Set<Long>> dimensionsSetMap,

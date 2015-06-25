@@ -197,6 +197,18 @@ angular.module('jDeriveApp')
           return deferred.promise;
       };
 
+      services.getSpikeChartSummary = function (drugid, date) {
+          var url = '{0}/drugs/{1}/dimensions?date={2}'.format(configService.apiUrl, drugid, date);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
 
       return services;
   });

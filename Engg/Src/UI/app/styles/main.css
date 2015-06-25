@@ -45,6 +45,9 @@
   .navbar > .container-fluid .navbar-brand {
     margin-left: -110px;
   }
+  .negative-margin{
+      margin-left: -15px;
+  }
 }
 
 .nav.navbar-nav.navbar-right{
