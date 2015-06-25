@@ -45,7 +45,7 @@ public class WeightGroupController {
                         HttpStatus.OK);
             } else {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).build(), HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).build(), HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);

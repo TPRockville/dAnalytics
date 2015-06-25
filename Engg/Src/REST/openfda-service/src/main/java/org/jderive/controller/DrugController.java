@@ -85,8 +85,8 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).build();
-                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).build();
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -107,8 +107,8 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).build();
-                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).build();
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -138,8 +138,8 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).build();
-                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).build();
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -163,8 +163,8 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).withDrugEventSpikeList(ImmutableList.of())
-                        .build(), HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).withDrugEventSpikeList(ImmutableList.of())
+                        .build(), HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -188,8 +188,8 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).withDrugCharSummaryList(ImmutableList.of())
-                        .build(), HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).withDrugCharSummaryList(ImmutableList.of())
+                        .build(), HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -215,8 +215,8 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString())
-                        .withDrugReactionSummaryList(ImmutableList.of()).build(), HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString())
+                        .withDrugReactionSummaryList(ImmutableList.of()).build(), HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -252,9 +252,9 @@ public class DrugController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString()).withDrugSummaryByMonthList(ImmutableList.of())
+                        .withStatusCode(HttpStatus.OK.toString()).withDrugSummaryByMonthList(ImmutableList.of())
                         .build();
-                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -279,9 +279,9 @@ public class DrugController {
         }
         else  {
             JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.NOT_FOUND.toString()).withDimensionResponse(ImmutableMap.of())
+                    .withStatusCode(HttpStatus.OK.toString()).withDimensionResponse(ImmutableMap.of())
                     .build();
-            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
         }
     }
 
@@ -314,9 +314,9 @@ public class DrugController {
             return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
         } else {
             JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.NOT_FOUND.toString())
+                    .withStatusCode(HttpStatus.OK.toString())
                     .build();
-            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
         }
     }catch (Exception e) {
         throw new JDeriveException(EXCEPTION_MESSAGE, e);
@@ -341,9 +341,9 @@ public class DrugController {
             return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
         } else {
             JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                    .withStatusCode(HttpStatus.NOT_FOUND.toString())
+                    .withStatusCode(HttpStatus.OK.toString())
                     .build();
-            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
         }
     	}catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);

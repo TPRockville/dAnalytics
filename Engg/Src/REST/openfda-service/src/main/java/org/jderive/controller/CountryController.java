@@ -46,9 +46,9 @@ public class CountryController {
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             } else {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.NOT_FOUND.toString())
+                        .withStatusCode(HttpStatus.OK.toString())
                         .build();
-                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
