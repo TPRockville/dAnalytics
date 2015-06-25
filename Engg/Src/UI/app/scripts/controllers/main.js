@@ -51,13 +51,13 @@ angular.module('jDeriveApp')
       //       console.log(data);
       //   });
 
-      //$scope.weightGroups = [];
-      //basicService.getWeightGroups()
-      //   .then(function (data) {
-      //       $scope.weightGroups = data.weightGroupList;
-      //   }, function (data) {
-      //       console.log(data);
-      //   });
+      $scope.weightGroups = [];
+      basicService.getWeightGroups()
+         .then(function (data) {
+             $scope.weightGroups = data.weightGroupList;
+         }, function (data) {
+             console.log(data);
+         });
 
       $scope.search = {};
 
@@ -271,6 +271,8 @@ angular.module('jDeriveApp')
       $scope.ERSummaryList = [];
       $scope.dischargeSummaryList = [];
 
+      $scope.selectedSearch = '';
+
 
       //$interval(function () {
       //     new DataService().loadData(function (data) {
@@ -330,7 +332,7 @@ angular.module('jDeriveApp')
               },
               regions: $scope.regions,
               color: {
-                  pattern: ['#ff7f0e', '#1f77b4', '#aec7e8']
+                  pattern: ['#FF0000','#ff7f0e', '#1f77b4', '#aec7e8']
               },
               zoom: {
                   enabled: false
@@ -443,13 +445,42 @@ angular.module('jDeriveApp')
                   });
               }
 
-              searchUrl += $scope.search.age ? '&ageGroupId=' + $scope.search.age : '';
+              $scope.selectedSearch = '';
 
-              searchUrl += $scope.search.country ? '&countryId=' + $scope.search.country : '';
+              if ($scope.search.selectedDrug) {
+                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug.name;
+              }
 
-              searchUrl += $scope.search.fromDate ? '&startDate=' + moment($scope.search.fromDate).utc().valueOf() : '';
+              if ($scope.search.gender) {
+                  searchUrl += '&gender=' + $scope.search.gender;
+                  $scope.selectedSearch += ', ' + $scope.search.gender;
+              }
 
-              searchUrl += $scope.search.toDate ? '&endDate=' + moment($scope.search.toDate).utc().valueOf() : '';
+              if ($scope.search.age) {
+                  searchUrl += '&ageGroupId=' + $scope.search.age;
+                  $scope.selectedSearch += $scope.selectedSearch ? ',' : '' + ' age group ' + $scope.search.age;
+              }
+              
+              if ($scope.search.country) {
+                  searchUrl += '&countryId=' + $scope.search.country;
+                  $scope.selectedSearch += '';
+              }
+
+              if ($scope.search.fromDate) {
+                  searchUrl += '&startDate=' + moment($scope.search.fromDate).utc().valueOf();
+                  $scope.selectedSearch += $scope.selectedSearch ? ',' : '' + ' for ' + moment($scope.search.fromDate).format('MM/YYYY');
+              }
+
+              if ($scope.search.toDate) {
+                  searchUrl += '&endDate=' + moment($scope.search.toDate).utc().valueOf();
+                  $scope.selectedSearch += $scope.search.fromDate ? ' to ' : ' till ' + moment($scope.search.toDate).format('MM/YYYY');
+              }
+
+              if ($scope.search.weight) {
+                  searchUrl += '&weightGroupId=' + $scope.search.weight;
+                  $scope.selectedSearch += $scope.selectedSearch ? ',' : '' + ' ' + $scope.search.weight;
+              }
+
           } else {
               $scope.drugEventSpikeList = [];
               $scope.drugEventSpikeList = [];

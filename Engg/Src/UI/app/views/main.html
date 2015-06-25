@@ -1,3 +1,7 @@
+<div class="container" ng-cloak>
+    <p><span style="font-size:10px;line-height:1;">dAnalytics compiles drug adverse event data from the U.S. Food and Drug Administration (<a href="https://open.fda.gov">https://open.fda.gov</a>).  We have analyzed about 10 million drug adverse events from the last 10 years, between 2004 and 2014. Search here to look for specific drug's events and related data.</span></p>
+</div>
+
 <ng-include src="'views/tpl/filter.html'"></ng-include>
 
 <div class="row">
@@ -12,10 +16,10 @@
             </div>
         </div>
         <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
-        <div class="text-center" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph."><b>Adverse Event Reports</b> <i class="glyphicon glyphicon-info-sign"></i></div>
+        <div class="text-center" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph.">Adverse event reported {{selectedSearch}}</div>
         <div id="spikeInformation" style="display:none">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="hideSpikeInformatrion();" style="margin-top:-15px;font-size:14px;color:#000000"><span aria-hidden="true">&times; Close</span></button>
-            
+
             <div class="row">
                 <div class="col-md-3">
                     <div id="ageGroupPie"></div>
@@ -34,13 +38,14 @@
     </div>
     <div class="col-md-2" ng-if="search.selectedDrug">
         <div class="row text-center">
-            <strong>Event spikes</strong>
+            <strong>Spike(s) in adverse event</strong>
+            <small>*for the period 2004 to 2014</small>
         </div>
         <br />
         <div style="max-height:350px;overflow-y:auto">
             <ul class="list-group">
                 <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion();">{{ spike.spikeDate | date:'MM/dd/yyyy'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
-                <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No spikes found</span></li>
+                <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></li>
             </ul>
         </div>
     </div>
@@ -57,6 +62,9 @@
 </div>
 
 <div class="container" ng-cloak>
-    <p><b style="font-size:11px">Disclaimer:</b> <span style="font-size:9px">The charts and reports displayed on this site are created using data obtained from the openFDA API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA api's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
-    <p style="font-size:11px;font-style:italic">This project is in beta using <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> and is not for clinical use.</p>
+    <p><b style="font-size:11px">Disclaimer:</b> <span style="font-size:9px">The charts and reports displayed on this site are created using data obtained from the <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA api's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
+    <p style="font-size:11px;font-style:italic">Developed by <a href="http://tpgsi.com/" target="_blank">TurningPoint global solution LLC</a> for GSA agile delivery service request for the quotation - 4QTFHS150004</p>
+</div>
+<div class="row text-right">
+    <a href="http://tpgsi.com/" target="_blank"><img src="/assets/images/tplogo.jpg" alt="TurningPoint Global Solutions" /></a>
 </div>
