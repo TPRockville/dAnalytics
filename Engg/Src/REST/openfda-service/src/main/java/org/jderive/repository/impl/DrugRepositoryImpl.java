@@ -129,6 +129,9 @@ public class DrugRepositoryImpl implements DrugRepository {
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getCountryId())) {
             criteria.add(Restrictions.eq("dmsm.countryId", drugMonthSummaryDomain.getCountryId()));
         }
+        if (!StringUtils.isEmpty(drugMonthSummaryDomain.getGenderId())) {
+            criteria.add(Restrictions.eq("dmsm.genderId", drugMonthSummaryDomain.getGenderId()));
+        }
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getStartDate())) {
             if (!StringUtils.isEmpty(drugMonthSummaryDomain.getEndDate())) {
                 criteria.add(Restrictions.between("dmsm.startDate",

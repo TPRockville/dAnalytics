@@ -143,12 +143,13 @@ public class DrugController {
             @RequestParam(value = "countryId", required = false) String countryId,
             @RequestParam(value = "ageGroupId", required = false) String ageGroupId,
             @RequestParam(value = "weightGroupId", required = false) String weightGroupId,
+            @RequestParam(value = "genderId", required = false) String genderId,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate) throws Exception {
         try {
 
             List<DrugSummaryDomain> drugSummaryDomainList = drugService.summary(drugSummaryDomain(drugId, countryId,
-                    ageGroupId, weightGroupId, startDate, endDate));
+                    ageGroupId, weightGroupId, startDate, endDate,genderId));
 
             if (drugSummaryDomainList != null) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
@@ -255,12 +256,13 @@ public class DrugController {
             @RequestParam(value = "countryId", required = false) String countryId,
             @RequestParam(value = "ageGroupId", required = false) String ageGroupId,
             @RequestParam(value = "weightGroupId", required = false) String weightGroupId,
+            @RequestParam(value = "genderId", required = false) String genderId,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate) throws Exception {
         try {
             DrugMonthSummaryDomain drugMonthSummaryDomain = new DrugMonthSummaryDomain();
             BeanUtils.copyProperties(
-                    drugSummaryDomain(drugId, countryId, ageGroupId, weightGroupId, startDate, endDate),
+                    drugSummaryDomain(drugId, countryId, ageGroupId, weightGroupId, startDate, endDate,genderId),
                     drugMonthSummaryDomain);
             List<DrugMonthSummaryDomain> drugMonthSummaryDomainList = drugService.summaryMonth(drugMonthSummaryDomain,
                     true);
@@ -312,9 +314,10 @@ public class DrugController {
     }
 
     private DrugSummaryDomain drugSummaryDomain(String drugId, String countryId, String ageGroupId,
-            String weightGroupId, String startDate, String endDate) {
+            String weightGroupId, String startDate, String endDate,String genderId) {
         DrugSummaryDomain drugSummaryDomain = new DrugSummaryDomain();
         drugSummaryDomain.setDrugId(NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
+        drugSummaryDomain.setGenderId(NumberUtil.isNumeric(genderId) ? NumberUtil.parseLong(genderId) : null);
         drugSummaryDomain.setAgeGroupId(NumberUtil.isNumeric(ageGroupId) ? NumberUtil.parseLong(ageGroupId) : null);
         drugSummaryDomain.setWeightGroupId(NumberUtil.isNumeric(weightGroupId) ? NumberUtil.parseLong(weightGroupId)
                 : null);
