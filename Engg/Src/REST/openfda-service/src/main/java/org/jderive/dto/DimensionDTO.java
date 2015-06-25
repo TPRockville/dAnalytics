@@ -10,6 +10,7 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.jderive.util.CacheUtil;
 
 public class DimensionDTO {
 
@@ -47,7 +48,7 @@ public class DimensionDTO {
         List<Dimension> genderDimensionList = Lists.newArrayList();
         for (Long genderGroupId : genderGroupSet) {
             Long eventCount = findEventCountSumFor(genderGroupId, drugSummaryList, DimensionType.GENDER_GROUP);
-            Dimension dimension = new Dimension(genderGroupId, eventCount);
+            Dimension dimension = new Dimension(genderGroupId, CacheUtil.getGender(genderGroupId), eventCount);
             genderDimensionList.add(dimension);
         }
         dimensionResponseMap.put("genderGroup", genderDimensionList);
@@ -59,7 +60,7 @@ public class DimensionDTO {
         List<Dimension> weightDimensionList = Lists.newArrayList();
         for (Long weightGroupId : weightGroupSet) {
             Long eventCount = findEventCountSumFor(weightGroupId, drugSummaryList, DimensionType.WEIGHT_GROUP);
-            Dimension dimension = new Dimension(weightGroupId, eventCount);
+            Dimension dimension = new Dimension(weightGroupId, CacheUtil.getWeightGroup(weightGroupId),eventCount);
             weightDimensionList.add(dimension);
         }
         dimensionResponseMap.put("weightGroup", weightDimensionList);
@@ -72,7 +73,7 @@ public class DimensionDTO {
 		List<Dimension> ageGroupDimensionList = Lists.newArrayList();
 		for (Long ageGroupId : ageGroupSet) {
 			Long eventCount = findEventCountSumFor(ageGroupId, drugSummaryList, DimensionType.AGE_GROUP);
-			Dimension dimension = new Dimension(ageGroupId, eventCount);
+			Dimension dimension = new Dimension(ageGroupId, CacheUtil.getAgeGroup(ageGroupId), eventCount);
 			ageGroupDimensionList.add(dimension);
 		}
 		dimensionResponseMap.put("ageGroup", ageGroupDimensionList);
