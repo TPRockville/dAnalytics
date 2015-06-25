@@ -1,12 +1,13 @@
 package org.jderive.service;
 
+import org.jderive.domain.DischargeSummaryDomain;
 import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
 import org.jderive.domain.DrugEventSpikeDomain;
 import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
-
+import org.jderive.domain.ERSummaryDomain;
 import java.util.List;
 
 /**
@@ -29,4 +30,9 @@ public interface DrugService {
     List<DrugReactionSummaryDomain> reactionSummary(Long drugId);
 
     List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection);
+	
+	List<ERSummaryDomain> getERSummary(String drugId);
+
+	List<DischargeSummaryDomain> getDischargeSummary(String drugId);
+
 }

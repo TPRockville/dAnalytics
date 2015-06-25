@@ -64,7 +64,7 @@ angular.module('jDeriveApp')
       };
 
       services.getCountries = function () {
-          var url = '{0}/{1}'.format(configService.apiUrl, 'jderive/country/list');
+          var url = '{0}/{1}'.format(configService.apiUrl, 'country/list');
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -77,7 +77,7 @@ angular.module('jDeriveApp')
       };
 
       services.getAgeGroups = function () {
-          var url = '{0}/{1}'.format(configService.apiUrl, 'jderive/agegroup/list');
+          var url = '{0}/{1}'.format(configService.apiUrl, 'agegroup/list');
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -90,7 +90,7 @@ angular.module('jDeriveApp')
       };
 
       services.getWeightGroups = function () {
-          var url = '{0}/{1}'.format(configService.apiUrl, 'jderive/weightgroup/list');
+          var url = '{0}/{1}'.format(configService.apiUrl, 'weightgroup/list');
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -103,9 +103,9 @@ angular.module('jDeriveApp')
       };
 
       services.getEventCount = function (searchCriteria, category) {
-          var url = '{0}/{1}?{2}'.format(configService.apiUrl, 'jderive/drugs/eventcount', searchCriteria);
+          var url = '{0}/{1}?{2}'.format(configService.apiUrl, 'drugs/eventcount', searchCriteria);
           if (category && category === 'month') {
-              url = '{0}/{1}?{2}'.format(configService.apiUrl, 'jderive/drugs/eventcount/month', searchCriteria);
+              url = '{0}/{1}?{2}'.format(configService.apiUrl, 'drugs/eventcount/month', searchCriteria);
           }
           var deferred = $q.defer();
           $http.get(url)
@@ -119,7 +119,7 @@ angular.module('jDeriveApp')
       };
 
       services.getDrugsList = function () {
-          var url = '{0}/{1}/{2}'.format(configService.apiUrl, 'jderive/drugs/name', 'baclof');
+          var url = '{0}/{1}/{2}'.format(configService.apiUrl, 'drugs/name', 'baclof');
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -132,7 +132,7 @@ angular.module('jDeriveApp')
       };
 
       services.getDrugEventSpikes = function (drugid) {
-          var url = '{0}/{1}/{2}/spike'.format(configService.apiUrl, 'jderive/drugs', drugid);
+          var url = '{0}/{1}/{2}/spike'.format(configService.apiUrl, 'drugs', drugid);
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -145,7 +145,7 @@ angular.module('jDeriveApp')
       };
 
       services.getDrugCharacterization = function (drugid) {
-          var url = '{0}/{1}/{2}/characterization'.format(configService.apiUrl, 'jderive/drugs', drugid);
+          var url = '{0}/{1}/{2}/characterization'.format(configService.apiUrl, 'drugs', drugid);
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -158,7 +158,7 @@ angular.module('jDeriveApp')
       };
 
       services.getDrugReaction = function (drugid) {
-          var url = '{0}/{1}/{2}/reaction'.format(configService.apiUrl, 'jderive/drugs', drugid);
+          var url = '{0}/{1}/{2}/reaction'.format(configService.apiUrl, 'drugs', drugid);
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -169,6 +169,34 @@ angular.module('jDeriveApp')
               });
           return deferred.promise;
       };
+
+
+      services.getDischargeSummary = function (drugid) {
+          var url = '{0}/drugs/{1}/indication/dischargesummary'.format(configService.apiUrl, drugid);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getERSummary = function (drugid) {
+          var url = '{0}/drugs/{1}/indication/ersummary'.format(configService.apiUrl, drugid);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
 
       return services;
   });

@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.jderive.api.Dimension;
 import org.jderive.api.DimensionResponse;
 import org.jderive.api.JDeriveResponse;
+import org.jderive.domain.DischargeSummaryDomain;
 import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
 import org.jderive.domain.DrugEventSpikeDomain;
@@ -21,8 +22,11 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.dto.DimensionDTO;
+import org.jderive.domain.ERSummaryDomain;
 import org.jderive.dto.DrugDTO;
 import org.jderive.exception.JDeriveException;
+import org.jderive.dto.ERSummaryDTO;
+import org.jderive.dto.DischargeSummaryDTO;
 import org.jderive.service.DrugService;
 import org.jderive.util.NumberUtil;
 import org.jsondoc.core.annotation.Api;
@@ -39,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 /**
@@ -285,5 +288,57 @@ public class DrugController {
                 : null);
         drugSummaryDomain.setEndDate(NumberUtil.isNumeric(endDate) ? new Date(NumberUtil.parseLong(endDate)) : null);
         return drugSummaryDomain;
+    }
+    @RequestMapping(value = "{id}/indication/ersummary", method = RequestMethod.GET) 
+    public ResponseEntity<JDeriveResponse> getERSummary(@PathVariable("id") String drugId)throws Exception {
+    	try
+    	{
+    	List<ERSummaryDomain> erSummaryDomains = drugService.getERSummary(drugId);
+
+        if (erSummaryDomains != null) {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.OK.toString())
+                    .withERSummary(erSummaryDomains.stream()
+                            .map(erSummaryDomain -> ERSummaryDTO.erSummary(erSummaryDomain))
+                            .collect(Collectors.toList()))
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+        } else {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.NOT_FOUND.toString())
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+        }
+    }catch (Exception e) {
+        throw new JDeriveException(EXCEPTION_MESSAGE, e);
+    }
+    }
+    
+    
+    @RequestMapping(value = "{id}/indication/dischargesummary", method = RequestMethod.GET) 
+    public ResponseEntity<JDeriveResponse> getDischargeSummary(@PathVariable("id") String drugId) throws Exception {
+    	
+    	try
+    	{
+    	List<DischargeSummaryDomain> dischargeSummaryDomains = drugService.getDischargeSummary(drugId);
+    	
+        if (dischargeSummaryDomains != null) {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.OK.toString())
+                    .withDischargeSummary(dischargeSummaryDomains.stream()
+                            .map(dischargeSummaryDomain -> DischargeSummaryDTO.dischargeSummary(dischargeSummaryDomain))
+                            .collect(Collectors.toList()))
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+        } else {
+            JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                    .withStatusCode(HttpStatus.NOT_FOUND.toString())
+                    .build();
+            return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+        }
+    	}catch (Exception e) {
+            throw new JDeriveException(EXCEPTION_MESSAGE, e);
+        }
+        
     }
 }

@@ -32,6 +32,8 @@ public class JDeriveResponse {
     private List<DrugCharSummary> drugCharSummaryList;
     private List<DrugReactionSummary> drugReactionSummaryList;
     private List<DrugSummaryByMonth> drugSummaryByMonthList;
+    private  List<ERSummary> eRSummary;
+    private  List<DischargeSummary> dischargeSummary;
 
     protected JDeriveResponse(Builder builder) {
         this.statusCode = builder.statusCode;
@@ -45,6 +47,8 @@ public class JDeriveResponse {
         this.drugCharSummaryList = builder.drugCharSummaryList;
         this.drugReactionSummaryList = builder.drugReactionSummaryList;
         this.drugSummaryByMonthList = builder.drugSummaryByMonthList;
+		this.eRSummary = builder.eRSummary;
+		this.dischargeSummary = builder.dischargeSummary;
     }
 
     public static Builder builder() {
@@ -63,6 +67,8 @@ public class JDeriveResponse {
         private List<DrugCharSummary> drugCharSummaryList;
         private List<DrugReactionSummary> drugReactionSummaryList;
         private List<DrugSummaryByMonth> drugSummaryByMonthList;
+        private List<ERSummary> eRSummary;
+        private List<DischargeSummary> dischargeSummary;
 
         public JDeriveResponse build() {
             return new JDeriveResponse(this);
@@ -122,5 +128,14 @@ public class JDeriveResponse {
             this.drugSummaryByMonthList = input;
             return this;
         }
+		public Builder withERSummary(List<ERSummary> input) {
+            this.eRSummary = input;
+            return this;
+        }  
+		
+		public Builder withDischargeSummary(List<DischargeSummary> input) {
+            this.dischargeSummary = input;
+            return this;
+        }  
     }
 }

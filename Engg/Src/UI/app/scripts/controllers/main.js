@@ -124,6 +124,7 @@ angular.module('jDeriveApp')
                  var minDate = new Date();
                  var maxDate = new Date();
                  $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+                 $("#dateSlider").dateRangeSlider("min", minDate);
 
                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
                  $('#noDataLabel').show();
@@ -138,7 +139,14 @@ angular.module('jDeriveApp')
                  bindChartEvent(eventData);
              } else {
                  bindChartEvent([]);
-                 $("#dateSlider").dateRangeSlider();
+                 $("#dateSlider").dateRangeSlider({
+                     formatter: function (val) {
+                         return moment(val).format('MMM YYYY');
+                     },
+                     step: {
+                         months: 1
+                     }
+                 });
              }
 
              var maxCountObject = $scope.maxCountObject;
@@ -152,7 +160,14 @@ angular.module('jDeriveApp')
              console.log('Failed service', data);
          });
       };
-      $("#dateSlider").dateRangeSlider();
+      $("#dateSlider").dateRangeSlider({
+          formatter: function (val) {
+              return moment(val).format('MMM YYYY');
+          },
+          step: {
+              months: 1
+          }
+      });
 
       $("#dateSlider").bind("valuesChanged", function (e, data) {
           if (chart) {
@@ -253,6 +268,10 @@ angular.module('jDeriveApp')
       $scope.recallNotfound = false;
       $scope.recallInformation = [];
 
+      $scope.ERSummaryList = [];
+      $scope.dischargeSummaryList = [];
+
+
       //$interval(function () {
       //     new DataService().loadData(function (data) {
       //        $scope.datapoints.push(data);
@@ -278,7 +297,7 @@ angular.module('jDeriveApp')
                   x: {
                       type: 'timeseries',
                       tick: {
-                          format: '%b %y',
+                          format: '%b %Y',
                           rotate: 40,
                           fit: true
                       },
@@ -453,26 +472,7 @@ angular.module('jDeriveApp')
           angular.element('#spikeInformation').show();
           angular.element('#eventInformation').hide();
 
-          var barChart = c3.generate({
-              bindto: '#spikeSummaryChart',
-              data: {
-                  json: [
-                          { name: 'Age', '0-10': 200, '11-20': 200, '21-30': 400 },
-                          { name: 'Weight', '0-10': 100, '11-20': 300, '21-30': 400 },
-                          { name: 'Gender', 'Unknown': 300, 'Male': 200, 'Female': 500 },
-                          { name: 'Country', '0-10': 400, '11-20': 100 }],
-                  keys: {
-                      x: 'name', // it's possible to specify 'x' when category axis
-                      value: ['0-10', '11-20', '21-30', 'Unknown', 'Male', 'Female'],
-                  },
-                  type: 'bar'
-              },
-              axis: {
-                  x: {
-                      type: 'category'
-                  }
-              }
-          });
+          bindGroupCharts();
       };
 
       $scope.hideSpikeInformatrion = function () {
@@ -480,4 +480,88 @@ angular.module('jDeriveApp')
           angular.element('#eventInformation').show();
       };
       //angular.element("#slider").dateRangeSlider();
+
+      $scope.getDischargeSummary = function (drugid) {
+          $scope.dischargeSummaryList = [];
+
+          basicService.getDischargeSummary(drugid)
+            .then(function (data) {
+                $scope.dischargeSummaryList = data.dishargeSummaryList
+            }, function (data) {
+                console.log('charct', data);
+            });
+      };
+
+      $scope.getERSummary = function (drugid) {
+          $scope.ERSummaryList = [];
+
+          basicService.getERSummary(drugid)
+            .then(function (data) {
+                $scope.ERSummaryList = data.ERSummaryList
+            }, function (data) {
+                console.log('charct', data);
+            });
+      };
+
+      var bindGroupCharts = function () {
+          var ageGroupData = [
+            ['Child', 30],
+            ['Adult', 120],
+            ['Old', 300]
+          ];
+
+          var weightGroupData = [
+           ['Under 50', 200],
+           ['51 - 70', 60],
+           ['Over 70', 300]
+          ];
+
+          var genderData = [
+              ['Unknown', 60],
+              ['Male', 100],
+              ['Female', 70]
+          ];
+
+          var countryData = [
+              ['US', 60],
+              ['IN', 100],
+              ['GB', 70],
+              ['CA', 20]
+          ];
+
+          bindGraph('#ageGroupPie', 'donut', ageGroupData, 'Age Group');
+          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group');
+          bindGraph('#genderGroupPie', 'donut', genderData, 'Gender');
+          bindGraph('#countryPie', 'donut', countryData, 'Country');
+      };
+
+      var bindGraph = function (divId, type, data, title) {
+          c3.generate({
+              bindto: divId,
+              data: {
+                  // iris data from R
+                  columns: data,
+                  type: type
+              },
+              pie: {
+                  //label:{
+                  //    format:function(x){
+                  //        return x;
+                  //    }
+                  //},
+                  title: 'Test'
+              },
+              tooltip: {
+                  format: {
+                      value: function (x) {
+                          return x;
+                      }
+                  }
+              },
+              donut: {
+                  title: title
+              }
+          });
+      };
+
   });

@@ -11,11 +11,15 @@ angular.module('jDeriveApp')
   .service('configService', function () {
       var service = {
           protocol: 'http',
-          host: 'localhost',
-          port: '8080'
+          host: '192.168.140.34',
+          port: '8080',
+          contextRoot: 'dAnalytics'
       };
-
-      service.apiUrl = '{0}://{1}:{2}'.format(service.protocol, service.host, service.port);
+      if (service.port && service.port !== '') {
+          service.apiUrl = '{0}://{1}:{2}/{3}'.format(service.protocol, service.host, service.port, service.contextRoot);
+      } else {
+          service.apiUrl = '{0}://{1}/{2}'.format(service.protocol, service.host, service.contextRoot);
+      }      
 
       return service;
   });
