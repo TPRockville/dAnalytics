@@ -53,7 +53,7 @@ public class AgeGroupController {
                         HttpStatus.OK);
             } else {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
-                        .withStatusCode(HttpStatus.OK.toString()).build(), HttpStatus.NOT_FOUND);
+                        .withStatusCode(HttpStatus.OK.toString()).build(), HttpStatus.OK);
             }
         } catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
