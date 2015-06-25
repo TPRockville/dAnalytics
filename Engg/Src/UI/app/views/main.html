@@ -44,7 +44,7 @@
         <br />
         <div style="max-height:350px;overflow-y:auto">
             <ul class="list-group">
-                <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion();">{{ spike.spikeDate | date:'MM/dd/yyyy'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
+                <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion();">{{ spike.spikeDate | date:'MM/yyyy'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
                 <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></li>
             </ul>
         </div>
