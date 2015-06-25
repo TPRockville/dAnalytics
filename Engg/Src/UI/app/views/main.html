@@ -35,7 +35,11 @@
                 </div>-->
             </div>
         </div>
+        <div class="text-center chart-loading" ng-if="chartLoading">
+            <img src="/assets/images/loading.gif" /> Loading...
+        </div>
     </div>
+
     <div class="col-md-2" ng-if="selectedSearch !== ''">
         <div class="row text-center">
             <strong>Spike(s) in adverse event</strong>
