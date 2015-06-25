@@ -35,8 +35,8 @@ angular.module('jDeriveApp')
 
       $scope.genderGroups = [
           { id: 0, name: 'Not Specified' },
-          { id: 1, name: 'Female' },
-          { id: 2, name: 'Male' }
+          { id: 2, name: 'Female' },
+          { id: 1, name: 'Male' }
       ];
 
       
@@ -210,7 +210,7 @@ angular.module('jDeriveApp')
       $scope.allSpikes = ['2013-04-25', '2013-04-28'];
 
       /*Random Data Generator */
-      function loadData() {
+      function loadData(searchText) {
           $scope.chartLoading = true;
           var eventsCount = [];
           var fromDate = '20040101';
@@ -224,7 +224,7 @@ angular.module('jDeriveApp')
               toDate = moment($scope.search.toDate).format('YYYYMMDD');
           }
 
-          basicService.getCountbyReceivedDate(fromDate, toDate, 'receivedate')
+          basicService.getCountbyReceivedDate(fromDate, toDate, 'receivedate', searchText)
           .then(function (data) {
               $scope.chartLoading = false;
               if (data) {
@@ -233,6 +233,7 @@ angular.module('jDeriveApp')
               var myKeys = [];
               var myvalues = [];
               var eventData = [];
+              console.log(data);
               $scope.monthData = d3.nest().key(function (a) {
                   return a.time.slice(0, 6)
               }).rollup(function (a) {
@@ -425,6 +426,7 @@ angular.module('jDeriveApp')
           $scope.drugEventSpikeList = [];
           $scope.selectedSearch = '';
           $scope.loadEventData('');
+          $scope.search.apiDataPoint = 'local';
       };
       $scope.recallNotfound = false;
       $scope.recallInformation = [];
@@ -504,13 +506,18 @@ angular.module('jDeriveApp')
 
               $scope.selectedSearch = '';
 
+              $scope.remoteSearch = '';
+
               if ($scope.search.selectedDrug) {
                   $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug.name;
+                  $scope.remoteSearch += 'patient.drug.medicinalproduct:' + $scope.search.selectedDrug.name;
               }
 
               if ($scope.search.gender) {
                   searchUrl += '&gender=' + $scope.search.gender.id;
                   $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender.name;
+
+                  $scope.remoteSearch += ($scope.remoteSearch !== '' ? '+AND+' : '') + 'patient.patientsex:' + $scope.search.gender.id;
               }
 
               if ($scope.search.age) {
@@ -548,7 +555,7 @@ angular.module('jDeriveApp')
           if ($scope.search.apiDataPoint == 'local') {
               $scope.loadEventData(searchUrl);
           } else {
-              loadData();
+              loadData($scope.remoteSearch);
           }
 
       };
@@ -654,7 +661,7 @@ angular.module('jDeriveApp')
           //];
           $scope.chartLoading = false;
           bindGraph('#ageGroupPie', 'donut', ageGroupData, 'Age Group');
-          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group');
+          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group(in Kg)');
           bindGraph('#genderGroupPie', 'donut', genderData, 'Gender');
           //bindGraph('#countryPie', 'donut', countryData, 'Country');
       };

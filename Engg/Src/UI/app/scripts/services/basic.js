@@ -11,8 +11,8 @@ angular.module('jDeriveApp')
   .service('basicService', function ($http, $q, configService) {
       var services = {};
 
-      services.getCountbyReceivedDate = function (fromDate, toDate, countBy) {
-          var url = 'https://api.fda.gov/drug/event.json?search=receivedate:[' + fromDate + '+TO+' + toDate + ']&count=' + countBy;
+      services.getCountbyReceivedDate = function (fromDate, toDate, countBy, search) {
+          var url = 'https://api.fda.gov/drug/event.json?search=receivedate:[' + fromDate + '+TO+' + toDate + ']' + (search === '' ? '' : '+AND+' + search) + '&count=' + countBy;
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
