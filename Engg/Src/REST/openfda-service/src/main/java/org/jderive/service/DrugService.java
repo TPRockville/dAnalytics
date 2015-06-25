@@ -29,7 +29,7 @@ public interface DrugService {
 
     List<DrugReactionSummaryDomain> reactionSummary(Long drugId);
 
-    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain);
+    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection);
 	
 	List<ERSummaryDomain> getERSummary(String drugId);
 
