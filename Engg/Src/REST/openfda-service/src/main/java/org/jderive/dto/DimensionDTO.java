@@ -18,19 +18,35 @@ public class DimensionDTO {
 			List<DrugMonthSummaryDomain> drugSummaryList) {
 		DimensionResponse dimensionResponse = new DimensionResponse();
 		Map<String, List<Dimension>> dimensionResponseMap = Maps.newHashMap();
-		populateAgeGroupDimension(drugSummaryList, dimensionResponseMap);
-		populateWeightGroupDimension(drugSummaryList, dimensionResponseMap);
-		populateGenderDimension(drugSummaryList, dimensionResponseMap);
+		Map<DimensionType, Set<Long>> dimensionsSet = Maps.newHashMap();
+		populateDimensionSet(dimensionsSet, drugSummaryList);
+		populateAgeGroupDimension(dimensionsSet, drugSummaryList, dimensionResponseMap);
+		populateWeightGroupDimension(dimensionsSet, drugSummaryList, dimensionResponseMap);
+		populateGenderDimension(dimensionsSet, drugSummaryList, dimensionResponseMap);
 		dimensionResponse.setDimensionResponse(dimensionResponseMap);
 		return dimensionResponse;
 	}
 
-	private static void populateGenderDimension(List<DrugMonthSummaryDomain> drugSummaryList,
-            Map<String, List<Dimension>> dimensionResponseMap) {
+    private static void populateDimensionSet(Map<DimensionType, Set<Long>> dimensionsSetMap,
+            List<DrugMonthSummaryDomain> drugSummaryList) {
         Set<Long> genderGroupSet = Sets.newHashSet();
+        Set<Long> weightGroupSet = Sets.newHashSet();
+        Set<Long> ageGroupSet = Sets.newHashSet();
+
         for (DrugMonthSummaryDomain drugMonthSummaryDomain : drugSummaryList) {
             genderGroupSet.add(drugMonthSummaryDomain.getGenderId());
+            weightGroupSet.add(drugMonthSummaryDomain.getWeightGroupId());
+            ageGroupSet.add(drugMonthSummaryDomain.getAgeGroupId());
         }
+        dimensionsSetMap.put(DimensionType.AGE_GROUP, ageGroupSet);
+        dimensionsSetMap.put(DimensionType.WEIGHT_GROUP, weightGroupSet);
+        dimensionsSetMap.put(DimensionType.GENDER_GROUP, genderGroupSet);
+
+    }
+
+    private static void populateGenderDimension(Map<DimensionType, Set<Long>> dimensionsSet, List<DrugMonthSummaryDomain> drugSummaryList,
+            Map<String, List<Dimension>> dimensionResponseMap) {
+        Set<Long> genderGroupSet = dimensionsSet.get(DimensionType.GENDER_GROUP);
         List<Dimension> genderDimensionList = Lists.newArrayList();
         for (Long genderGroupId : genderGroupSet) {
             Long eventCount = findEventCountSumFor(genderGroupId, drugSummaryList, DimensionType.GENDER_GROUP);
@@ -40,12 +56,9 @@ public class DimensionDTO {
         dimensionResponseMap.put("genderGroup", genderDimensionList);
     }
 
-    private static void populateWeightGroupDimension(List<DrugMonthSummaryDomain> drugSummaryList,
+    private static void populateWeightGroupDimension(Map<DimensionType, Set<Long>> dimensionsSetMap, List<DrugMonthSummaryDomain> drugSummaryList,
             Map<String, List<Dimension>> dimensionResponseMap) {
-        Set<Long> weightGroupSet = Sets.newHashSet();
-        for (DrugMonthSummaryDomain drugMonthSummaryDomain : drugSummaryList) {
-            weightGroupSet.add(drugMonthSummaryDomain.getWeightGroupId());
-        }
+        Set<Long> weightGroupSet = dimensionsSetMap.get(DimensionType.WEIGHT_GROUP);
         List<Dimension> weightDimensionList = Lists.newArrayList();
         for (Long weightGroupId : weightGroupSet) {
             Long eventCount = findEventCountSumFor(weightGroupId, drugSummaryList, DimensionType.WEIGHT_GROUP);
@@ -55,13 +68,10 @@ public class DimensionDTO {
         dimensionResponseMap.put("weightGroup", weightDimensionList);
     }
 
-    private static void populateAgeGroupDimension(
+    private static void populateAgeGroupDimension(Map<DimensionType, Set<Long>> dimensionsSet,
 			List<DrugMonthSummaryDomain> drugSummaryList,
 			Map<String, List<Dimension>> dimensionResponseMap) {
-		Set<Long> ageGroupSet = Sets.newHashSet();
-		for (DrugMonthSummaryDomain drugMonthSummaryDomain : drugSummaryList) {
-			ageGroupSet.add(drugMonthSummaryDomain.getAgeGroupId());
-		}
+		Set<Long> ageGroupSet = dimensionsSet.get(DimensionType.AGE_GROUP);
 		List<Dimension> ageGroupDimensionList = Lists.newArrayList();
 		for (Long ageGroupId : ageGroupSet) {
 			Long eventCount = findEventCountSumFor(ageGroupId, drugSummaryList, DimensionType.AGE_GROUP);
