@@ -1,0 +1,37 @@
+﻿<div class="row">
+    <div class="col-md-12" ng-show="search.selectedDrug">
+        <div class="row text-info">
+            <div class="col-md-12">
+                <label title="This table provides the details of Recall information based on the drug selected. Recall reason provides the detailed information of why the Drug is recalled and on what date along with current status of recall."><b>Recall Information</b> <i class="glyphicon glyphicon-info-sign"></i></label>
+            </div>
+        </div>
+        <div class="row text-primary" ng-hide="recallInformation && recallInformation.length > 0" style="margin-top:20px;margin-left:20px">
+            <div class="col-md-12">
+                No recall information found for this drug.
+            </div>
+        </div>
+        <div class="row" ng-show="recallInformation && recallInformation.length > 0">
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-2">Recall Number</th>
+                            <th class="col-xs-2">Recall Date</th>
+                            <th>Reason</th>
+                            <th class="col-xs-1">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="recall in recallInformation">
+                            <td>{{recall.recall_number }}</td>
+                            <td>{{recall.recall_initiation_date | daDateformat:'YYYYMMDD':'MM/DD/YYYY'}}</td>
+                            <td>{{recall.reason_for_recall}}</td>
+                            <td>{{recall.status}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

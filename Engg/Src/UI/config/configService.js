@@ -12,10 +12,14 @@ angular.module('jDeriveApp')
       var service = {
           protocol: '@@protocol',
           host: '@@host',
-          port: '@@port'
+          port: '@@port',
+          contextRoot: '@@contextRoot'
       };
-
-      service.apiUrl = '{0}://{1}:{2}'.format(service.protocol, service.host, service.port);
+      if (service.port && service.port !== '') {
+          service.apiUrl = '{0}://{1}:{2}/{3}'.format(service.protocol, service.host, service.port, service.contextRoot);
+      } else {
+          service.apiUrl = '{0}://{1}/{2}'.format(service.protocol, service.host, service.contextRoot);
+      }      
 
       return service;
   });

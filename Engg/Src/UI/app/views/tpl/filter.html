@@ -1,0 +1,187 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <form class="form-horizontal" ng-submit="searchEvents();">
+            <div class="row">
+                <div class="col-md-2 pull-right" style="margin-top:-28px;padding-left:50px">
+                    <button type="button" class="btn btn-link" ng-hide="searchAdvanced" ng-click="searchAdvanced = !searchAdvanced"><i class="glyphicon glyphicon-chevron-down"></i> Advanced Search</button>
+                    <button type="button" class="btn btn-link less-search" ng-show="searchAdvanced" ng-click="searchAdvanced = !searchAdvanced"><i class="glyphicon glyphicon-chevron-up"></i> Show less</button>
+                </div>
+            </div>
+            <div class="" ng-hide="searchAdvanced">
+                <div class="">
+                    <!--<div class="row">
+                        <div class="col-md-12">
+                            <b>Search Criteria</b>
+                        </div>
+                    </div>
+                    <br />-->
+                    <div class="row" ng-hide="!search.selectedDrug && !search.gender && !search.fromDate && !search.toDate && !search.age && !search.country">
+                        <!--<div class="col-md-3" ng-if="search.selectedDrug">
+                            <div class="col-md-5"><b>Drug name : </b></div><div class="col-md-7">{{search.selectedDrug.name}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.gender">
+                            <div class="col-md-5"><b>Gender : </b></div><div class="col-md-7">{{search.gender}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.fromDate">
+                            <div class="col-md-5"><b>From Date : </b></div><div class="col-md-7">{{search.fromDate | date:'MM/dd/yyyy'}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.toDate">
+                            <div class="col-md-5"><b>To Date : </b></div><div class="col-md-7">{{search.toDate | date:'MM/dd/yyyy'}}</div>
+                        </div>
+
+                        <div class="col-md-3" ng-if="search.age">
+                            <div class="col-md-5"><b>Age : </b></div><div class="col-md-7">{{search.age}}</div>
+                        </div>
+                        <div class="col-md-3" ng-if="search.country">
+                            <div class="col-md-5"><b>Country : </b></div><div class="col-md-7">{{search.country.code}}</div>
+                        </div>-->
+                        <span ng-if="search.selectedDrug" style="margin:20px">
+                            <b>Drug name : </b>{{search.selectedDrug.name}}
+                        </span>
+                        <span ng-if="search.gender" style="margin:20px">
+                            <b>Gender : </b>{{search.gender}}
+                        </span>
+                        <span ng-if="search.fromDate" style="margin:20px">
+                            <b>From Date : </b>{{search.fromDate | date:'MM/dd/yyyy'}}
+                        </span>
+                        <span ng-if="search.toDate" style="margin:20px">
+                            <b>To Date : </b>{{search.toDate | date:'MM/dd/yyyy'}}
+                        </span>
+
+                        <span ng-if="search.age" style="margin:20px">
+                            <b>Age : </b>{{search.age}}
+                        </span>
+                        <span ng-if="search.country" style="margin:20px">
+                            <b>Country : </b>{{search.country.code}}
+                        </span>
+
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="panel panel-primary" ng-show="searchAdvanced">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputDrug" class="col-sm-3 control-label">Drug</label>
+                                <div class="col-sm-8">
+                                    <!--<select ui-select2 class="form-control input-sm" ng-model="search.drug" style="width:100%" data-placeholder="Select a Drug">
+                                        <option value=""></option>
+                                        <option ng-repeat="drug in drugsList" value="{{drug.id}}">{{drug.name}}</option>
+                                    </select>-->
+
+                                    <angucomplete-alt id="searchDrug"
+                                                      placeholder="Please type at least 3 characters to show the drug list"
+                                                      pause="700"
+                                                      selected-object="searchDrugChanged"
+                                                      remote-url="{{serverUrl}}/drugs/name/"
+                                                      remote-url-data-field="drugList"
+                                                      title-field="name"
+                                                      input-class="form-control input-sm"
+                                                      minlength="3"
+                                                      auto-match="true"
+                                                      text-searching="Searching for drugs"
+                                                      match-class="autocomplete-match" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputGender" class="col-sm-3 control-label">Gender</label>
+                                <div class="col-sm-8">
+                                    <select ng-model="search.gender" class="form-control input-sm">
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Unknown">Unknown</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputFromDate" class="col-sm-3 control-label">From Date</label>
+                                <div class="col-sm-8">
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle" id="dropdownFromDate" role="button" data-toggle="dropdown" data-target="#">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" data-ng-model="search.fromDate" datetime-formater="MM/dd/yyyy" placeholder="From Date"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                            <datetimepicker data-ng-model="search.fromDate" data-datetimepicker-config="{ dropdownSelector: '#dropdownFromDate',minView:'day'}" />
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputToDate" class="col-sm-3 control-label">To Date</label>
+                                <div class="col-sm-8">
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle" id="dropdownToDate" role="button" data-toggle="dropdown" data-target="#">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" data-ng-model="search.toDate" value="toDate" datetime-formater="MM/dd/yyyy" placeholder="To Date"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                            <datetimepicker data-ng-model="search.toDate" data-datetimepicker-config="{ dropdownSelector: '#dropdownToDate', minView:'day' }" />
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputAge" class="col-sm-3 control-label" ng-model="search.age">Age Group</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control input-sm" ng-model="search.age" ui-select2="{ allowClear: true}" data-placeholder="Select Age">
+                                        <option value=""></option>
+                                        <option ng-repeat="age in ageGroups" value="{{age.id}}">{{age.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputCountry" class="col-sm-3 control-label">Country</label>
+                                <div class="col-sm-8">
+                                    <select ui-select2="{ allowClear: true}" class="form-control input-sm" ng-model="search.country" style="width:100%" data-placeholder="Select a Country">
+                                        <option value=""></option>
+                                        <option ng-repeat="country in countries" value="{{country.id}}">{{country.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-5">
+                            <div class="radio" style="padding-left:50px">
+                                <label title="Retrieved Data from Application Database">
+                                    <input type="radio" name="dataPoints" id="dataPoints1" value="local" checked ng-model="apiDataPoint">
+                                    Local API <i class="glyphicon glyphicon-info-sign"></i>
+                                </label>
+                                <label title="This selection presents the graph using data obtained from the openFDA API endpoints. This tool may not display all available fields or data / is not intended for clinical use. Please visit the open.fda.gov website to review their disclaimer">
+                                    <input type="radio" name="dataPoints" id="dataPoints2" value="openfda" ng-model="apiDataPoint">
+                                    Open FDA API
+                                    <i class="glyphicon glyphicon-info-sign"></i>
+                                </label>
+
+                            </div>
+                        </div>
+                        <div class="col-md-2 pull-right">
+                            <button type="button" class="btn btn-default btn-sm pull-right" ng-click="resetSearch()">Reset</button>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" style="margin-right:10px">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

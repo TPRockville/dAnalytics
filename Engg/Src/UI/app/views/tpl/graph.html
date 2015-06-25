@@ -1,6 +1,4 @@
-<ng-include src="'views/tpl/filter.html'"></ng-include>
-
-<div class="row">
+﻿<div class="row">
     <div class="col-md-10">
         <div id="eventInformation">
             <div id="eventGraphPanel">
@@ -15,21 +13,7 @@
         <div class="text-center" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph."><b>Adverse Event Reports</b> <i class="glyphicon glyphicon-info-sign"></i></div>
         <div id="spikeInformation" style="display:none">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="hideSpikeInformatrion();" style="margin-top:-15px;font-size:14px;color:#000000"><span aria-hidden="true">&times; Close</span></button>
-            
-            <div class="row">
-                <div class="col-md-3">
-                    <div id="ageGroupPie"></div>
-                </div>
-                <div class="col-md-3">
-                    <div id="wightGroupPie"></div>
-                </div>
-                <div class="col-md-3">
-                    <div id="genderGroupPie"></div>
-                </div>
-                <div class="col-md-3">
-                    <div id="countryPie"></div>
-                </div>
-            </div>
+            <div id="spikeSummaryChart"></div>
         </div>
     </div>
     <div class="col-md-2" ng-if="search.selectedDrug">
@@ -44,19 +28,4 @@
             </ul>
         </div>
     </div>
-</div>
-
-<div ng-if="search.selectedDrug">
-
-    <ng-include src="'views/tpl/recallinformation.html'"></ng-include>
-
-    <ng-include src="'views/tpl/reactioninformation.html'"></ng-include>
-
-    <ng-include src="'views/tpl/emergencyinformation.html'"></ng-include>
-
-</div>
-
-<div class="container" ng-cloak>
-    <p><b style="font-size:11px">Disclaimer:</b> <span style="font-size:9px">The charts and reports displayed on this site are created using data obtained from the openFDA API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA api's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
-    <p style="font-size:11px;font-style:italic">This project is in beta using <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> and is not for clinical use.</p>
 </div>
