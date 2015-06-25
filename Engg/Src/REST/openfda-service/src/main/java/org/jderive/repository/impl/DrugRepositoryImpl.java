@@ -7,11 +7,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.jderive.domain.DischargeSummaryDomain;
 import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
 import org.jderive.domain.DrugEventSpikeDomain;
+import org.jderive.domain.DrugIndicationDomain;
 import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
+import org.jderive.domain.ERSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.repository.DrugRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,4 +144,37 @@ public class DrugRepositoryImpl implements DrugRepository {
         criteria.setResultTransformer(Transformers.aliasToBean(DrugMonthSummaryDomain.class));
         return criteria.list();
     }
+	
+	@Override
+	public List<ERSummaryDomain> getERSummary(String drugId) {
+		
+		List<String> drugIndictions = getDrugIndication(drugId);
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ERSummaryDomain.class, "ersummary");
+		criteria.add(Restrictions.in("ersummary.episodeDiseaseCategory",drugIndictions));
+		
+		return criteria.list();
+	}
+
+	@Override
+	public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
+		
+		List<String> drugIndictions = getDrugIndication(drugId);
+
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DischargeSummaryDomain.class);
+		
+		criteria.add(Restrictions.in("aPRDRGDescription",drugIndictions));
+
+		return criteria.list();
+	}
+	
+	
+	private List<String> getDrugIndication(String drugId) {
+		String queryByName = "select drug_indication_code from drug_indication where drug_indication_id in (select drug_indication_id from drug_indication_link where drug_id ="
+				+ drugId + ")";
+		SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(
+				queryByName);
+		List<String> drugIndictions = (List<String>) query .list();
+		return drugIndictions;
+	}
 }
