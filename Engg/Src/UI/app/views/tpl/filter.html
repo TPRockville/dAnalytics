@@ -10,22 +10,23 @@
             <div class="panel panel-primary" ng-show="searchAdvanced">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-11">
                             <div class="form-group">
-                                <label for="inputDrug" class="col-md-2 col-sm-3 control-label">Select Drug</label>
+                                <label for="inputDrug" class="col-md-2 col-sm-3 control-label negative-margin" title="Select Drug">Select Drug</label>
                                 <div class="col-md-9 col-sm-8 negative-margin">
                                     <angucomplete-alt id="searchDrug"
                                                       placeholder="Please type at least 3 characters to show the drug list"
                                                       pause="700"
                                                       selected-object="searchDrugChanged"
-                                                      remote-url="{{serverUrl}}/drugs/name/{{search.searchAnywhere ? '%':''}}"
+                                                      remote-url="{{serverUrl}}/drugs/name/{{search.searchAnywhere}}/"
                                                       remote-url-data-field="drugList"
                                                       title-field="name"
                                                       input-class="form-control input-sm"
                                                       minlength="3"
                                                       auto-match="true"
                                                       text-searching="Searching for drugs"
-                                                      match-class="autocomplete-match" />
+                                                      match-class="autocomplete-match"
+                                                      focus-out="drugfocus()" />
 
                                 </div>
 
@@ -36,7 +37,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-offset-3 col-md-9 col-sm-offset-0 col-sm-8">
-                                    <label style="font-weight:normal"><input type="checkbox" ng-model="search.searchAnywhere" /> Search anywhere in drug name </label>
+                                    <label style="font-weight:normal"><input type="checkbox" ng-model="search.searchAnywhere" title="Select to search anywhere in drug name" /> Search anywhere in drug name</label>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +45,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="inputFromDate" class="col-sm-3 control-label">Select Period</label>
+                                <label for="inputFromDate" class="col-sm-3 control-label" title="Select period">Select Period</label>
                                 <div class="col-sm-8">
                                     <div class="dropdown">
                                         <a class="dropdown-toggle" id="dropdownFromDate" role="button" data-toggle="dropdown" data-target="#">
@@ -81,7 +82,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="inputGender" class="col-sm-3 control-label">Gender</label>
+                                <label for="inputGender" class="col-sm-3 control-label" title="Gender">Gender</label>
                                 <div class="col-sm-8">
                                     <select ng-model="search.gender" class="form-control input-sm"
                                             ng-options="gender.name for gender in genderGroups track by gender.id">
@@ -95,7 +96,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="inputAge" class="col-sm-3 control-label">Age Group</label>
+                                <label for="inputAge" class="col-sm-3 control-label" title="Select Age Group">Age Group</label>
                                 <div class="col-sm-8">
                                     <select class="form-control input-sm" ng-model="search.age" id="searchAge" ui-select2="{ allowClear: true}" data-placeholder="Select Age Group">
                                         <option value=""></option>
@@ -109,7 +110,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="inputAge" class="col-sm-3 control-label">Weight Range</label>
+                                <label for="inputAge" class="col-sm-3 control-label" title="Select Weight Range">Weight Range</label>
                                 <div class="col-sm-8">
                                     <select class="form-control input-sm" ng-model="search.weight" ui-select2="{ allowClear: true}" data-placeholder="Select Weight Range">
                                         <option value=""></option>
@@ -135,15 +136,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">FDA Data</label>
+                                <label class="col-sm-3 control-label" title="Select FDA Data">FDA Data</label>
                                 <div class="col-sm-9">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="dataPoints" id="dataPoints1" value="local" checked ng-model="apiDataPoint">
+                                            <input type="radio" name="dataPoints" id="dataPoints1" value="local" checked ng-model="search.apiDataPoint" title="Offline Data">
                                             Offline <i class="glyphicon glyphicon-info-sign" title="The report runs on local database downloaded from FDA (https://open.fda.gov). Select this option when open FDA.gov is not available."></i>
                                         </label>
                                         <label>
-                                            <input type="radio" name="dataPoints" id="dataPoints2" value="openfda" ng-model="apiDataPoint">
+                                            <input type="radio" name="dataPoints" id="dataPoints2" value="openfda" ng-model="search.apiDataPoint" title="Online Data">
                                             Online
                                             <i class="glyphicon glyphicon-info-sign" title="Data is retrieved in real time from FDA using open FDA APIs (https://open.fda.gov)."></i>
                                         </label>
@@ -151,10 +152,9 @@
                                 </div>
                             </div>
                         </div>
-                            <div class="col-md-2 pull-right">
-                                <button type="button" class="btn btn-default btn-sm pull-right" ng-click="resetSearch()">Reset</button>
-                                <button type="submit" class="btn btn-primary btn-sm pull-right" style="margin-right:10px">Submit</button>
-                            </div>
+                        <div class="col-md-2 pull-right">
+                            <button type="button" class="btn btn-default btn-sm pull-right" ng-click="resetSearch()" title="Reset Filter">Reset</button>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" style="margin-right:10px" title="Submit">Submit</button>
                         </div>
                     </div>
                 </div>

@@ -35,11 +35,11 @@ angular.module('jDeriveApp')
 
       $scope.genderGroups = [
           { id: 0, name: 'Not Specified' },
-          { id: 1, name: 'Female' },
-          { id: 2, name: 'Male' }
+          { id: 2, name: 'Female' },
+          { id: 1, name: 'Male' }
       ];
 
-      $scope.searchAnywhere = false;
+      
 
       basicService.getCountries()
          .then(function (data) {
@@ -61,6 +61,14 @@ angular.module('jDeriveApp')
       //       console.log(data);
       //   });
 
+      $scope.drugfocus = function()
+      {
+          //console.log($scope.search.selectedDrug);
+          if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
+              $scope.$broadcast('angucomplete-alt:clearInput');
+          }
+      }
+
       $scope.weightGroups = [];
       basicService.getWeightGroups()
          .then(function (data) {
@@ -69,7 +77,7 @@ angular.module('jDeriveApp')
              console.log(data);
          });
 
-      $scope.search = {};
+      $scope.search = {searchAnywhere : false};
 
       //$scope.search.fromDate = new Date('01/01/2014');
 
@@ -117,7 +125,7 @@ angular.module('jDeriveApp')
                      currentVal = a.eventCount;
                      $scope.maxCountObject = a;
                  }
-                 eventData.push({ 'time': new Date(a.startDate), 'count': a.eventCount });
+                 eventData.push({ 'time': moment(a.startDate).format('YYYY-MM-DD'), 'count': a.eventCount });
              });
              
              if (eventData.length > 0) {
@@ -191,9 +199,9 @@ angular.module('jDeriveApp')
 
       //$("#dateSlider").dateRangeSlider("values", new Date(2012, 0, 1), new Date(2012, 0, 31));
       //$('#eventGraphPanel').hide();
-      $scope.apiDataPoint = 'local';
+      $scope.search.apiDataPoint = 'local';
       $scope.loadEventData('');
-      //if ($scope.apiDataPoint == 'local') {
+      //if ($scope.search.apiDataPoint == 'local') {
 
       //} else {
       //    //loadData();
@@ -202,7 +210,8 @@ angular.module('jDeriveApp')
       $scope.allSpikes = ['2013-04-25', '2013-04-28'];
 
       /*Random Data Generator */
-      function loadData() {
+      function loadData(searchText) {
+          $scope.chartLoading = true;
           var eventsCount = [];
           var fromDate = '20040101';
           var toDate = $filter('date')(new Date(), 'yyyyMMdd');
@@ -215,14 +224,16 @@ angular.module('jDeriveApp')
               toDate = moment($scope.search.toDate).format('YYYYMMDD');
           }
 
-          basicService.getCountbyReceivedDate(fromDate, toDate, 'receivedate')
+          basicService.getCountbyReceivedDate(fromDate, toDate, 'receivedate', searchText)
           .then(function (data) {
+              $scope.chartLoading = false;
               if (data) {
                   eventsCount = data.results;
               }
               var myKeys = [];
               var myvalues = [];
               var eventData = [];
+              console.log(data);
               $scope.monthData = d3.nest().key(function (a) {
                   return a.time.slice(0, 6)
               }).rollup(function (a) {
@@ -236,27 +247,52 @@ angular.module('jDeriveApp')
               var currentVal = 0;
               var maxCountObject = {};
 
-              eventsCount.map(function (a) {
-                  if (currentVal < parseInt(a.eventCount)) {
-                      currentVal = a.eventCount;
+              //$scope.monthData = d3.nest().key(function (a) {
+              //    return moment(a.eventDate).format('YYYYMM');
+              //}).rollup(function (a) {
+              //    return d3.sum(a, function (a) {
+              //        return a.eventCount
+              //    })
+              //}).entries(eventsCount);
+
+              $scope.monthData.map(function (a) {
+                  if (currentVal < parseInt(a.values)) {
+                      currentVal = a.values;
                       maxCountObject = a;
                   }
-                  var currentDate = new Date(moment(a.time, 'YYYYMMDD'));
-                  eventData.push({ 'time': currentDate, 'count': a.count });
-                  if ($scope.regions.length > 0)
-                      $scope.regions = [];
-                  $scope.regions.push({ start: new Date(moment(maxCountObject.eventDate).subtract(moment.duration(22, 'd'))), end: new Date(moment(maxCountObject.eventDate).add(moment.duration(5, 'd'))), class: 'regionYellow' });
-
+                  var currentDate = new Date(moment(a.key, 'YYYYMMDD'));
+                  eventData.push({ 'time': currentDate, 'count': a.values });
+                  
               });
+
+              if (eventData.length > 0) {
+                  $('#eventGraphPanel').show();
+
+                  var minDate = new Date(moment(eventData[0].time));
+                  var maxDate = new Date(moment(eventData[eventData.length - 1].time));
+
+                  $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+
+                  $("#dateSlider").dateRangeSlider("min", minDate);
+
+                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
+                  $('#noDataLabel').hide();
+              } else {
+                  //$('#eventGraphPanel').hide();
+                  var minDate = new Date();
+                  var maxDate = new Date();
+                  $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+                  $("#dateSlider").dateRangeSlider("min", minDate);
+
+                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
+                  $('#noDataLabel').show();
+              }
+              if ($scope.regions.length > 0)
+                  $scope.regions = [];
+              $scope.regions.push({ start: new Date(moment(maxCountObject.key, 'YYYYMM').subtract(moment.duration(3, 'M'))), end: new Date(moment(maxCountObject.key, 'YYYYMM').add(moment.duration(3, 'M'))), class: 'regionYellow' });
               $scope.datapoints = eventData;
 
-              chart.load({
-                  json: $scope.datapoints,
-                  keys: {
-                      x: 'time',
-                      value: ['count'],
-                  }
-              });
+              bindChartEvent(eventData);
           },
             function (data) {
                 alert('Failed to get details.');
@@ -378,6 +414,8 @@ angular.module('jDeriveApp')
       $scope.searchDrugChanged = function (drug) {
           if (drug && drug.originalObject) {
               $scope.search.selectedDrug = drug.originalObject;
+          } else {
+              $scope.search.selectedDrug = null;
           }
       };
 
@@ -388,6 +426,7 @@ angular.module('jDeriveApp')
           $scope.drugEventSpikeList = [];
           $scope.selectedSearch = '';
           $scope.loadEventData('');
+          $scope.search.apiDataPoint = 'local';
       };
       $scope.recallNotfound = false;
       $scope.recallInformation = [];
@@ -467,13 +506,18 @@ angular.module('jDeriveApp')
 
               $scope.selectedSearch = '';
 
+              $scope.remoteSearch = '';
+
               if ($scope.search.selectedDrug) {
-                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug;
+                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug.name;
+                  $scope.remoteSearch += 'patient.drug.medicinalproduct:' + $scope.search.selectedDrug.name;
               }
 
               if ($scope.search.gender) {
                   searchUrl += '&gender=' + $scope.search.gender.id;
                   $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender.name;
+
+                  $scope.remoteSearch += ($scope.remoteSearch !== '' ? '+AND+' : '') + 'patient.patientsex:' + $scope.search.gender.id;
               }
 
               if ($scope.search.age) {
@@ -508,10 +552,10 @@ angular.module('jDeriveApp')
               $scope.recallNotfound = false;
               $scope.recallInformation = [];
           }
-          if ($scope.apiDataPoint == 'local') {
+          if ($scope.search.apiDataPoint == 'local') {
               $scope.loadEventData(searchUrl);
           } else {
-              loadData();
+              loadData($scope.remoteSearch);
           }
 
       };
@@ -617,7 +661,7 @@ angular.module('jDeriveApp')
           //];
           $scope.chartLoading = false;
           bindGraph('#ageGroupPie', 'donut', ageGroupData, 'Age Group');
-          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group');
+          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group(in Kg)');
           bindGraph('#genderGroupPie', 'donut', genderData, 'Gender');
           //bindGraph('#countryPie', 'donut', countryData, 'Country');
       };
