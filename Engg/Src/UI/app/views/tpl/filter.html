@@ -7,7 +7,7 @@
                     <button type="button" class="btn btn-link less-search" ng-show="searchAdvanced" ng-click="searchAdvanced = !searchAdvanced"><i class="glyphicon glyphicon-chevron-up"></i> Show less</button>
                 </div>
             </div>
-            <div class="" ng-hide="searchAdvanced">
+            <!--<div class="" ng-hide="searchAdvanced">
                 <div class="">
                     <div class="row" ng-hide="!search.selectedDrug && !search.gender && !search.fromDate && !search.toDate && !search.age && !search.country">
                         <span ng-if="search.selectedDrug" style="margin:20px">
@@ -33,7 +33,7 @@
                     </div>
                     <br />
                 </div>
-            </div>
+            </div>-->
             <div class="panel panel-primary" ng-show="searchAdvanced">
                 <div class="panel-body">
                     <div class="row">                        
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <!--<div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="inputCountry" class="col-sm-3 control-label">Country</label>
@@ -150,14 +150,14 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">FDA Data</label>
                                 <div class="col-sm-9">
                                     <div class="radio">
-                                        <label title="This selection presents the graph using data obtained from the openFDA API endpoints. This tool may not display all available fields or data / is not intended for clinical use. Please visit the open.fda.gov website to review their disclaimer">
+                                        <label title="The report runs on local database downloaded from FDA (https://open.fda.gov). Select this option when open FDA.gov is not available.">
                                             <input type="radio" name="dataPoints" id="dataPoints1" value="local" checked ng-model="apiDataPoint">
                                             Offline <i class="glyphicon glyphicon-info-sign"></i>
                                         </label>
