@@ -2,12 +2,15 @@ package org.jderive.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Durga on 6/20/2015.
@@ -34,6 +37,8 @@ public class JDeriveResponse {
     private List<DrugSummaryByMonth> drugSummaryByMonthList;
     private  List<ERSummary> eRSummary;
     private  List<DischargeSummary> dischargeSummary;
+	private Map<String, List<Dimension>> dimensionResponse;
+
 
     protected JDeriveResponse(Builder builder) {
         this.statusCode = builder.statusCode;
@@ -49,6 +54,7 @@ public class JDeriveResponse {
         this.drugSummaryByMonthList = builder.drugSummaryByMonthList;
 		this.eRSummary = builder.eRSummary;
 		this.dischargeSummary = builder.dischargeSummary;
+		this.dimensionResponse = builder.dimensionResponse;
     }
 
     public static Builder builder() {
@@ -69,6 +75,8 @@ public class JDeriveResponse {
         private List<DrugSummaryByMonth> drugSummaryByMonthList;
         private List<ERSummary> eRSummary;
         private List<DischargeSummary> dischargeSummary;
+    	private Map<String, List<Dimension>> dimensionResponse;
+
 
         public JDeriveResponse build() {
             return new JDeriveResponse(this);
@@ -135,6 +143,11 @@ public class JDeriveResponse {
 		
 		public Builder withDischargeSummary(List<DischargeSummary> input) {
             this.dischargeSummary = input;
+            return this;
+        }  
+		
+		public Builder withDimensionResponse(Map<String, List<Dimension>> input) {
+            this.dimensionResponse = input;
             return this;
         }  
     }
