@@ -1,5 +1,8 @@
 package org.jderive.dto;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.jderive.api.Drug;
 import org.jderive.api.DrugCharSummary;
 import org.jderive.api.DrugEventSpike;
@@ -61,7 +64,32 @@ public final class DrugDTO {
     public static DrugSummaryByMonth drugMonthSummary(DrugMonthSummaryDomain dbDrugMonthSummaryDomain) {
         DrugSummaryByMonth drugSummaryByMonth = new DrugSummaryByMonth();
         drugSummaryByMonth.setEventCount(dbDrugMonthSummaryDomain.getEventCount());
-        drugSummaryByMonth.setStartDate(dbDrugMonthSummaryDomain.getStartDate());
+        try
+        {
+        
+        	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+             Date date = sdf.parse("2004-01-02");
+             
+             if(dbDrugMonthSummaryDomain.getStartDate() == null)
+             {
+            	 drugSummaryByMonth.setStartDate(date);
+             }
+             if(dbDrugMonthSummaryDomain.getStartDate().before(date))
+             {
+             	drugSummaryByMonth.setStartDate(date);
+             }
+             else
+             {
+             	 drugSummaryByMonth.setStartDate(dbDrugMonthSummaryDomain.getStartDate());
+             }
+             
+        }catch(Exception exception)
+        {
+        	System.out.println("Exception : "+exception.getMessage());
+        }
+       
+        
+       
         return drugSummaryByMonth;
     }
 }
