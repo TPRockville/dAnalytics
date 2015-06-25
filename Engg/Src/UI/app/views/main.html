@@ -35,8 +35,12 @@
                 </div>-->
             </div>
         </div>
+        <div class="text-center chart-loading" ng-if="chartLoading">
+            <img src="/assets/images/loading.gif" /> Loading...
+        </div>
     </div>
-    <div class="col-md-2" ng-if="selectedSearch !== ''">
+
+    <div class="col-md-2" ng-if="selectedSearch !== '' && search.selectedDrug">
         <div class="row text-center">
             <strong>Spike(s) in adverse event</strong>
         </div>
@@ -53,7 +57,7 @@
     </div>
 </div>
 
-<div ng-if="selectedSearch !== ''">
+<div ng-if="selectedSearch !== '' && search.selectedDrug">
 
     <ng-include src="'views/tpl/recallinformation.html'"></ng-include>
 

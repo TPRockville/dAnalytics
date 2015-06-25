@@ -27,9 +27,19 @@ angular.module('jDeriveApp')
 
       $scope.radioReaction = 'reaction';
 
+      $scope.chartLoading = false;
+
       $scope.countries = [];
       $scope.ageGroups = [];
       $scope.drugsList = [];
+
+      $scope.genderGroups = [
+          { id: 0, name: 'Not Specified' },
+          { id: 1, name: 'Female' },
+          { id: 2, name: 'Male' }
+      ];
+
+      $scope.searchAnywhere = false;
 
       basicService.getCountries()
          .then(function (data) {
@@ -72,8 +82,10 @@ angular.module('jDeriveApp')
       //loadData();
 
       $scope.loadEventData = function (searchCriteria) {
+          $scope.chartLoading = true;
           basicService.getEventCount(searchCriteria, 'month')
          .then(function (data) {
+             
              //var eventsCount = data.drugSummaryList;
              //$scope.dataResult = data.drugSummaryList;
 
@@ -107,7 +119,7 @@ angular.module('jDeriveApp')
                  }
                  eventData.push({ 'time': new Date(a.startDate), 'count': a.eventCount });
              });
-
+             
              if (eventData.length > 0) {
                  $('#eventGraphPanel').show();
                  var minDate = new Date(moment(eventData[0].time));
@@ -133,7 +145,7 @@ angular.module('jDeriveApp')
              if ($scope.regions.length > 0) {
                  $scope.regions = [];
              }
-
+             
              if (eventData.length > 0) {
                  //$scope.regions.push({ start: new Date(2012, 0, 1), end: new Date(2013, 0, 1), class: 'regionYellow' });
                  bindChartEvent(eventData);
@@ -154,9 +166,10 @@ angular.module('jDeriveApp')
                  $scope.duration = moment.duration(3, 'M');
                  $scope.regions.push({ start: new Date(moment(maxCountObject.startDate).subtract(moment.duration(3, 'M'))), end: new Date(moment(maxCountObject.startDate).add(moment.duration(3, 'M'))), class: 'regionYellow' });
              }
-
+             $scope.chartLoading = false;
 
          }, function (data) {
+             $scope.chartLoading = false;
              console.log('Failed service', data);
          });
       };
@@ -332,7 +345,7 @@ angular.module('jDeriveApp')
               },
               regions: $scope.regions,
               color: {
-                  pattern: ['#FF0000','#ff7f0e', '#1f77b4', '#aec7e8']
+                  pattern: ['#FF0000', '#ff7f0e', '#1f77b4', '#aec7e8']
               },
               zoom: {
                   enabled: false
@@ -455,19 +468,19 @@ angular.module('jDeriveApp')
               $scope.selectedSearch = '';
 
               if ($scope.search.selectedDrug) {
-                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug.name;
+                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug;
               }
 
               if ($scope.search.gender) {
-                  searchUrl += '&gender=' + $scope.search.gender;
-                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender;
+                  searchUrl += '&gender=' + $scope.search.gender.id;
+                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender.name;
               }
 
               if ($scope.search.age) {
                   searchUrl += '&ageGroupId=' + $scope.search.age;
-                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' age group ' + $scope.search.age;
+                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' age group ' + $("#select2-chosen-2").html();
               }
-              
+
               if ($scope.search.country) {
                   searchUrl += '&countryId=' + $scope.search.country;
                   $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' country ' + $scope.search.country;
@@ -484,7 +497,7 @@ angular.module('jDeriveApp')
 
               if ($scope.search.weight) {
                   searchUrl += '&weightGroupId=' + $scope.search.weight;
-                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' ' + $scope.search.weight;
+                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' ' + $("#select2-chosen-3").html();
               }
 
           } else {
@@ -510,7 +523,7 @@ angular.module('jDeriveApp')
           angular.element('#eventInformation').hide();
 
           //bindGroupCharts();
-          $scope.getSpikeChartSummary($scope.search.selectedDrug.id,date);
+          $scope.getSpikeChartSummary($scope.search.selectedDrug.id, date);
       };
 
       $scope.hideSpikeInformatrion = function () {
@@ -544,6 +557,7 @@ angular.module('jDeriveApp')
       $scope.SpikeChartSummary = [];
 
       $scope.getSpikeChartSummary = function (drugid, date) {
+          $scope.chartLoading = true;
           $scope.SpikeChartSummary = [];
           basicService.getSpikeChartSummary(drugid, moment(date).unix())
             .then(function (data) {
@@ -601,7 +615,7 @@ angular.module('jDeriveApp')
           //    ['GB', 70],
           //    ['CA', 20]
           //];
-
+          $scope.chartLoading = false;
           bindGraph('#ageGroupPie', 'donut', ageGroupData, 'Age Group');
           bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group');
           bindGraph('#genderGroupPie', 'donut', genderData, 'Gender');

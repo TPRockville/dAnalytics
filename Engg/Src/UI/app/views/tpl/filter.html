@@ -7,45 +7,18 @@
                     <button type="button" class="btn btn-link less-search" ng-show="searchAdvanced" ng-click="searchAdvanced = !searchAdvanced"><i class="glyphicon glyphicon-chevron-up"></i> Show less</button>
                 </div>
             </div>
-            <!--<div class="" ng-hide="searchAdvanced">
-                <div class="">
-                    <div class="row" ng-hide="!search.selectedDrug && !search.gender && !search.fromDate && !search.toDate && !search.age && !search.country">
-                        <span ng-if="search.selectedDrug" style="margin:20px">
-                            <b>Drug name : </b>{{search.selectedDrug.name}}
-                        </span>
-                        <span ng-if="search.gender" style="margin:20px">
-                            <b>Gender : </b>{{search.gender}}
-                        </span>
-                        <span ng-if="search.fromDate" style="margin:20px">
-                            <b>From Date : </b>{{search.fromDate | date:'MM/dd/yyyy'}}
-                        </span>
-                        <span ng-if="search.toDate" style="margin:20px">
-                            <b>To Date : </b>{{search.toDate | date:'MM/dd/yyyy'}}
-                        </span>
-
-                        <span ng-if="search.age" style="margin:20px">
-                            <b>Age : </b>{{search.age}}
-                        </span>
-                        <span ng-if="search.country" style="margin:20px">
-                            <b>Country : </b>{{search.country.code}}
-                        </span>
-
-                    </div>
-                    <br />
-                </div>
-            </div>-->
             <div class="panel panel-primary" ng-show="searchAdvanced">
                 <div class="panel-body">
-                    <div class="row">                        
-                        <div class="col-md-10">                            
+                    <div class="row">
+                        <div class="col-md-10">
                             <div class="form-group">
                                 <label for="inputDrug" class="col-md-2 col-sm-3 control-label">Select Drug</label>
-                                <div class="col-md-10 col-sm-8 negative-margin">
+                                <div class="col-md-9 col-sm-8 negative-margin">
                                     <angucomplete-alt id="searchDrug"
                                                       placeholder="Please type at least 3 characters to show the drug list"
                                                       pause="700"
                                                       selected-object="searchDrugChanged"
-                                                      remote-url="{{serverUrl}}/drugs/name/"
+                                                      remote-url="{{serverUrl}}/drugs/name/{{search.searchAnywhere ? '%':''}}"
                                                       remote-url-data-field="drugList"
                                                       title-field="name"
                                                       input-class="form-control input-sm"
@@ -53,7 +26,17 @@
                                                       auto-match="true"
                                                       text-searching="Searching for drugs"
                                                       match-class="autocomplete-match" />
-                                    <i class="glyphicon glyphicon-info-sign" title="Select a drug to see any adverse events reported for it."></i>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-9 col-sm-offset-0 col-sm-8">
+                                    <label style="font-weight:normal"><input type="checkbox" ng-model="search.searchAnywhere" /> Search anywhere in drug name </label>
                                 </div>
                             </div>
                         </div>
@@ -100,11 +83,9 @@
                             <div class="form-group">
                                 <label for="inputGender" class="col-sm-3 control-label">Gender</label>
                                 <div class="col-sm-8">
-                                    <select ng-model="search.gender" class="form-control input-sm">
+                                    <select ng-model="search.gender" class="form-control input-sm"
+                                            ng-options="gender.name for gender in genderGroups track by gender.id">
                                         <option value="">Select Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Unknown">Unknown</option>
                                     </select>
                                 </div>
                             </div>
@@ -116,7 +97,7 @@
                             <div class="form-group">
                                 <label for="inputAge" class="col-sm-3 control-label">Age Group</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control input-sm" ng-model="search.age" ui-select2="{ allowClear: true}" data-placeholder="Select Age Group">
+                                    <select class="form-control input-sm" ng-model="search.age" id="searchAge" ui-select2="{ allowClear: true}" data-placeholder="Select Age Group">
                                         <option value=""></option>
                                         <option ng-repeat="age in ageGroups" value="{{age.id}}">{{age.name}}</option>
                                     </select>
@@ -157,22 +138,23 @@
                                 <label class="col-sm-3 control-label">FDA Data</label>
                                 <div class="col-sm-9">
                                     <div class="radio">
-                                        <label title="The report runs on local database downloaded from FDA (https://open.fda.gov). Select this option when open FDA.gov is not available.">
+                                        <label>
                                             <input type="radio" name="dataPoints" id="dataPoints1" value="local" checked ng-model="apiDataPoint">
-                                            Offline <i class="glyphicon glyphicon-info-sign"></i>
+                                            Offline <i class="glyphicon glyphicon-info-sign" title="The report runs on local database downloaded from FDA (https://open.fda.gov). Select this option when open FDA.gov is not available."></i>
                                         </label>
-                                        <label title="Data is retrieved in real time from FDA using open FDA APIs (https://open.fda.gov).">
+                                        <label>
                                             <input type="radio" name="dataPoints" id="dataPoints2" value="openfda" ng-model="apiDataPoint">
                                             Online
-                                            <i class="glyphicon glyphicon-info-sign"></i>
+                                            <i class="glyphicon glyphicon-info-sign" title="Data is retrieved in real time from FDA using open FDA APIs (https://open.fda.gov)."></i>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 pull-right">
-                            <button type="button" class="btn btn-default btn-sm pull-right" ng-click="resetSearch()">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-sm pull-right" style="margin-right:10px">Submit</button>
+                            <div class="col-md-2 pull-right">
+                                <button type="button" class="btn btn-default btn-sm pull-right" ng-click="resetSearch()">Reset</button>
+                                <button type="submit" class="btn btn-primary btn-sm pull-right" style="margin-right:10px">Submit</button>
+                            </div>
                         </div>
                     </div>
                 </div>
