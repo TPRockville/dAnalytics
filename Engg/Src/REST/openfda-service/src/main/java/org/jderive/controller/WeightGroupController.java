@@ -6,6 +6,7 @@ import org.jderive.domain.WeightGroupDomain;
 import org.jderive.dto.WeightGroupDTO;
 import org.jderive.exception.JDeriveException;
 import org.jderive.service.WeightGroupService;
+import org.jderive.util.CacheUtil;
 import org.jderive.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,9 @@ public class WeightGroupController {
         try {
             WeightGroupDomain weightGroupDomain = weightGroupService.findById(NumberUtil.isNumeric(id) ?
                     NumberUtil.parseLong(id) : null);
+
+            CacheUtil.addWeightGroupToCache(weightGroupDomain);
+
             if (weightGroupDomain != null) {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())
@@ -57,6 +61,7 @@ public class WeightGroupController {
     public ResponseEntity<JDeriveResponse> list() throws Exception {
         try {
             List<WeightGroupDomain> weightGroupDomains = weightGroupService.findAll();
+            CacheUtil.addWeightGroupToCache(weightGroupDomains.toArray(new WeightGroupDomain[weightGroupDomains.size()]));
             return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                     .withStatusCode(HttpStatus.OK.toString())
                     .withWeightGroupList(weightGroupDomains.stream()

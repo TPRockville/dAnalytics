@@ -16,13 +16,17 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 @ToString
 public class Dimension {
 
-	public Dimension(Long type, Long eventCount) {
+	public Dimension(Long id, String type, Long eventCount) {
+		this.id = id;
 		this.type = type;
 		this.eventCount = eventCount;
 	}
 
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
+
     @JsonSerialize(using = ToStringSerializer.class)
-	private Long type;
+	private String type;
 
     @JsonSerialize(using = ToStringSerializer.class)
 	private Long eventCount;
