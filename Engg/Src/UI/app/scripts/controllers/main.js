@@ -39,7 +39,7 @@ angular.module('jDeriveApp')
           { id: 2, name: 'Male' }
       ];
 
-      $scope.searchAnywhere = false;
+      
 
       basicService.getCountries()
          .then(function (data) {
@@ -77,7 +77,7 @@ angular.module('jDeriveApp')
              console.log(data);
          });
 
-      $scope.search = {};
+      $scope.search = {searchAnywhere : false};
 
       //$scope.search.fromDate = new Date('01/01/2014');
 
@@ -199,9 +199,9 @@ angular.module('jDeriveApp')
 
       //$("#dateSlider").dateRangeSlider("values", new Date(2012, 0, 1), new Date(2012, 0, 31));
       //$('#eventGraphPanel').hide();
-      $scope.apiDataPoint = 'local';
+      $scope.search.apiDataPoint = 'local';
       $scope.loadEventData('');
-      //if ($scope.apiDataPoint == 'local') {
+      //if ($scope.search.apiDataPoint == 'local') {
 
       //} else {
       //    //loadData();
@@ -246,27 +246,52 @@ angular.module('jDeriveApp')
               var currentVal = 0;
               var maxCountObject = {};
 
-              eventsCount.map(function (a) {
-                  if (currentVal < parseInt(a.eventCount)) {
-                      currentVal = a.eventCount;
+              //$scope.monthData = d3.nest().key(function (a) {
+              //    return moment(a.eventDate).format('YYYYMM');
+              //}).rollup(function (a) {
+              //    return d3.sum(a, function (a) {
+              //        return a.eventCount
+              //    })
+              //}).entries(eventsCount);
+
+              $scope.monthData.map(function (a) {
+                  if (currentVal < parseInt(a.values)) {
+                      currentVal = a.values;
                       maxCountObject = a;
                   }
-                  var currentDate = new Date(moment(a.time, 'YYYYMMDD'));
-                  eventData.push({ 'time': currentDate, 'count': a.count });
-                  if ($scope.regions.length > 0)
-                      $scope.regions = [];
-                  $scope.regions.push({ start: new Date(moment(maxCountObject.eventDate).subtract(moment.duration(22, 'd'))), end: new Date(moment(maxCountObject.eventDate).add(moment.duration(5, 'd'))), class: 'regionYellow' });
-
+                  var currentDate = new Date(moment(a.key, 'YYYYMMDD'));
+                  eventData.push({ 'time': currentDate, 'count': a.values });
+                  
               });
+
+              if (eventData.length > 0) {
+                  $('#eventGraphPanel').show();
+
+                  var minDate = new Date(moment(eventData[0].time));
+                  var maxDate = new Date(moment(eventData[eventData.length - 1].time));
+
+                  $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+
+                  $("#dateSlider").dateRangeSlider("min", minDate);
+
+                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
+                  $('#noDataLabel').hide();
+              } else {
+                  //$('#eventGraphPanel').hide();
+                  var minDate = new Date();
+                  var maxDate = new Date();
+                  $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+                  $("#dateSlider").dateRangeSlider("min", minDate);
+
+                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
+                  $('#noDataLabel').show();
+              }
+              if ($scope.regions.length > 0)
+                  $scope.regions = [];
+              $scope.regions.push({ start: new Date(moment(maxCountObject.key, 'YYYYMM').subtract(moment.duration(3, 'M'))), end: new Date(moment(maxCountObject.key, 'YYYYMM').add(moment.duration(3, 'M'))), class: 'regionYellow' });
               $scope.datapoints = eventData;
 
-              chart.load({
-                  json: $scope.datapoints,
-                  keys: {
-                      x: 'time',
-                      value: ['count'],
-                  }
-              });
+              bindChartEvent(eventData);
           },
             function (data) {
                 alert('Failed to get details.');
@@ -480,7 +505,7 @@ angular.module('jDeriveApp')
               $scope.selectedSearch = '';
 
               if ($scope.search.selectedDrug) {
-                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug;
+                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug.name;
               }
 
               if ($scope.search.gender) {
@@ -520,7 +545,7 @@ angular.module('jDeriveApp')
               $scope.recallNotfound = false;
               $scope.recallInformation = [];
           }
-          if ($scope.apiDataPoint == 'local') {
+          if ($scope.search.apiDataPoint == 'local') {
               $scope.loadEventData(searchUrl);
           } else {
               loadData();
