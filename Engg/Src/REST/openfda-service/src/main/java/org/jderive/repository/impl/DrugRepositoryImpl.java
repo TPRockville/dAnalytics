@@ -7,11 +7,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.jderive.domain.DischargeSummaryDomain;
 import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
 import org.jderive.domain.DrugEventSpikeDomain;
+import org.jderive.domain.DrugIndicationDomain;
 import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
+import org.jderive.domain.ERSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.repository.DrugRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,16 +70,19 @@ public class DrugRepositoryImpl implements DrugRepository {
             }
         }
 
-        criteria.setProjection(Projections.projectionList()
-                .add(Projections.sum("dsm.eventCount").as("eventCount"))
-                .add(Projections.groupProperty("dsm.startDate").as("startDate")));
-        criteria.setResultTransformer(Transformers.aliasToBean(DrugSummaryDomain.class));
-        return criteria.list();
+			criteria.setProjection(Projections
+					.projectionList()
+					.add(Projections.sum("dsm.eventCount").as("eventCount"))
+					.add(Projections.groupProperty("dsm.startDate").as(
+							"startDate")));
+			criteria.setResultTransformer(Transformers
+					.aliasToBean(DrugSummaryDomain.class));
+		return criteria.list();
     }
 
     @Override
     public List<DrugDomain> findByName(String name) {
-        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '%" + name + "%' LIMIT 0, 100";
+        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '" + name + "%' LIMIT 0, 100";
         SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
         query.addEntity(DrugDomain.class);
         return query.list();
@@ -109,7 +115,7 @@ public class DrugRepositoryImpl implements DrugRepository {
 
     @Override
     public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugMonthSummaryDomain) {
+            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugMonthSummaryDomain.class, "dmsm");
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getDrugId())) {
             criteria.add(Restrictions.eq("dmsm.drugId", drugMonthSummaryDomain.getDrugId()));
@@ -135,10 +141,48 @@ public class DrugRepositoryImpl implements DrugRepository {
             }
         }
 
-        criteria.setProjection(Projections.projectionList()
-                .add(Projections.sum("dmsm.eventCount").as("eventCount"))
-                .add(Projections.groupProperty("dmsm.startDate").as("startDate")));
-        criteria.setResultTransformer(Transformers.aliasToBean(DrugMonthSummaryDomain.class));
-        return criteria.list();
+        if (applyProjection) {
+			criteria.setProjection(Projections
+					.projectionList()
+					.add(Projections.sum("dmsm.eventCount").as("eventCount"))
+					.add(Projections.groupProperty("dmsm.startDate").as(
+							"startDate")));
+			criteria.setResultTransformer(Transformers
+					.aliasToBean(DrugMonthSummaryDomain.class));
+		}
+		return criteria.list();
     }
+	
+	@Override
+	public List<ERSummaryDomain> getERSummary(String drugId) {
+		
+		List<String> drugIndictions = getDrugIndication(drugId);
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ERSummaryDomain.class, "ersummary");
+		criteria.add(Restrictions.in("ersummary.episodeDiseaseCategory",drugIndictions));
+		
+		return criteria.list();
+	}
+
+	@Override
+	public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
+		
+		List<String> drugIndictions = getDrugIndication(drugId);
+
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DischargeSummaryDomain.class);
+		
+		criteria.add(Restrictions.in("aPRDRGDescription",drugIndictions));
+
+		return criteria.list();
+	}
+	
+	
+	private List<String> getDrugIndication(String drugId) {
+		String queryByName = "select drug_indication_code from drug_indication where drug_indication_id in (select drug_indication_id from drug_indication_link where drug_id ="
+				+ drugId + ")";
+		SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(
+				queryByName);
+		List<String> drugIndictions = (List<String>) query .list();
+		return drugIndictions;
+	}
 }

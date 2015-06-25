@@ -1,6 +1,7 @@
 package org.jderive.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.jderive.domain.DischargeSummaryDomain;
 import org.jderive.domain.DrugCharSummaryDomain;
 import org.jderive.domain.DrugDomain;
 import org.jderive.domain.DrugEventSpikeDomain;
@@ -8,6 +9,7 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
+import org.jderive.domain.ERSummaryDomain;
 import org.jderive.repository.DrugRepository;
 import org.jderive.service.DrugService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,8 +97,8 @@ public class DrugServiceImpl implements DrugService {
     @Override
     @Transactional(readOnly = true)
     public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugSummary) {
-        return drugRepository.summaryMonth(drugSummary);
+            DrugMonthSummaryDomain drugSummary, boolean applyProjection) {
+        return drugRepository.summaryMonth(drugSummary, applyProjection);
     }
 
     private DrugReactionSummaryDomain aggregateReactionSummaryDomains(List<DrugReactionSummaryDomain>
@@ -111,4 +113,15 @@ public class DrugServiceImpl implements DrugService {
         drugReactionSummaryDomain.setDrugId(drugId);
         return drugReactionSummaryDomain;
     }
+    
+    @Transactional(readOnly = true)
+	public List<ERSummaryDomain> getERSummary(String drugId) {
+		return drugRepository.getERSummary(drugId);
+	}
+
+    @Transactional(readOnly = true)
+	@Override
+	public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
+		return drugRepository.getDischargeSummary(drugId);
+	}
 }
