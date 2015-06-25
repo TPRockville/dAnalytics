@@ -61,6 +61,14 @@ angular.module('jDeriveApp')
       //       console.log(data);
       //   });
 
+      $scope.drugfocus = function()
+      {
+          //console.log($scope.search.selectedDrug);
+          if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
+              $scope.$broadcast('angucomplete-alt:clearInput');
+          }
+      }
+
       $scope.weightGroups = [];
       basicService.getWeightGroups()
          .then(function (data) {
@@ -203,6 +211,7 @@ angular.module('jDeriveApp')
 
       /*Random Data Generator */
       function loadData() {
+          $scope.chartLoading = true;
           var eventsCount = [];
           var fromDate = '20040101';
           var toDate = $filter('date')(new Date(), 'yyyyMMdd');
@@ -217,6 +226,7 @@ angular.module('jDeriveApp')
 
           basicService.getCountbyReceivedDate(fromDate, toDate, 'receivedate')
           .then(function (data) {
+              $scope.chartLoading = false;
               if (data) {
                   eventsCount = data.results;
               }
@@ -378,6 +388,8 @@ angular.module('jDeriveApp')
       $scope.searchDrugChanged = function (drug) {
           if (drug && drug.originalObject) {
               $scope.search.selectedDrug = drug.originalObject;
+          } else {
+              $scope.search.selectedDrug = null;
           }
       };
 
