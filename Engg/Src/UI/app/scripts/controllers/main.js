@@ -125,7 +125,7 @@ angular.module('jDeriveApp')
                      currentVal = a.eventCount;
                      $scope.maxCountObject = a;
                  }
-                 eventData.push({ 'time': new Date(a.startDate), 'count': a.eventCount });
+                 eventData.push({ 'time': moment(a.startDate).format('YYYY-MM-DD'), 'count': a.eventCount });
              });
              
              if (eventData.length > 0) {
