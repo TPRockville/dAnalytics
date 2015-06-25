@@ -270,8 +270,9 @@ public class DrugController {
         return drugSummaryDomain;
     }
     @RequestMapping(value = "{id}/indication/ersummary", method = RequestMethod.GET) 
-    public ResponseEntity<JDeriveResponse> getERSummary(@PathVariable("id") String drugId) {
-    	
+    public ResponseEntity<JDeriveResponse> getERSummary(@PathVariable("id") String drugId)throws Exception {
+    	try
+    	{
     	List<ERSummaryDomain> erSummaryDomains = drugService.getERSummary(drugId);
 
         if (erSummaryDomains != null) {
@@ -288,13 +289,17 @@ public class DrugController {
                     .build();
             return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
         }
-        
+    }catch (Exception e) {
+        throw new JDeriveException(EXCEPTION_MESSAGE, e);
+    }
     }
     
     
     @RequestMapping(value = "{id}/indication/dischargesummary", method = RequestMethod.GET) 
-    public ResponseEntity<JDeriveResponse> getDischargeSummary(@PathVariable("id") String drugId) {
+    public ResponseEntity<JDeriveResponse> getDischargeSummary(@PathVariable("id") String drugId) throws Exception {
     	
+    	try
+    	{
     	List<DischargeSummaryDomain> dischargeSummaryDomains = drugService.getDischargeSummary(drugId);
     	
         if (dischargeSummaryDomains != null) {
@@ -310,6 +315,9 @@ public class DrugController {
                     .withStatusCode(HttpStatus.NOT_FOUND.toString())
                     .build();
             return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.NOT_FOUND);
+        }
+    	}catch (Exception e) {
+            throw new JDeriveException(EXCEPTION_MESSAGE, e);
         }
         
     }
