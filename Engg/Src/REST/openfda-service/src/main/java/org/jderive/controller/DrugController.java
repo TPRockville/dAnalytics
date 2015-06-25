@@ -116,8 +116,8 @@ public class DrugController {
         }
     }
 
-    @RequestMapping(value = "/name/{name}/{contains}", method = RequestMethod.GET)
-    public ResponseEntity<JDeriveResponse> autoComplete(@PathVariable("name") String name,@PathVariable("contains") boolean containsFlag) throws Exception {
+    @RequestMapping(value = "/name/{contains}/{name}", method = RequestMethod.GET)
+    public ResponseEntity<JDeriveResponse> autoComplete(@PathVariable("contains") boolean containsFlag,@PathVariable("name") String name) throws Exception {
         try {
             List<DrugDomain> drugDomainList = drugService.findByName(name,containsFlag);
             if (CollectionUtils.isNotEmpty(drugDomainList)) {
