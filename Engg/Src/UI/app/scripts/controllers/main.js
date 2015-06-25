@@ -33,6 +33,12 @@ angular.module('jDeriveApp')
       $scope.ageGroups = [];
       $scope.drugsList = [];
 
+      $scope.genderGroups = [
+          { id: 0, name: 'Not Specified' },
+          { id: 1, name: 'Female' },
+          { id: 2, name: 'Male' }
+      ];
+
       $scope.searchAnywhere = false;
 
       basicService.getCountries()
@@ -462,17 +468,17 @@ angular.module('jDeriveApp')
               $scope.selectedSearch = '';
 
               if ($scope.search.selectedDrug) {
-                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug.name;
+                  $scope.selectedSearch += 'for selected drug ' + $scope.search.selectedDrug;
               }
 
               if ($scope.search.gender) {
-                  searchUrl += '&gender=' + $scope.search.gender;
-                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender;
+                  searchUrl += '&gender=' + $scope.search.gender.id;
+                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender.name;
               }
 
               if ($scope.search.age) {
                   searchUrl += '&ageGroupId=' + $scope.search.age;
-                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' age group ' + $scope.search.age;
+                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' age group ' + $("#select2-chosen-2").html();
               }
 
               if ($scope.search.country) {
@@ -491,7 +497,7 @@ angular.module('jDeriveApp')
 
               if ($scope.search.weight) {
                   searchUrl += '&weightGroupId=' + $scope.search.weight;
-                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' ' + $scope.search.weight;
+                  $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + ' ' + $("#select2-chosen-3").html();
               }
 
           } else {

@@ -83,11 +83,9 @@
                             <div class="form-group">
                                 <label for="inputGender" class="col-sm-3 control-label">Gender</label>
                                 <div class="col-sm-8">
-                                    <select ng-model="search.gender" class="form-control input-sm">
+                                    <select ng-model="search.gender" class="form-control input-sm"
+                                            ng-options="gender.name for gender in genderGroups track by gender.id">
                                         <option value="">Select Gender</option>
-                                        <option value="2">Male</option>
-                                        <option value="1">Female</option>
-                                        <option value="0">Not Specified</option>
                                     </select>
                                 </div>
                             </div>
@@ -99,7 +97,7 @@
                             <div class="form-group">
                                 <label for="inputAge" class="col-sm-3 control-label">Age Group</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control input-sm" ng-model="search.age" ui-select2="{ allowClear: true}" data-placeholder="Select Age Group">
+                                    <select class="form-control input-sm" ng-model="search.age" id="searchAge" ui-select2="{ allowClear: true}" data-placeholder="Select Age Group">
                                         <option value=""></option>
                                         <option ng-repeat="age in ageGroups" value="{{age.id}}">{{age.name}}</option>
                                     </select>
