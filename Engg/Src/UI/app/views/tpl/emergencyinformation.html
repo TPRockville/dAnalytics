@@ -3,11 +3,12 @@
         <div class="row text-info">
             <div class="col-md-12">
                 <label title=""><b>Emergency Room</b></label>
+                <small>There is no direct correlation between event and Emergency room data.</small>
             </div>
         </div>
         <div class="table-responsive" ng-if="ERSummaryList.length > 0">
             <div style="max-height:300px;overflow-y:auto">
-                <table class="table table-bordered" name="ERSummaryList">
+                <table class="table table-bordered table-condensed" name="ERSummaryList">
                     <thead>
                         <tr>
                             <th>Drug Indication</th>
@@ -36,11 +37,12 @@
         <div class="row text-info">
             <div class="col-md-12">
                 <label title=""><b>Discharge Data</b></label>
+                <small>There is no direct correlation between event and Discharge summary data.</small>
             </div>
         </div>
         <div class="table-responsive" ng-if="dischargeSummaryList.length > 0">
             <div style="max-height:300px;overflow-y:auto">
-                <table class="table table-bordered" name="dischargeSummaryList">
+                <table class="table table-bordered table-condensed" name="dischargeSummaryList">
                     <thead>
                         <tr>
                             <th>Year</th>
