@@ -17,7 +17,7 @@ public class DrugEventSpike {
 
     private Date spikeDate;
 
-    private String eventCount;
+    private Long eventCount;
 
     private String eventAverage;
 
