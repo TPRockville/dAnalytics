@@ -26,10 +26,7 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.domain.ERSummaryDomain;
-import org.jderive.dto.DimensionDTO;
-import org.jderive.dto.DischargeSummaryDTO;
-import org.jderive.dto.DrugDTO;
-import org.jderive.dto.ERSummaryDTO;
+import org.jderive.dto.*;
 import org.jderive.exception.JDeriveException;
 import org.jderive.service.DrugService;
 import org.jderive.util.NumberUtil;
@@ -66,8 +63,8 @@ public class DrugController {
     	public int compare(DrugEventSpikeDomain drugEventSpikeDomain1, DrugEventSpikeDomain drugEventSpikeDomain2) {
     		if(drugEventSpikeDomain1.getEventCount() != null && drugEventSpikeDomain2.getEventCount() != null)
     		{
-    			Integer num1 = Integer.parseInt(drugEventSpikeDomain1.getEventCount());
-        		Integer num2 = Integer.parseInt(drugEventSpikeDomain2.getEventCount());
+    			Long num1 = drugEventSpikeDomain1.getEventCount();
+        		Long num2 = drugEventSpikeDomain2.getEventCount();
         		return num1.compareTo(num2);
     		}else
     		{
@@ -226,7 +223,7 @@ public class DrugController {
     @RequestMapping(value = "/{drugId}/reaction", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> reactionSummary(@PathVariable("drugId") String drugId) throws Exception {
         try {
-            List<DrugReactionSummaryDomain> drugReactionSummaryDomainList = drugService.reactionSummary(NumberUtil
+            List<DrugReactionSummaryDTO> drugReactionSummaryDomainList = drugService.reactionSummary(NumberUtil
                     .isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
             if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
@@ -235,8 +232,8 @@ public class DrugController {
                         .withDrugReactionSummaryList(
                                 drugReactionSummaryDomainList
                                         .stream()
-                                        .map(drugReactionSummaryDomain -> DrugDTO
-                                                .drugReactionSummary(drugReactionSummaryDomain))
+                                        .map(drugReactionSummaryDTO -> DrugReactionSummaryDTO
+                                                .transform(drugReactionSummaryDTO))
                                         .collect(Collectors.toList())).build();
 
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);

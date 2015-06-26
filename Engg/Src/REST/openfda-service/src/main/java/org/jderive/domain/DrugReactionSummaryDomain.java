@@ -26,7 +26,7 @@ public class DrugReactionSummaryDomain {
     @Column(name = "DRUG_ID")
     private Long drugId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "REACTION_ID", nullable = false)
     private DrugReactionDomain reactionDomain;
 

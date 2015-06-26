@@ -8,6 +8,8 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.domain.ERSummaryDomain;
+import org.jderive.dto.DrugReactionSummaryDTO;
+
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public interface DrugRepository {
 
     List<DrugCharSummaryDomain> characterSummary(Long drugId);
 
-    List<DrugReactionSummaryDomain>  reactionSummary(Long drugId);
+    List<DrugReactionSummaryDTO>  reactionSummary(Long drugId);
 
     List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugSummary, boolean applyProjection);
     

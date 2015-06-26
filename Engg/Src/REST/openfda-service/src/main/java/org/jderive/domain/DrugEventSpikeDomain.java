@@ -30,7 +30,7 @@ public class DrugEventSpikeDomain {
     private Date spikeDate;
 
     @Column(name = "EVENT_COUNT")
-    private String eventCount;
+    private Long eventCount;
 
     @Column(name = "DRUG_EVENT_AVG")
     private String eventAverage;
