@@ -225,7 +225,7 @@ public class DrugController {
                                                            @RequestParam("firstResult") Integer firstResult,
                                                            @RequestParam("maxResults") Integer maxResults) throws JDeriveException{
         try {
-            List<DrugReactionSummaryDTO> drugReactionSummaryDomainList = drugService.reactionSummary((NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null),firstResult,maxResult);
+            List<DrugReactionSummaryDTO> drugReactionSummaryDomainList = drugService.reactionSummary((NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null),firstResult,maxResults);
             if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
                         .builder()
