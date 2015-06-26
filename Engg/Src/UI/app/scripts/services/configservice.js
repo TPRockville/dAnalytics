@@ -11,7 +11,7 @@ angular.module('jDeriveApp')
   .service('configService', function () {
       var service = {
           protocol: 'http',
-          host: '52.24.193.94',
+          host: '192.168.140.34',
           port: '8080',
           contextRoot: 'dAnalytics'
       };
