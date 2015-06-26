@@ -562,7 +562,7 @@ angular.module('jDeriveApp')
       function loadReactions(skip, count) {
           basicService.getDrugReaction($scope.search.selectedDrug.id, skip, count)
           .then(function (data) {
-              $scope.drugReactionSummaryList = data.drugReactionSummaryList;              
+              $scope.drugReactionSummaryList = data.drugReactionSummaryList;
           }, function (data) {
               console.log('charct', data);
           });
@@ -701,22 +701,30 @@ angular.module('jDeriveApp')
           });
       };
       $scope.reactionsLoading = false;
+      $scope.hasMoreReactions = true;
       $scope.loadMoreReactions = function () {
+          if ($scope.hasMoreReactions) {
+              $scope.reactionsLoading = true;
 
-          $scope.reactionsLoading = true;
+              $scope.reactionSkip += $scope.reactionCount;
+              //var results = loadReactions($scope.reactionSkip, $scope.reactionCount);
 
-          $scope.reactionSkip += $scope.reactionCount;
-          //var results = loadReactions($scope.reactionSkip, $scope.reactionCount);
-
-          basicService.getDrugReaction($scope.search.selectedDrug.id, $scope.reactionSkip, $scope.reactionCount)
-          .then(function (data) {
-              angular.forEach(data.drugReactionSummaryList, function (value) {
-                  $scope.drugReactionSummaryList.push(value);
+              basicService.getDrugReaction($scope.search.selectedDrug.id, $scope.reactionSkip, $scope.reactionCount + 1)
+              .then(function (data) {
+                  $scope.hasMoreReactions = (data.drugReactionSummaryList && data.drugReactionSummaryList.length > $scope.reactionCount);
+                  var index = 0;
+                  angular.forEach(data.drugReactionSummaryList, function (value) {
+                      index++;
+                      if (index <= $scope.reactionCount) {
+                          $scope.drugReactionSummaryList.push(value);
+                      }
+                  });
+                  $scope.reactionsLoading = false;
+              }, function (data) {
+                  $scope.reactionsLoading = false;
+                  console.log('reactions', data);
               });
-              $scope.reactionsLoading = false
-          }, function (data) {
-              console.log('reactions', data);
-          });
+          }
       };
 
   });
