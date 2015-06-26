@@ -32,7 +32,7 @@ public interface DrugService {
 
     List<DrugReactionSummaryDTO> reactionSummary(Long drugId,int firstResult, int maxResults);
 
-    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection);
+    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) throws JDeriveException;
 	
 	List<ERSummaryDomain> getERSummary(String drugId);
 

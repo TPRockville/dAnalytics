@@ -289,7 +289,7 @@ public class DrugController {
 
     @RequestMapping(value = "/{drugId}/dimensions", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> getDimensions(@PathVariable("drugId") String drugId,
-            @RequestParam(value = "date", required = false) String date) {
+            @RequestParam(value = "date", required = false) String date) throws JDeriveException {
         DrugMonthSummaryDomain drugMonthSummaryDomain = new DrugMonthSummaryDomain();
         drugMonthSummaryDomain.setDrugId(Long.valueOf(drugId));
         drugMonthSummaryDomain.setStartDate(new Date(Long.valueOf(date) * 1000));
