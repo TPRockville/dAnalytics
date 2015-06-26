@@ -13,4 +13,9 @@ angular.module('jDeriveApp')
       return function (input, inpitformat, format) {
           return moment(input, inpitformat).format(format);
       };
-  });
+  })
+.filter('timezoneFormat', function (moment) {
+    return function (input, format) {
+        return moment(input.slice(0,10)).format(format);
+    };
+});

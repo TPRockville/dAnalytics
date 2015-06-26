@@ -79,7 +79,7 @@ angular.module('jDeriveApp')
              console.log(data);
          });
 
-      $scope.search = { searchAnywhere: false };
+      $scope.search = { searchAnywhere: true };
 
       //$scope.search.fromDate = new Date('01/01/2014');
 
@@ -571,6 +571,8 @@ angular.module('jDeriveApp')
       $scope.showSpikeInformatrion = function (date) {
           angular.element('#spikeInformation').show();
           angular.element('#eventInformation').hide();
+          angular.element('#spikelabel').show();
+          angular.element('#adverselabel').hide();
 
           //bindGroupCharts();
           $scope.getSpikeChartSummary($scope.search.selectedDrug.id, date);
@@ -579,6 +581,9 @@ angular.module('jDeriveApp')
       $scope.hideSpikeInformatrion = function () {
           angular.element('#spikeInformation').hide();
           angular.element('#eventInformation').show();
+
+          angular.element('#spikelabel').hide();
+          angular.element('#adverselabel').show();
       };
       //angular.element("#slider").dateRangeSlider();
 

@@ -16,7 +16,7 @@
             </div>
         </div>
         <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
-        <div class="text-center" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph.">Adverse event {{selectedSearch === '' ? 'report' : 'reported'}} {{selectedSearch}}</div>
+        <div class="text-center" id="adverselabel" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph.">Adverse event {{selectedSearch === '' ? 'report' : 'reported'}} {{selectedSearch}}</div>
         <div id="spikeInformation" style="display:none">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="hideSpikeInformatrion();" style="margin-top:-15px;font-size:14px;color:#000000"><span aria-hidden="true">&times; Close</span></button>
 
@@ -35,6 +35,7 @@
                 </div>-->
             </div>
         </div>
+        <div class="text-center" id="spikelabel" style="position:relative;top:-330px;display:none" title="Zero event count is not considered for plotting the graph.">Event count by summary</div>
         <div class="text-center chart-loading" ng-if="chartLoading">
             <img src="/assets/images/loading.gif" /> Loading...
         </div>
@@ -47,7 +48,7 @@
         <br />
         <div style="max-height:350px;overflow-y:auto">
             <ul class="list-group">
-                <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion(spike.spikeDate);" name="spike{{$index}}">{{ spike.spikeDate | date:'MMM yyyy'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
+                <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion(spike.spikeDate);" name="spike{{$index}}">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
                 <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></li>
             </ul>
         </div>
