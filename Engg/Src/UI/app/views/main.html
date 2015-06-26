@@ -1,5 +1,5 @@
 <div class="container" ng-cloak>
-    <p><span style="font-size:12px;line-height:1;">dAnalytics compiles drug adverse event data from the U.S. Food and Drug Administration (<a href="https://open.fda.gov">https://open.fda.gov</a>).  We have analyzed about 10 million drug adverse events from the last 10 years, between 2004 and 2014. Search here to look for specific drug's events and related data.</span></p>
+    <p><span style="font-size:12px;line-height:1;">dAnalytics compiles drug adverse event data from the U.S. Food and Drug Administration (<a href="https://open.fda.gov">https://open.fda.gov</a>).  We have analyzed about 10 million drug adverse events from the last 10 years, between 2004 and 2014. Use filter criteria below to drill down into adverse event data.</span></p>
 </div>
 
 <ng-include src="'views/tpl/filter.html'"></ng-include>
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
-        <div class="text-center" id="adverselabel" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph.">Adverse event {{selectedSearch === '' ? 'report' : 'reported'}} {{selectedSearch}}</div>
+        <div class="text-center" id="adverselabel" style="position:relative;top:-370px;" title="Zero event count is not considered for plotting the graph.">Adverse Event {{selectedSearch === '' ? 'report' : 'reported'}} {{selectedSearch}}</div>
         <div id="spikeInformation" style="display:none">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="hideSpikeInformatrion();" style="margin-top:-15px;font-size:14px;color:#000000"><span aria-hidden="true">&times; Close</span></button>
 
@@ -74,8 +74,8 @@
 </div>
 
 <div class="container" ng-cloak style="padding-top:20px">
-    <p><b style="font-size:12px">Disclaimer:</b> <span style="font-size:12px">The charts and reports displayed on this site are created using data obtained from the <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA api's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
-    <p style="font-size:12px;font-style:italic">Developed by <a href="http://tpgsi.com/" target="_blank">TurningPoint Global Solutions LLC</a> for GSA agile delivery service request for the quotation - 4QTFHS150004</p>
+    <p><b style="font-size:12px">Disclaimer:</b> <span style="font-size:12px">The charts and reports displayed on this site are created using data obtained from the <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA API's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
+    <p style="font-size:12px;font-style:italic">Developed by <a href="http://tpgsi.com/" target="_blank">TurningPoint Global Solutions LLC</a></p>
 </div>
 <div class="row text-right">
     <a href="http://tpgsi.com/" target="_blank"><img src="/assets/images/tplogo.jpg" alt="TurningPoint Global Solutions" /></a>
