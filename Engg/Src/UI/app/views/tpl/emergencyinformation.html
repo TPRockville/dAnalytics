@@ -1,9 +1,14 @@
 ﻿<div class="row">
+    <div class="col-md-12">
+        <h4 class="text-warning text-center">Other Available Statistics</h4>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-6">
         <div class="row text-info">
             <div class="col-md-12">
-                <label title=""><b>Emergency Room</b></label>
-                <small>There is no direct correlation between event and Emergency room data.</small>
+                <label title=""><b>Emergency Room</b> (Specific to state of New York for 2012)</label>
+                <small>This table provides count of patients who have visited Emergency room  for which selected drug may have been prescribed.</small>
             </div>
         </div>
         <div class="table-responsive" ng-if="ERSummaryList.length > 0">
@@ -11,7 +16,7 @@
                 <table class="table table-bordered table-condensed" name="ERSummaryList">
                     <thead>
                         <tr>
-                            <th>Drug Indication</th>
+                            <th>Similar adverse event</th>
                             <th>Total ER Visits</th>
                         </tr>
                     </thead>
@@ -23,7 +28,7 @@
                     </tbody>
                 </table>
             </div>
-            <small>*Emergency room data available for the state of New York for 2012</small>
+            <!--<small>*Emergency room data available for the state of New York for 2012</small>-->
         </div>
         <div class="row text-primary" ng-if="ERSummaryList.length <= 0" style="margin-top:20px;margin-bottom:20px">
             <div class="col-md-12">
@@ -36,8 +41,8 @@
     <div class="col-md-6">
         <div class="row text-info">
             <div class="col-md-12">
-                <label title=""><b>Discharge Data</b></label>
-                <small>There is no direct correlation between event and Discharge summary data.</small>
+                <label title=""><b>Patient discharge data</b> (Specific to state of NY for the 2009 to 2014 )</label>
+                <small>This table provides count of patients have been Admitted / Discharged for which selected drug may have been prescribed.</small>
             </div>
         </div>
         <div class="table-responsive" ng-if="dischargeSummaryList.length > 0">
@@ -46,8 +51,8 @@
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th>Drug Indication</th>
-                            <th>No. Of Patient Discharges</th>
+                            <th>Similar adverse event</th>
+                            <th>Number of Patient Discharges</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,7 +64,7 @@
                     </tbody>
                 </table>
             </div>
-            <small>*Discharge data available for the state of New York from 2009 till 2014.</small>
+            <!--<small>*Discharge data available for the state of New York from 2009 till 2014.</small>-->
         </div>
         <div class="row text-primary" ng-if="dischargeSummaryList.length <= 0" style="margin-top:20px;margin-bottom:20px;">
             <div class="col-md-12">
