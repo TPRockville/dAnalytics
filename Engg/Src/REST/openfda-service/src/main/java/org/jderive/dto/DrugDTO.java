@@ -66,19 +66,7 @@ public final class DrugDTO {
         drugSummaryByMonth.setEventCount(dbDrugMonthSummaryDomain.getEventCount());
         try
         {
-        
-        	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-             Date date = sdf.parse("2004-01-02");
-             
-             if(dbDrugMonthSummaryDomain.getStartDate() == null)
-             {
-            	 drugSummaryByMonth.setStartDate(date);
-             }
-             if(dbDrugMonthSummaryDomain.getStartDate().before(date))
-             {
-             	drugSummaryByMonth.setStartDate(date);
-             }
-             else
+             if(dbDrugMonthSummaryDomain.getStartDate()!=null)
              {
              	 drugSummaryByMonth.setStartDate(dbDrugMonthSummaryDomain.getStartDate());
              }
