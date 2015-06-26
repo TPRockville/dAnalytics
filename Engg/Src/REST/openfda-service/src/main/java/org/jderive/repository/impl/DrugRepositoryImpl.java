@@ -108,7 +108,7 @@ public class DrugRepositoryImpl implements DrugRepository {
     @Override
     public List<DrugEventSpikeDomain> eventSpikeCount(Long drugId) {
         Query query = sessionFactory.getCurrentSession()
-                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId ORDER BY eventCount");
+                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId ORDER BY eventCount desc");
         query.setLong("drugId", drugId);
         return query.list();
     }
