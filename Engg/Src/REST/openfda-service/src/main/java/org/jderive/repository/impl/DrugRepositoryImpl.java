@@ -8,15 +8,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
-import org.jderive.domain.DischargeSummaryDomain;
-import org.jderive.domain.DrugCharSummaryDomain;
-import org.jderive.domain.DrugDomain;
-import org.jderive.domain.DrugEventSpikeDomain;
-import org.jderive.domain.DrugIndicationDomain;
-import org.jderive.domain.DrugMonthSummaryDomain;
-import org.jderive.domain.DrugReactionSummaryDomain;
-import org.jderive.domain.ERSummaryDomain;
-import org.jderive.domain.DrugSummaryDomain;
+import org.jderive.domain.*;
 import org.jderive.dto.DrugReactionSummaryDTO;
 import org.jderive.exception.JDeriveException;
 import org.jderive.repository.DrugRepository;
@@ -140,8 +132,8 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) {
+    public List<DrugMonthSummaryDomain> summaryMonth (
+            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) throws JDeriveException{
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugMonthSummaryDomain.class, "dmsm");
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getDrugId())) {
             criteria.add(Restrictions.eq("dmsm.drugId", drugMonthSummaryDomain.getDrugId()));
@@ -158,6 +150,18 @@ public class DrugRepositoryImpl implements DrugRepository {
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getGenderId())) {
             criteria.add(Restrictions.eq("dmsm.genderId", drugMonthSummaryDomain.getGenderId()));
         }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse("2004-01-02");
+            if (drugMonthSummaryDomain.getStartDate() == null || drugMonthSummaryDomain.getStartDate().before(date)) {
+
+                drugMonthSummaryDomain.setStartDate(date);
+            }
+        } catch (ParseException e) {
+            throw new JDeriveException("Problem with parsing the date", e);
+        }
+
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getStartDate())) {
             if (!StringUtils.isEmpty(drugMonthSummaryDomain.getEndDate())) {
                 criteria.add(Restrictions.between("dmsm.startDate",

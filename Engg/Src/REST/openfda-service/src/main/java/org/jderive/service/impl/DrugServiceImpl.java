@@ -81,7 +81,7 @@ public class DrugServiceImpl implements DrugService {
     @Override
     @Transactional(readOnly = true)
     public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugSummary, boolean applyProjection) {
+            DrugMonthSummaryDomain drugSummary, boolean applyProjection) throws JDeriveException {
         return drugRepository.summaryMonth(drugSummary, applyProjection);
     }
 
