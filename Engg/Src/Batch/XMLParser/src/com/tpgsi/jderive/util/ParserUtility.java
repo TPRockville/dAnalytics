@@ -22,7 +22,6 @@ import com.tpgsi.jderive.jaxb.Summary;
 public class ParserUtility 
 {
 	private static final String DELIMMITER = ",";
-	private static final String COLUMN_NAMES = "SAFETYREPORTVERSION,SAFETYREPORTID,PRIMARYSOURCECOUNTRY,OCCURCOUNTRY,TRANSMISSIONDATEFORMAT,TRANSMISSIONDATE,REPORTTYPE,RECEIVEDATEFORMAT,RECEIVEDATE,RECEIPTDATEFORMAT,RECEIPTDATE,FULFILLEXPEDITECRITERIA,COMPANYNUMB,DUPLICATE,DUPLICATESOURCE,DUPLICATENUMB,REPORTERCOUNTRY,QUALIFICATION,SENDERTYPE,SENDERORGANIZATION,RECEIVERTYPE,RECEIVERORGANIZATION,PATIENTONSETAGE,PATIENTONSETAGEUNIT,PATIENTWEIGHT,PATIENTSEX,DRUGCHARACTERIZATION,MEDICINALPRODUCT,DRUGDOSAGETEXT,DRUGDOSAGEFORM,DRUGAUTHORIZATIONNUMB,DRUGSTRUCTUREDOSAGENUMB,DRUGSTRUCTUREDOSAGEUNIT,DRUGSEPARATEDOSAGENUMB,DRUGINTERVALDOSAGEUNITNUMB,DRUGINTERVALDOSAGEDEFINITION,DRUGAADMINISTRATIONROUTE,DRUGINDICATION,DRUGSTARTDATEFORMAT,DRUGSTARTDATE,DRUGENDDATEFORMAT,DRUGENDDATE,ACTIONDRUG,ACTIVESUBSTANCENAME,REACTIONMEDDRAVERSIONPT,REACTIONMEDDRAPT,REACTIONOUTCOME,NARRATIVEINCLUDECLINICAL\n";
 	
 	/**
 	 * Denormalizing the XML file by multiplying the number of Drugs with number of reactions and then adding into a csv file
@@ -32,7 +31,6 @@ public class ParserUtility
 	 */
 	public void generateReport(final List<SafetyReport> safetyList, final BufferedWriter bout) throws Exception 
 	{
-		bout.write(COLUMN_NAMES);
 		Patient patient;
 		ReportDuplicate reportDuplicate;
 		PrimarySource primarySource;
@@ -174,7 +172,7 @@ public class ParserUtility
 	
 	/**
 	 * Return Blank value if the value is null 
-	 * Else if the value contains a comma, add space instead
+	 * Else if the value contains a comma or carriage return, add space instead
 	 * @param value
 	 * @return
 	 */
@@ -183,6 +181,6 @@ public class ParserUtility
 		if(value == null)
 			return "";
 		else
-			return value.replaceAll(",", " ");
+			return value.replaceAll(",", " ").replaceAll("\\n", " ");
 	}
 }
