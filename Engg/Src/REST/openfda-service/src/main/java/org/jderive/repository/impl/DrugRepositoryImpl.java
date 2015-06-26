@@ -170,7 +170,7 @@ public class DrugRepositoryImpl implements DrugRepository {
             } else {
                 criteria.add(Restrictions.between("dmsm.startDate",
                         drugMonthSummaryDomain.getStartDate(),
-                        new Date(System.currentTimeMillis())));
+                        drugMonthSummaryDomain.getEndDate()));
             }
         }
 
