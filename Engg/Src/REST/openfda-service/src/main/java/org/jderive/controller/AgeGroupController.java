@@ -47,7 +47,6 @@ public class AgeGroupController {
         try {
             AgeGroupDomain ageGroupDomain = ageGroupService.findById(NumberUtil.isNumeric(id) ? NumberUtil.parseLong(id)
                     : null);
-            CacheUtil.addAgeGroupToCache(ageGroupDomain);
             if (ageGroupDomain != null) {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())

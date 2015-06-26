@@ -221,10 +221,11 @@ public class DrugController {
     }
 
     @RequestMapping(value = "/{drugId}/reaction", method = RequestMethod.GET)
-    public ResponseEntity<JDeriveResponse> reactionSummary(@PathVariable("drugId") String drugId) throws Exception {
+    public ResponseEntity<JDeriveResponse> reactionSummary(@PathVariable("drugId") String drugId,
+                                                           @RequestParam("firstResult") Integer firstResult,
+                                                           @RequestParam("maxResults") Integer maxResults) throws JDeriveException{
         try {
-            List<DrugReactionSummaryDTO> drugReactionSummaryDomainList = drugService.reactionSummary(NumberUtil
-                    .isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
+            List<DrugReactionSummaryDTO> drugReactionSummaryDomainList = drugService.reactionSummary((NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null),firstResult,maxResult);
             if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
                         .builder()

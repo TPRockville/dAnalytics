@@ -40,8 +40,6 @@ public class WeightGroupController {
             WeightGroupDomain weightGroupDomain = weightGroupService.findById(NumberUtil.isNumeric(id) ?
                     NumberUtil.parseLong(id) : null);
 
-            CacheUtil.addWeightGroupToCache(weightGroupDomain);
-
             if (weightGroupDomain != null) {
                 return new ResponseEntity<JDeriveResponse>(JDeriveResponse.builder()
                         .withStatusCode(HttpStatus.OK.toString())
