@@ -306,6 +306,12 @@ total_count bigint(10),
 primary key(discharge_summary_id)
 );
 
+CREATE TABLE `country_code` (
+  `id` bigint(100) NOT NULL DEFAULT '0',
+  `country_name` varchar(100) DEFAULT NULL,
+  `country_code` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE INDEX DS_DRUG_IDX ON drug_summary(drug_id);
 CREATE INDEX DS_DRUG_AGE_IDX ON drug_summary(drug_id,age_group_id);

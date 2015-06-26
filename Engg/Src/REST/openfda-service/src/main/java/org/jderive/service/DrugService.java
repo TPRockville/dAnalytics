@@ -8,6 +8,9 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.domain.ERSummaryDomain;
+import org.jderive.dto.DrugReactionSummaryDTO;
+import org.jderive.exception.JDeriveException;
+
 import java.util.List;
 
 /**
@@ -19,7 +22,7 @@ public interface DrugService {
 
     DrugDomain findById(Long id);
 
-    List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummary);
+    List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummary) throws JDeriveException;
 
     List<DrugDomain> findByName(String name,boolean containsFlag);
 
@@ -27,9 +30,9 @@ public interface DrugService {
 
     List<DrugCharSummaryDomain> characterSummary(Long drugId);
 
-    List<DrugReactionSummaryDomain> reactionSummary(Long drugId);
+    List<DrugReactionSummaryDTO> reactionSummary(Long drugId,int firstResult, int maxResults);
 
-    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection);
+    List<DrugMonthSummaryDomain> summaryMonth(DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) throws JDeriveException;
 	
 	List<ERSummaryDomain> getERSummary(String drugId);
 

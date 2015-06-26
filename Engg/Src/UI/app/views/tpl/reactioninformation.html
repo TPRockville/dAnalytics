@@ -6,8 +6,8 @@
             </div>
         </div>
 
-        <div class="table-responsive" ng-show="drugReactionSummaryList && drugReactionSummaryList.length > 0">
-            <table class="table table-bordered" name="drugReactions">
+        <div class="table-responsive" ng-show="drugReactionSummaryList && drugReactionSummaryList.length > 0"  when-scroll-ends="loadMoreReactions()" style="max-height:150px;overflow-y:auto;">
+            <table class="table table-bordered table-condensed" name="drugReactions">
                 <thead>
                     <tr>
                         <th>Drug Name</th>
@@ -20,6 +20,11 @@
                         <td ng-if="$index == 0" rowspan="{{drugReactionSummaryList.length}}"  style="padding-top:{{drugReactionSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
                         <td>{{reac.reactionName}}</td>
                         <td>{{reac.eventCount}}</td>
+                    </tr>
+                    <tr ng-if="reactionsLoading">
+                        <td colspan="3" class="text-center">
+                            Loading more reactions
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -37,8 +42,8 @@
                 <label><b>FDA Drug Characterization Details</b> <i class="glyphicon glyphicon-info-sign" title=" This table details the 3 different type Characterization of a Drug along with its respective counts"></i></label>
             </div>
         </div>
-        <div class="table-responsive" ng-show="drugCharSummaryList && drugCharSummaryList.length > 0">
-            <table class="table table-bordered" name="drugCharSummaryList">
+        <div class="table-responsive" ng-show="drugCharSummaryList && drugCharSummaryList.length > 0" style="max-height:220px;overflow-y:auto">
+            <table class="table table-bordered table-condensed" name="drugCharSummaryList">
                 <thead>
                     <tr>
                         <th>Drug Name</th>

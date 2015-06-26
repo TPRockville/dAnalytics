@@ -4,6 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.jderive.JDeriveApplication;
 import org.jderive.api.JDeriveResponse;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = JDeriveApplication.class)
 @WebIntegrationTest("server.port:0") //spring boot start the server with random port no.
+@Ignore
 public class JDeriveE2ETest {
 
     private RestTemplate restTemplate = null;

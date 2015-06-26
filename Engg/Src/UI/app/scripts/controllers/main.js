@@ -33,13 +33,16 @@ angular.module('jDeriveApp')
       $scope.ageGroups = [];
       $scope.drugsList = [];
 
+      $scope.reactionSkip = 0;
+      $scope.reactionCount = 5;
+
       $scope.genderGroups = [
           { id: 0, name: 'Not Specified' },
-          { id: 2, name: 'Female' },
-          { id: 1, name: 'Male' }
+          { id: 1, name: 'Female' },
+          { id: 2, name: 'Male' }
       ];
 
-      
+
 
       basicService.getCountries()
          .then(function (data) {
@@ -61,8 +64,7 @@ angular.module('jDeriveApp')
       //       console.log(data);
       //   });
 
-      $scope.drugfocus = function()
-      {
+      $scope.drugfocus = function () {
           //console.log($scope.search.selectedDrug);
           if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
               $scope.$broadcast('angucomplete-alt:clearInput');
@@ -77,7 +79,7 @@ angular.module('jDeriveApp')
              console.log(data);
          });
 
-      $scope.search = {searchAnywhere : false};
+      $scope.search = { searchAnywhere: true };
 
       //$scope.search.fromDate = new Date('01/01/2014');
 
@@ -93,7 +95,7 @@ angular.module('jDeriveApp')
           $scope.chartLoading = true;
           basicService.getEventCount(searchCriteria, 'month')
          .then(function (data) {
-             
+
              //var eventsCount = data.drugSummaryList;
              //$scope.dataResult = data.drugSummaryList;
 
@@ -125,9 +127,9 @@ angular.module('jDeriveApp')
                      currentVal = a.eventCount;
                      $scope.maxCountObject = a;
                  }
-                 eventData.push({ 'time': moment(a.startDate).format('YYYY-MM-DD'), 'count': a.eventCount });
+                 eventData.push({ 'time': a.startDate.slice(0, 10), 'count': a.eventCount });
              });
-             
+
              if (eventData.length > 0) {
                  $('#eventGraphPanel').show();
                  var minDate = new Date(moment(eventData[0].time));
@@ -153,7 +155,7 @@ angular.module('jDeriveApp')
              if ($scope.regions.length > 0) {
                  $scope.regions = [];
              }
-             
+
              if (eventData.length > 0) {
                  //$scope.regions.push({ start: new Date(2012, 0, 1), end: new Date(2013, 0, 1), class: 'regionYellow' });
                  bindChartEvent(eventData);
@@ -262,7 +264,7 @@ angular.module('jDeriveApp')
                   }
                   var currentDate = new Date(moment(a.key, 'YYYYMMDD'));
                   eventData.push({ 'time': currentDate, 'count': a.values });
-                  
+
               });
 
               if (eventData.length > 0) {
@@ -492,17 +494,14 @@ angular.module('jDeriveApp')
                    }, function (data) {
                        console.log('charct', data);
                    });
-
-                  basicService.getDrugReaction($scope.search.selectedDrug.id)
-                  .then(function (data) {
-                      $scope.drugReactionSummaryList = data.drugReactionSummaryList
-                  }, function (data) {
-                      console.log('charct', data);
-                  });
+                  $scope.reactionSkip = 0;
+                  loadReactions($scope.reactionSkip, $scope.reactionCount);
 
                   $scope.getDischargeSummary($scope.search.selectedDrug.id);
                   $scope.getERSummary($scope.search.selectedDrug.id);
               }
+
+
 
               $scope.selectedSearch = '';
 
@@ -514,7 +513,7 @@ angular.module('jDeriveApp')
               }
 
               if ($scope.search.gender) {
-                  searchUrl += '&gender=' + $scope.search.gender.id;
+                  searchUrl += '&genderId=' + $scope.search.gender.id;
                   $scope.selectedSearch += ($scope.selectedSearch ? ',' : '') + $scope.search.gender.name;
 
                   $scope.remoteSearch += ($scope.remoteSearch !== '' ? '+AND+' : '') + 'patient.patientsex:' + $scope.search.gender.id;
@@ -560,11 +559,20 @@ angular.module('jDeriveApp')
 
       };
 
-
+      function loadReactions(skip, count) {
+          basicService.getDrugReaction($scope.search.selectedDrug.id, skip, count)
+          .then(function (data) {
+              $scope.drugReactionSummaryList = data.drugReactionSummaryList;
+          }, function (data) {
+              console.log('charct', data);
+          });
+      }
 
       $scope.showSpikeInformatrion = function (date) {
           angular.element('#spikeInformation').show();
           angular.element('#eventInformation').hide();
+          angular.element('#spikelabel').show();
+          angular.element('#adverselabel').hide();
 
           //bindGroupCharts();
           $scope.getSpikeChartSummary($scope.search.selectedDrug.id, date);
@@ -573,6 +581,9 @@ angular.module('jDeriveApp')
       $scope.hideSpikeInformatrion = function () {
           angular.element('#spikeInformation').hide();
           angular.element('#eventInformation').show();
+
+          angular.element('#spikelabel').hide();
+          angular.element('#adverselabel').show();
       };
       //angular.element("#slider").dateRangeSlider();
 
@@ -693,6 +704,32 @@ angular.module('jDeriveApp')
                   title: title
               }
           });
+      };
+      $scope.reactionsLoading = false;
+      $scope.hasMoreReactions = true;
+      $scope.loadMoreReactions = function () {
+          if ($scope.hasMoreReactions) {
+              $scope.reactionsLoading = true;
+
+              $scope.reactionSkip += $scope.reactionCount;
+              //var results = loadReactions($scope.reactionSkip, $scope.reactionCount);
+
+              basicService.getDrugReaction($scope.search.selectedDrug.id, $scope.reactionSkip, $scope.reactionCount + 1)
+              .then(function (data) {
+                  $scope.hasMoreReactions = (data.drugReactionSummaryList && data.drugReactionSummaryList.length > $scope.reactionCount);
+                  var index = 0;
+                  angular.forEach(data.drugReactionSummaryList, function (value) {
+                      index++;
+                      if (index <= $scope.reactionCount) {
+                          $scope.drugReactionSummaryList.push(value);
+                      }
+                  });
+                  $scope.reactionsLoading = false;
+              }, function (data) {
+                  $scope.reactionsLoading = false;
+                  console.log('reactions', data);
+              });
+          }
       };
 
   });

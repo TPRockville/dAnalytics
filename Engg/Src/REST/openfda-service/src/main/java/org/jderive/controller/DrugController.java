@@ -26,10 +26,7 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.domain.ERSummaryDomain;
-import org.jderive.dto.DimensionDTO;
-import org.jderive.dto.DischargeSummaryDTO;
-import org.jderive.dto.DrugDTO;
-import org.jderive.dto.ERSummaryDTO;
+import org.jderive.dto.*;
 import org.jderive.exception.JDeriveException;
 import org.jderive.service.DrugService;
 import org.jderive.util.NumberUtil;
@@ -66,8 +63,8 @@ public class DrugController {
     	public int compare(DrugEventSpikeDomain drugEventSpikeDomain1, DrugEventSpikeDomain drugEventSpikeDomain2) {
     		if(drugEventSpikeDomain1.getEventCount() != null && drugEventSpikeDomain2.getEventCount() != null)
     		{
-    			Integer num1 = Integer.parseInt(drugEventSpikeDomain1.getEventCount());
-        		Integer num2 = Integer.parseInt(drugEventSpikeDomain2.getEventCount());
+    			Long num1 = drugEventSpikeDomain1.getEventCount();
+        		Long num2 = drugEventSpikeDomain2.getEventCount();
         		return num1.compareTo(num2);
     		}else
     		{
@@ -176,7 +173,7 @@ public class DrugController {
             List<DrugEventSpikeDomain> drugEventSpikeDomainList = drugService.eventSpikeCount(NumberUtil
                     .isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
             
-            Collections.sort(drugEventSpikeDomainList, EVENT_COUNT_COMPARATOR);
+            //Collections.sort(drugEventSpikeDomainList, EVENT_COUNT_COMPARATOR);
             
             if (CollectionUtils.isNotEmpty(drugEventSpikeDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
@@ -224,10 +221,11 @@ public class DrugController {
     }
 
     @RequestMapping(value = "/{drugId}/reaction", method = RequestMethod.GET)
-    public ResponseEntity<JDeriveResponse> reactionSummary(@PathVariable("drugId") String drugId) throws Exception {
+    public ResponseEntity<JDeriveResponse> reactionSummary(@PathVariable("drugId") String drugId,
+                                                           @RequestParam("firstResult") Integer firstResult,
+                                                           @RequestParam("maxResults") Integer maxResults) throws JDeriveException{
         try {
-            List<DrugReactionSummaryDomain> drugReactionSummaryDomainList = drugService.reactionSummary(NumberUtil
-                    .isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
+            List<DrugReactionSummaryDTO> drugReactionSummaryDomainList = drugService.reactionSummary((NumberUtil.isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null),firstResult,maxResults);
             if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
                         .builder()
@@ -235,8 +233,8 @@ public class DrugController {
                         .withDrugReactionSummaryList(
                                 drugReactionSummaryDomainList
                                         .stream()
-                                        .map(drugReactionSummaryDomain -> DrugDTO
-                                                .drugReactionSummary(drugReactionSummaryDomain))
+                                        .map(drugReactionSummaryDTO -> DrugReactionSummaryDTO
+                                                .transform(drugReactionSummaryDTO))
                                         .collect(Collectors.toList())).build();
 
                 return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
@@ -291,7 +289,7 @@ public class DrugController {
 
     @RequestMapping(value = "/{drugId}/dimensions", method = RequestMethod.GET)
     public ResponseEntity<JDeriveResponse> getDimensions(@PathVariable("drugId") String drugId,
-            @RequestParam(value = "date", required = false) String date) {
+            @RequestParam(value = "date", required = false) String date) throws JDeriveException {
         DrugMonthSummaryDomain drugMonthSummaryDomain = new DrugMonthSummaryDomain();
         drugMonthSummaryDomain.setDrugId(Long.valueOf(drugId));
         drugMonthSummaryDomain.setStartDate(new Date(Long.valueOf(date) * 1000));

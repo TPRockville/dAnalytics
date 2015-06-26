@@ -157,8 +157,8 @@ angular.module('jDeriveApp')
           return deferred.promise;
       };
 
-      services.getDrugReaction = function (drugid) {
-          var url = '{0}/{1}/{2}/reaction'.format(configService.apiUrl, 'drugs', drugid);
+      services.getDrugReaction = function (drugid, skip, count) {
+          var url = '{0}/{1}/{2}/reaction?firstResult={3}&maxResults={4}'.format(configService.apiUrl, 'drugs', drugid, skip, count);
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {

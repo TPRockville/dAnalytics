@@ -4,23 +4,20 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
-import org.jderive.domain.DischargeSummaryDomain;
-import org.jderive.domain.DrugCharSummaryDomain;
-import org.jderive.domain.DrugDomain;
-import org.jderive.domain.DrugEventSpikeDomain;
-import org.jderive.domain.DrugIndicationDomain;
-import org.jderive.domain.DrugMonthSummaryDomain;
-import org.jderive.domain.DrugReactionSummaryDomain;
-import org.jderive.domain.ERSummaryDomain;
-import org.jderive.domain.DrugSummaryDomain;
+import org.jderive.domain.*;
+import org.jderive.dto.DrugReactionSummaryDTO;
+import org.jderive.exception.JDeriveException;
 import org.jderive.repository.DrugRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +41,7 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummaryDomain) {
+    public List<DrugSummaryDomain> summary(DrugSummaryDomain drugSummaryDomain) throws JDeriveException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugSummaryDomain.class, "dsm");
         if (!StringUtils.isEmpty(drugSummaryDomain.getDrugId())) {
             criteria.add(Restrictions.eq("dsm.drugId", drugSummaryDomain.getDrugId()));
@@ -58,6 +55,18 @@ public class DrugRepositoryImpl implements DrugRepository {
         if (!StringUtils.isEmpty(drugSummaryDomain.getCountryId())) {
             criteria.add(Restrictions.eq("dsm.countryId", drugSummaryDomain.getCountryId()));
         }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse("2004-01-02");
+            if (drugSummaryDomain.getStartDate() == null || drugSummaryDomain.getStartDate().before(date)) {
+
+                drugSummaryDomain.setStartDate(date);
+            }
+        } catch (ParseException e) {
+            throw new JDeriveException("Problem with parsing the date", e);
+        }
+
         if (!StringUtils.isEmpty(drugSummaryDomain.getStartDate())) {
             if (!StringUtils.isEmpty(drugSummaryDomain.getEndDate())) {
                 criteria.add(Restrictions.between("dsm.startDate",
@@ -70,19 +79,19 @@ public class DrugRepositoryImpl implements DrugRepository {
             }
         }
 
-			criteria.setProjection(Projections
-					.projectionList()
-					.add(Projections.sum("dsm.eventCount").as("eventCount"))
-					.add(Projections.groupProperty("dsm.startDate").as(
-							"startDate")));
-			criteria.setResultTransformer(Transformers
-					.aliasToBean(DrugSummaryDomain.class));
-		return criteria.list();
+        criteria.setProjection(Projections
+                .projectionList()
+                .add(Projections.sum("dsm.eventCount").as("eventCount"))
+                .add(Projections.groupProperty("dsm.startDate").as(
+                        "startDate")));
+        criteria.setResultTransformer(Transformers
+                .aliasToBean(DrugSummaryDomain.class));
+        return criteria.list();
     }
 
     @Override
     public List<DrugDomain> findByName(String name) {
-        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE '" + name + "%' ORDER BY drug_name LIMIT 0, 100";
+        String queryByName = "SELECT * FROM drug_list WHERE drug_name LIKE \"" + name + "%\" ORDER BY drug_name LIMIT 0, 100";
         SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
         query.addEntity(DrugDomain.class);
         return query.list();
@@ -91,7 +100,7 @@ public class DrugRepositoryImpl implements DrugRepository {
     @Override
     public List<DrugEventSpikeDomain> eventSpikeCount(Long drugId) {
         Query query = sessionFactory.getCurrentSession()
-                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId ORDER BY eventCount");
+                .createQuery("From DrugEventSpikeDomain desd where desd.drugId = :drugId ORDER BY eventCount desc");
         query.setLong("drugId", drugId);
         return query.list();
     }
@@ -105,17 +114,26 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public List<DrugReactionSummaryDomain> reactionSummary(Long drugId) {
-        Query query = sessionFactory.getCurrentSession()
-                .createQuery("From DrugReactionSummaryDomain drsd where drsd.drugId = :drugId " +
-                        "order by drsd.eventCount desc");
-        query.setLong("drugId", drugId);
-        return query.list();
+    public List<DrugReactionSummaryDTO> reactionSummary(Long drugId, int firstResult, int maxResults) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugReactionSummaryDomain.class, "drsd");
+        criteria.createAlias("drsd.reactionDomain", "rd");
+        criteria.add(Restrictions.eq("drsd.drugId", drugId));
+
+        criteria.setProjection(Projections
+                        .projectionList()
+                        .add(Projections.property("drsd.id"), "id")
+                        .add(Projections.property("drsd.drugId"), "drugId")
+                        .add(Projections.property("rd.code"), "reactionName")
+                        .add(Projections.property("drsd.eventCount"), "eventCount")
+        );
+        criteria.addOrder(Order.desc("drsd.eventCount"));
+        criteria.setResultTransformer(Transformers.aliasToBean(DrugReactionSummaryDTO.class)).setFirstResult(firstResult).setMaxResults(maxResults);
+        return criteria.list();
     }
 
     @Override
-    public List<DrugMonthSummaryDomain> summaryMonth(
-            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) {
+    public List<DrugMonthSummaryDomain> summaryMonth (
+            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) throws JDeriveException{
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugMonthSummaryDomain.class, "dmsm");
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getDrugId())) {
             criteria.add(Restrictions.eq("dmsm.drugId", drugMonthSummaryDomain.getDrugId()));
@@ -132,6 +150,18 @@ public class DrugRepositoryImpl implements DrugRepository {
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getGenderId())) {
             criteria.add(Restrictions.eq("dmsm.genderId", drugMonthSummaryDomain.getGenderId()));
         }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse("2004-01-02");
+            if (drugMonthSummaryDomain.getStartDate() == null || drugMonthSummaryDomain.getStartDate().before(date)) {
+
+                drugMonthSummaryDomain.setStartDate(date);
+            }
+        } catch (ParseException e) {
+            throw new JDeriveException("Problem with parsing the date", e);
+        }
+
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getStartDate())) {
             if (!StringUtils.isEmpty(drugMonthSummaryDomain.getEndDate())) {
                 criteria.add(Restrictions.between("dmsm.startDate",
@@ -140,52 +170,52 @@ public class DrugRepositoryImpl implements DrugRepository {
             } else {
                 criteria.add(Restrictions.between("dmsm.startDate",
                         drugMonthSummaryDomain.getStartDate(),
-                        new Date(System.currentTimeMillis())));
+                        drugMonthSummaryDomain.getEndDate()));
             }
         }
 
         if (applyProjection) {
-			criteria.setProjection(Projections
-					.projectionList()
-					.add(Projections.sum("dmsm.eventCount").as("eventCount"))
-					.add(Projections.groupProperty("dmsm.startDate").as(
-							"startDate")));
-			criteria.setResultTransformer(Transformers
-					.aliasToBean(DrugMonthSummaryDomain.class));
-		}
-		return criteria.list();
+            criteria.setProjection(Projections
+                    .projectionList()
+                    .add(Projections.sum("dmsm.eventCount").as("eventCount"))
+                    .add(Projections.groupProperty("dmsm.startDate").as(
+                            "startDate")));
+            criteria.setResultTransformer(Transformers
+                    .aliasToBean(DrugMonthSummaryDomain.class));
+        }
+        return criteria.list();
     }
-	
-	@Override
-	public List<ERSummaryDomain> getERSummary(String drugId) {
-		
-		List<String> drugIndictions = getDrugIndication(drugId);
-		
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ERSummaryDomain.class, "ersummary");
-		criteria.add(Restrictions.in("ersummary.episodeDiseaseCategory",drugIndictions));
-		
-		return criteria.list();
-	}
 
-	@Override
-	public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
-		
-		List<String> drugIndictions = getDrugIndication(drugId);
+    @Override
+    public List<ERSummaryDomain> getERSummary(String drugId) {
 
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DischargeSummaryDomain.class);
-		
-		criteria.add(Restrictions.in("aPRDRGDescription",drugIndictions));
+        List<String> drugIndictions = getDrugIndication(drugId);
 
-		return criteria.list();
-	}
-	
-	
-	private List<String> getDrugIndication(String drugId) {
-		String queryByName = "select drug_indication_code from drug_indication where drug_indication_id in (select drug_indication_id from drug_indication_link where drug_id ="
-				+ drugId + ")";
-		SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(
-				queryByName);
-		List<String> drugIndictions = (List<String>) query .list();
-		return drugIndictions;
-	}
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ERSummaryDomain.class, "ersummary");
+        criteria.add(Restrictions.in("ersummary.episodeDiseaseCategory", drugIndictions));
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
+
+        List<String> drugIndictions = getDrugIndication(drugId);
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DischargeSummaryDomain.class);
+
+        criteria.add(Restrictions.in("aPRDRGDescription", drugIndictions));
+
+        return criteria.list();
+    }
+
+
+    private List<String> getDrugIndication(String drugId) {
+        String queryByName = "select drug_indication_code from drug_indication where drug_indication_id in (select drug_indication_id from drug_indication_link where drug_id ="
+                + drugId + ")";
+        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(
+                queryByName);
+        List<String> drugIndictions = (List<String>) query.list();
+        return drugIndictions;
+    }
 }
