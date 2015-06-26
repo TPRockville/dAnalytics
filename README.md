@@ -1,5 +1,5 @@
 #Drug Analytics Development Approach
-http://danalytics.tpgsi.com
+Link: http://danalytics.tpgsi.com
 
 dAnalytics is a prototype developed in response to the General Services Administration (GSA) Agile Delivery Services Request for Quotation - 4QTFHS150004. The system analyzes the Drug Adverse Event dataset from OpenFDA API to explain spikes in the data and correlate this to any drug recalls, emergency room visits or patient discharges.  The following outlines the approach used to develop the prototype. 
 
