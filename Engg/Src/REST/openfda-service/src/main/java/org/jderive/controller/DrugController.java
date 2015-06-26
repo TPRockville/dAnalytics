@@ -173,7 +173,7 @@ public class DrugController {
             List<DrugEventSpikeDomain> drugEventSpikeDomainList = drugService.eventSpikeCount(NumberUtil
                     .isNumeric(drugId) ? NumberUtil.parseLong(drugId) : null);
             
-            Collections.sort(drugEventSpikeDomainList, EVENT_COUNT_COMPARATOR);
+            //Collections.sort(drugEventSpikeDomainList, EVENT_COUNT_COMPARATOR);
             
             if (CollectionUtils.isNotEmpty(drugEventSpikeDomainList)) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse
