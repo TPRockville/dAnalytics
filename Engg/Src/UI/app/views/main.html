@@ -35,7 +35,7 @@
                 </div>-->
             </div>
         </div>
-        <div class="text-center" id="spikelabel" style="position:relative;top:-330px;display:none" title="Zero event count is not considered for plotting the graph.">Event count by summary</div>
+        <div class="text-center" id="spikelabel" style="position:relative;top:-330px;display:none" title="Monthly adverse event distribution by Age, Weight and Gender">Monthly adverse event distribution by Age, Weight and Gender</div>
         <div class="text-center chart-loading" ng-if="chartLoading">
             <img src="/assets/images/loading.gif" /> Loading...
         </div>
@@ -43,12 +43,13 @@
 
     <div class="col-md-2" ng-if="selectedSearch !== '' && search.selectedDrug">
         <div class="row text-center">
-            <strong>Spike(s) in adverse event</strong>
+            <strong>Adverse event spike</strong>
+            <div style="font-size:9px" class="text-primary">Please click on the link for distribution by Age, Weight and Gender.</div>
         </div>
         <br />
         <div style="max-height:350px;overflow-y:auto">
             <ul class="list-group">
-                <li class="list-group-item" style="cursor:pointer" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4"><a ng-click="showSpikeInformatrion(spike.spikeDate);" name="spike{{$index}}">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
+                <li class="list-group-item" style="cursor:pointer;text-decoration:underline" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4" ng-click="showSpikeInformatrion(spike.spikeDate);"><a name="spike{{$index}}">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}</a> <span class="badge">{{spike.eventCount}}</span></li>
                 <li class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></li>
             </ul>
         </div>
@@ -66,6 +67,10 @@
     <br />
     <ng-include src="'views/tpl/emergencyinformation.html'"></ng-include>
 
+</div>
+
+<div ng-if="!search.selectedDrug" class="row text-primary text-center">
+    <label>Select a drug to see additional data.</label>
 </div>
 
 <div class="container" ng-cloak style="padding-top:20px">
