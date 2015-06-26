@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -16,6 +17,7 @@ import org.jderive.domain.DrugMonthSummaryDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.ERSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
+import org.jderive.dto.DrugReactionSummaryDTO;
 import org.jderive.repository.DrugRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -76,7 +78,7 @@ public class DrugRepositoryImpl implements DrugRepository {
 					.add(Projections.groupProperty("dsm.startDate").as(
 							"startDate")));
 			criteria.setResultTransformer(Transformers
-					.aliasToBean(DrugSummaryDomain.class));
+                    .aliasToBean(DrugSummaryDomain.class));
 		return criteria.list();
     }
 
@@ -105,12 +107,21 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public List<DrugReactionSummaryDomain> reactionSummary(Long drugId) {
-        Query query = sessionFactory.getCurrentSession()
-                .createQuery("From DrugReactionSummaryDomain drsd where drsd.drugId = :drugId " +
-                        "order by drsd.eventCount desc");
-        query.setLong("drugId", drugId);
-        return query.list();
+    public List<DrugReactionSummaryDTO> reactionSummary(Long drugId) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugReactionSummaryDomain.class, "drsd");
+        criteria.createAlias("drsd.reactionDomain", "rd");
+        criteria.add(Restrictions.eq("drsd.drugId", drugId));
+
+        criteria.setProjection(Projections
+                        .projectionList()
+                        .add(Projections.property("drsd.id"), "id")
+                        .add(Projections.property("drsd.drugId"), "drugId")
+                        .add(Projections.property("rd.code"), "reactionName")
+                        .add(Projections.property("drsd.eventCount"), "eventCount")
+        );
+        criteria.addOrder(Order.desc("drsd.eventCount"));
+        criteria.setResultTransformer(Transformers.aliasToBean(DrugReactionSummaryDTO.class));
+        return criteria.list();
     }
 
     @Override

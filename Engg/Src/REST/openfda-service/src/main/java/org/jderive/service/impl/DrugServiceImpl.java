@@ -10,6 +10,7 @@ import org.jderive.domain.DrugReactionDomain;
 import org.jderive.domain.DrugReactionSummaryDomain;
 import org.jderive.domain.DrugSummaryDomain;
 import org.jderive.domain.ERSummaryDomain;
+import org.jderive.dto.DrugReactionSummaryDTO;
 import org.jderive.repository.DrugRepository;
 import org.jderive.service.DrugService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +73,10 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugReactionSummaryDomain> reactionSummary(Long drugId) {
-        List<DrugReactionSummaryDomain> drugReactionSummaryDomainList = drugRepository.reactionSummary(drugId);
-        //Aggregate the DrugReactionSummaryDomain from 2 index to list.size();
+    public List<DrugReactionSummaryDTO> reactionSummary(Long drugId) {
+        return drugRepository.reactionSummary(drugId);
+
+/*        //Aggregate the DrugReactionSummaryDomain from 2 index to list.size();
         if (CollectionUtils.isNotEmpty(drugReactionSummaryDomainList)) {
 
             if (drugReactionSummaryDomainList.size() > 2) {
@@ -97,7 +99,7 @@ public class DrugServiceImpl implements DrugService {
                 return drugReactionSummaryDomainList;
             }
         }
-        return null;
+        return null;*/
     }
 
     @Override
