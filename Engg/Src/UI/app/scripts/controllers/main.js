@@ -38,8 +38,8 @@ angular.module('jDeriveApp')
 
       $scope.genderGroups = [
           { id: 0, name: 'Not Specified' },
-          { id: 2, name: 'Female' },
-          { id: 1, name: 'Male' }
+          { id: 1, name: 'Female' },
+          { id: 2, name: 'Male' }
       ];
 
 
