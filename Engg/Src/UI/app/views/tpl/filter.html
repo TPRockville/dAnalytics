@@ -15,7 +15,7 @@
                                 <label for="inputDrug" class="col-md-2 col-sm-3 control-label negative-margin" title="Select Drug">Select Drug</label>
                                 <div class="col-md-9 col-sm-8 negative-margin">
                                     <angucomplete-alt id="searchDrug"
-                                                      placeholder="Please type at least 3 characters to show the drug list"
+                                                      placeholder="Please type at least 3 characters to show the drug list (ex: ASPIRIN, ATIVAN ...)"
                                                       pause="700"
                                                       selected-object="searchDrugChanged"
                                                       remote-url="{{serverUrl}}/drugs/name/{{search.searchAnywhere}}/"
@@ -23,7 +23,7 @@
                                                       title-field="name"
                                                       input-class="form-control input-sm"
                                                       minlength="3"
-                                                      auto-match="true"
+                                                      auto-match="false"
                                                       text-searching="Searching for drugs"
                                                       match-class="autocomplete-match"
                                                       focus-out="drugfocus()" />
