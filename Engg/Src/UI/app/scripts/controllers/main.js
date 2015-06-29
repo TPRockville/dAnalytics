@@ -91,16 +91,12 @@ angular.module('jDeriveApp')
 
              if (eventData.length > 0) {
                  $('#eventGraphPanel').show();
-                 var minDate = new Date(moment(eventData[0].time).format('YYYY-MM-DD'));
-                 var maxDate = new Date(moment(eventData[eventData.length - 1].time.format('YYYY-MM-DD')));
-                 console.log(eventData[0].time,minDate, maxDate);
-                 if (minDate === maxDate) {
-                     $("#dateSlider").dateRangeSlider("bounds", minDate, new Date(moment(maxDate).add(moment.duration(1, 'M'))));
-                 } else {
-                     $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
-                 }
+                 var minDate = new Date(moment(eventData[0].time));
+                 var maxDate = new Date(moment(eventData[eventData.length - 1].time));
+
+                 $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+
                  $("#dateSlider").dateRangeSlider("min", minDate);
-                 $("#dateSlider").dateRangeSlider("max", maxDate);
 
                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
                  $('#noDataLabel').hide();
@@ -152,7 +148,8 @@ angular.module('jDeriveApp')
           },
           step: {
               months: 1
-          }
+          },
+          arrows: false
       });
 
       $("#dateSlider").bind("valuesChanged", function (e, data) {
@@ -435,7 +432,7 @@ angular.module('jDeriveApp')
                     .then(function (data) {
                         $scope.drugEventSpikeList = data.drugEventSpikeList;
                         if ($scope.drugEventSpikeList && $scope.drugEventSpikeList.length > 0) {
-                            $scope.showSpikeInformatrion($scope.drugEventSpikeList[0].spikeDate);
+                            $scope.showSpikeInformatrion($scope.drugEventSpikeList[0].spikeDate, 0);
                         }
                     }, function (data) {
                         console.log('spike', data)
@@ -521,7 +518,8 @@ angular.module('jDeriveApp')
           });
       }
 
-      $scope.showSpikeInformatrion = function (date) {
+      $scope.showSpikeInformatrion = function (date, index) {
+          $scope.spikeSelectedIndex = index;
           //angular.element('#spikeInformation').show();
           //angular.element('#eventInformation').hide();
           //angular.element('#spikelabel').show();
@@ -598,7 +596,7 @@ angular.module('jDeriveApp')
           }
           $scope.spikeChartLoading = false;
           bindGraph('#ageGroupPie', 'donut', ageGroupData, 'Age Group');
-          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group(in Kg)');
+          bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group(in Pounds)');
           bindGraph('#genderGroupPie', 'donut', genderData, 'Gender');
       };
 
@@ -611,9 +609,7 @@ angular.module('jDeriveApp')
               },
               tooltip: {
                   format: {
-                      value: function (x) {
-                          return x;
-                      }
+                      value: ''
                   }
               },
               donut: {
