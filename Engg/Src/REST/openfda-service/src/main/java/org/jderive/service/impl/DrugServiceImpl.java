@@ -1,24 +1,17 @@
 package org.jderive.service.impl;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.jderive.domain.DischargeSummaryDomain;
-import org.jderive.domain.DrugCharSummaryDomain;
-import org.jderive.domain.DrugDomain;
-import org.jderive.domain.DrugEventSpikeDomain;
-import org.jderive.domain.DrugMonthSummaryDomain;
-import org.jderive.domain.DrugReactionDomain;
-import org.jderive.domain.DrugReactionSummaryDomain;
-import org.jderive.domain.DrugSummaryDomain;
-import org.jderive.domain.ERSummaryDomain;
+import org.jderive.domain.*;
 import org.jderive.dto.DrugReactionSummaryDTO;
 import org.jderive.exception.JDeriveException;
 import org.jderive.repository.DrugRepository;
 import org.jderive.service.DrugService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,9 +19,14 @@ import java.util.List;
  */
 @Service
 public class DrugServiceImpl implements DrugService {
+    private static final String ALL_DRUG_COUNT_CACHE = "ALL_DRUG_COUNT_CACHE";
 
     @Autowired
     private DrugRepository drugRepository;
+
+    @Autowired
+    private CacheManager cacheManager;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -50,13 +48,12 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugDomain> findByName(String name,boolean containsFlag) {
-    	
-    	if(containsFlag)
-    	{
-    		name = "%"+name;
-    	}
-    	
+    public List<DrugDomain> findByName(String name, boolean containsFlag) {
+
+        if (containsFlag) {
+            name = "%" + name;
+        }
+
         return drugRepository.findByName(name);
     }
 
@@ -74,8 +71,8 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DrugReactionSummaryDTO> reactionSummary(Long drugId,int firstResult, int maxResults) {
-        return drugRepository.reactionSummary(drugId,firstResult,maxResults);
+    public List<DrugReactionSummaryDTO> reactionSummary(Long drugId, int firstResult, int maxResults) {
+        return drugRepository.reactionSummary(drugId, firstResult, maxResults);
     }
 
     @Override
@@ -86,7 +83,7 @@ public class DrugServiceImpl implements DrugService {
     }
 
     private DrugReactionSummaryDomain aggregateReactionSummaryDomains(List<DrugReactionSummaryDomain>
-                                                                      drugReactionSummaryDomainList, Long drugId) {
+                                                                              drugReactionSummaryDomainList, Long drugId) {
         Long sumOfEventCounts = drugReactionSummaryDomainList.stream()
                 .mapToLong(DrugReactionSummaryDomain::getEventCount).sum();
         DrugReactionSummaryDomain drugReactionSummaryDomain = new DrugReactionSummaryDomain();
@@ -97,15 +94,30 @@ public class DrugServiceImpl implements DrugService {
         drugReactionSummaryDomain.setDrugId(drugId);
         return drugReactionSummaryDomain;
     }
-    
-    @Transactional(readOnly = true)
-	public List<ERSummaryDomain> getERSummary(String drugId) {
-		return drugRepository.getERSummary(drugId);
-	}
 
     @Transactional(readOnly = true)
-	@Override
-	public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
-		return drugRepository.getDischargeSummary(drugId);
-	}
+    public List<ERSummaryDomain> getERSummary(String drugId) {
+        return drugRepository.getERSummary(drugId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<DischargeSummaryDomain> getDischargeSummary(String drugId) {
+        return drugRepository.getDischargeSummary(drugId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DrugOnlyMonthSummaryDomain> drugOnlySummaryMonth(Long drugId) throws JDeriveException {
+        Cache cache = cacheManager.getCache(DrugOnlyMonthSummaryDomain.CACHE);
+
+        if (drugId == null && cache.get(ALL_DRUG_COUNT_CACHE) != null) {
+            return (List<DrugOnlyMonthSummaryDomain>) cache.get(ALL_DRUG_COUNT_CACHE).get();
+        }
+        List<DrugOnlyMonthSummaryDomain> drugOnlyMonthSummaryDomains = drugRepository.drugOnlySummaryMonth(drugId);
+        if (drugId == null) {
+            cache.put(ALL_DRUG_COUNT_CACHE, drugOnlyMonthSummaryDomains);
+        }
+        return drugOnlyMonthSummaryDomains;
+    }
 }
