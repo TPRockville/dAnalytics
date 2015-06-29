@@ -313,6 +313,18 @@ CREATE TABLE `country_code` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `drug_only_summary_month`
+    (
+        `drug_only_summary_month_id` bigint(255) NOT NULL AUTO_INCREMENT,
+        `drug_id` bigint(100),
+        `start_date` DATE,
+        `end_date` DATE,
+        `event_count` bigint(100),
+        PRIMARY KEY (`drug_only_summary_month_id`),
+        CONSTRAINT `drug_only_summary_month_fk1` FOREIGN KEY (`drug_id`) REFERENCES drug_list (`drug_id`)
+      )
+    ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE INDEX DS_DRUG_IDX ON drug_summary(drug_id);
 CREATE INDEX DS_DRUG_AGE_IDX ON drug_summary(drug_id,age_group_id);
 CREATE INDEX DS_DRUG_COUNTRY_IDX ON drug_summary(drug_id,country_id);
@@ -326,3 +338,6 @@ CREATE INDEX DS_M_DRUG_COUNTRY_IDX ON drug_summary_month(drug_id,country_id);
 CREATE INDEX DS_M_DRUG_GENDER_IDX ON drug_summary_month(drug_id,gender_id);
 CREATE INDEX DS_M_DRUG_WEIGHT_IDX ON drug_summary_month(drug_id,weight_group_id);
 CREATE INDEX DS_M_DRUG_DATE_IDX ON drug_summary_month(drug_id,start_date);
+
+CREATE INDEX DOS_M_DRUG_IDX ON drug_only_summary_month(drug_id);
+CREATE INDEX DOS_M_DATE_IDX ON drug_only_summary_month(start_date);

@@ -1,0 +1,41 @@
+#This has to be executed one by one 
+
+#------------- FOR DRUG LIST
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Drug List Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_list --columns "drug_id,drug_name"  --export-dir /user/hadoop/CompleteDS/druglist/part-* --verbose
+
+#------------- FOR DRUG INDICATION
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Drug Indication Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_indication --columns "drug_indication_id,drug_indication_code"  --export-dir /user/hadoop/CompleteDS/drugindication/part-* --verbose 
+ 
+#------------- FOR REACTION
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Reaction List Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table reaction_list --columns "reaction_id,reaction_code" --export-dir /user/hadoop/CompleteDS/reaction/part-* --verbose 
+
+#------------- FOR COUNTRY LIST
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Country List Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table country_list --columns "country_id,country_code"  --export-dir /user/hadoop/CompleteDS/countries/part-* --verbose 
+
+#------------- FOR DRUG SUBSTANCE LIST
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Durg Substance List Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_substance_list --columns  "drug_substance_id,drug_substance"  --export-dir /user/hadoop/CompleteDS/drugsubstance/part-* --verbose 
+
+#------------- FOR DRUG DUMMARY
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Drug Summary Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_summary --columns  "drug_id,age_group_id,gender_id,weight_group_id,country_id,start_date,event_count"  --export-dir /user/hadoop/CompleteDS/drugsummary/part-* --num-mappers 15 --verbose 
+
+#------------- FOR DRUG REACTION SUMMARY    ------------792.7422 seconds 
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Durg Reaction Summary Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_reaction_summary --columns  "drug_id,reaction_id,event_count"  --export-dir /user/hadoop/CompleteDS/drugreactionsummary/part-* --num-mappers 15 --verbose 
+
+#------------- FOR DRUG CHARACTERIZATION SUMMARY
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Durg Substance List Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_char_summary --columns  "drug_id,drug_characterization_id,event_count"  --export-dir /user/hadoop/CompleteDS/drugcharsummary/part-* --num-mappers 15 --verbose 
+
+#------------- FOR DRUG DUMMARY MONTH
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Drug Summary Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_summary_month --columns  "drug_id,age_group_id,gender_id,weight_group_id,country_id,start_date,event_count"  --export-dir /user/hadoop/CompleteDS/drugsummarybymonth/part-* --num-mappers 15 --verbose 
+
+#------------- FOR DRUG ONLY DUMMARY MONTH
+#This sqoop is to export the processed drug list part file from HDFS to MariaDB for Drug Summary Table: 
+sqoop export --connect jdbc:mysql://[IP]:3306/drug_complete_ds --username [username] --password [password] --table drug_only_summary_month --columns  "drug_id,start_date,event_count"  --export-dir /user/hadoop/CompleteDS/drugonlysummarybymonth/part-* --num-mappers 15 --verbose 
