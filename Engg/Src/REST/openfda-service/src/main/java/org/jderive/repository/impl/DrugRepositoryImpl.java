@@ -220,9 +220,19 @@ public class DrugRepositoryImpl implements DrugRepository {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date date = sdf.parse("2004-01-02");
             criteria.add(Restrictions.ge("dmsm.startDate", date));
+
+            criteria.setProjection(Projections.projectionList()
+                            .add(Projections.sum("dmsm.eventCount").as("eventCount"))
+                            .add(Projections.groupProperty("dmsm.startDate").as("startDate"))
+
+            );
+            criteria.setResultTransformer(Transformers
+                    .aliasToBean(DrugOnlyMonthSummaryDomain.class));
+
         } catch (ParseException e) {
             throw new JDeriveException("Problem with parsing the date", e);
         }
+        criteria.addOrder(Order.asc("dmsm.startDate"));
         return criteria.list();
     }
 

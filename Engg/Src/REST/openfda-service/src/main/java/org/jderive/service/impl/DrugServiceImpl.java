@@ -109,7 +109,7 @@ public class DrugServiceImpl implements DrugService {
     @Override
     @Transactional(readOnly = true)
     public List<DrugOnlyMonthSummaryDomain> drugOnlySummaryMonth(Long drugId) throws JDeriveException {
-        Cache cache = cacheManager.getCache(DrugOnlyMonthSummaryDomain.CACHE);
+        Cache cache = cacheManager.getCache(DrugOnlyMonthSummaryDomain.EVENT_COUNT_CACHE);
 
         if (drugId == null && cache.get(ALL_DRUG_COUNT_CACHE) != null) {
             return (List<DrugOnlyMonthSummaryDomain>) cache.get(ALL_DRUG_COUNT_CACHE).get();

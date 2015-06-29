@@ -45,8 +45,14 @@ public class JDeriveApplication {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager(DrugOnlyMonthSummaryDomain.CACHE);
+        return new ConcurrentMapCacheManager(DrugOnlyMonthSummaryDomain.EVENT_COUNT_CACHE);
     }
+
+    /*@Bean
+    public CacheManager drugCacheManager() {
+        return new ConcurrentMapCacheManager(DrugOnlyMonthSummaryDomain.ALL_DRUG_CACHE);
+    }*/
+
 
     @Bean
     public CorsFilter corsFilter() {

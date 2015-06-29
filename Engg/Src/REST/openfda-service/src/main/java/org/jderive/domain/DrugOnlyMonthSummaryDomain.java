@@ -17,7 +17,9 @@ import java.util.Date;
 public class DrugOnlyMonthSummaryDomain {
 
     @Transient
-    public static final String CACHE = "eventcount";
+    public static final String EVENT_COUNT_CACHE = "eventcount";
+    @Transient
+    public static final String ALL_DRUG_CACHE = "alldrugs";
 
     @Id
     @Column(name = "DRUG_ONLY_SUMMARY_MONTH_ID")
