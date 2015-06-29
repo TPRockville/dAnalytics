@@ -54,7 +54,7 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (min-width: 768px) {
     .navbar-brand {
         left: 0px;
     }
@@ -73,4 +73,36 @@
 
 .nav.navbar-nav.navbar-right {
     margin-top: 5px;
+}
+.header-message{
+  margin: 0 auto;
+  margin-top: -40px;
+  padding: 0 246px;
+  display: inline-block;
+  position: absolute;
+}
+
+@media (max-width: 824px) {
+	.header-message{
+	  margin: 0 auto;
+	  margin-top: 4px;
+	  padding: 0 8px;
+	  display: inline-block;
+	  position: static;
+	}
+} 
+.aAnalytics-logo{
+margin-top: 6px;
+}
+.nav-menu{
+	background: url(../assets/images/menu_bg.jpg) top;
+	height: 30px;
+}
+.nav-menu .menu-link{
+	margin:5px 25px;
+}
+.nav-menu a{
+  padding: 2px 5px;
+  color: #fff;
+  font-weight: bold;
 }
