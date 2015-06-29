@@ -132,8 +132,8 @@ public class DrugRepositoryImpl implements DrugRepository {
     }
 
     @Override
-    public List<DrugMonthSummaryDomain> summaryMonth (
-            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) throws JDeriveException{
+    public List<DrugMonthSummaryDomain> summaryMonth(
+            DrugMonthSummaryDomain drugMonthSummaryDomain, boolean applyProjection) throws JDeriveException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugMonthSummaryDomain.class, "dmsm");
         if (!StringUtils.isEmpty(drugMonthSummaryDomain.getDrugId())) {
             criteria.add(Restrictions.eq("dmsm.drugId", drugMonthSummaryDomain.getDrugId()));
@@ -206,6 +206,33 @@ public class DrugRepositoryImpl implements DrugRepository {
 
         criteria.add(Restrictions.in("aPRDRGDescription", drugIndictions));
 
+        return criteria.list();
+    }
+
+    @Override
+    public List<DrugOnlyMonthSummaryDomain> drugOnlySummaryMonth(Long drugId) throws JDeriveException {
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DrugOnlyMonthSummaryDomain.class, "dmsm");
+        if (!StringUtils.isEmpty(drugId)) {
+            criteria.add(Restrictions.eq("dmsm.drugId", drugId));
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse("2004-01-02");
+            criteria.add(Restrictions.ge("dmsm.startDate", date));
+
+            criteria.setProjection(Projections.projectionList()
+                            .add(Projections.sum("dmsm.eventCount").as("eventCount"))
+                            .add(Projections.groupProperty("dmsm.startDate").as("startDate"))
+
+            );
+            criteria.setResultTransformer(Transformers
+                    .aliasToBean(DrugOnlyMonthSummaryDomain.class));
+
+        } catch (ParseException e) {
+            throw new JDeriveException("Problem with parsing the date", e);
+        }
+        criteria.addOrder(Order.asc("dmsm.startDate"));
         return criteria.list();
     }
 

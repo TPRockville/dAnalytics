@@ -9,12 +9,7 @@ import org.jderive.api.DrugEventSpike;
 import org.jderive.api.DrugReactionSummary;
 import org.jderive.api.DrugSummary;
 import org.jderive.api.DrugSummaryByMonth;
-import org.jderive.domain.DrugCharSummaryDomain;
-import org.jderive.domain.DrugDomain;
-import org.jderive.domain.DrugEventSpikeDomain;
-import org.jderive.domain.DrugMonthSummaryDomain;
-import org.jderive.domain.DrugReactionSummaryDomain;
-import org.jderive.domain.DrugSummaryDomain;
+import org.jderive.domain.*;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -66,18 +61,36 @@ public final class DrugDTO {
         drugSummaryByMonth.setEventCount(dbDrugMonthSummaryDomain.getEventCount());
         try
         {
-             if(dbDrugMonthSummaryDomain.getStartDate()!=null)
-             {
-             	 drugSummaryByMonth.setStartDate(dbDrugMonthSummaryDomain.getStartDate());
-             }
-             
+            if(dbDrugMonthSummaryDomain.getStartDate()!=null)
+            {
+                drugSummaryByMonth.setStartDate(dbDrugMonthSummaryDomain.getStartDate());
+            }
+
         }catch(Exception exception)
         {
-        	System.out.println("Exception : "+exception.getMessage());
+            System.out.println("Exception : "+exception.getMessage());
         }
-       
-        
-       
+
+
+
+        return drugSummaryByMonth;
+    }
+
+    public static DrugSummaryByMonth drugOnlyMonthSummary(DrugOnlyMonthSummaryDomain drugOnlyMonthSummaryDomain) {
+
+        DrugSummaryByMonth drugSummaryByMonth = new DrugSummaryByMonth();
+        drugSummaryByMonth.setEventCount(drugOnlyMonthSummaryDomain.getEventCount());
+        try
+        {
+            if(drugOnlyMonthSummaryDomain.getStartDate()!=null)
+            {
+                drugSummaryByMonth.setStartDate(drugOnlyMonthSummaryDomain.getStartDate());
+            }
+
+        }catch(Exception exception)
+        {
+            System.out.println("Exception : "+exception.getMessage());
+        }
         return drugSummaryByMonth;
     }
 }
