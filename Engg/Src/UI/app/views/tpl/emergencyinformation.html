@@ -23,7 +23,7 @@
                     <tbody>
                         <tr ng-repeat="reac in ERSummaryList">
                             <td>{{reac.episodeDiseaseCategory}}</td>
-                            <td>{{reac.sumTotalERVisits}}</td>
+                            <td>{{reac.sumTotalERVisits | number}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,7 +59,7 @@
                         <tr ng-repeat="dis in dischargeSummaryList">
                             <td>{{dis.year}}</td>
                             <td>{{dis.aprdrgdescription}}</td>
-                            <td>{{dis.totalCount}}</td>
+                            <td>{{dis.totalCount | number}}</td>
                         </tr>
                     </tbody>
                 </table>

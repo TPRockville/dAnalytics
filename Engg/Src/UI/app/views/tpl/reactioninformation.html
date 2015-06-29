@@ -12,14 +12,14 @@
                     <tr>
                         <th>Drug Name</th>
                         <th>Drug Reaction</th>
-                        <th>Number of Adverse event</th>
+                        <th>Number of Adverse Events</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="reac in drugReactionSummaryList">
                         <td ng-if="$index == 0" rowspan="{{drugReactionSummaryList.length}}"  style="padding-top:{{drugReactionSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
                         <td>{{reac.reactionName}}</td>
-                        <td>{{reac.eventCount}}</td>
+                        <td>{{reac.eventCount | number}}</td>
                     </tr>
                     <tr ng-if="reactionsLoading">
                         <td colspan="3" class="text-center">
@@ -48,14 +48,14 @@
                     <tr>
                         <th>Drug Name</th>
                         <th>FDA drug Characterization</th>
-                        <th>Number of Adverse event</th>
+                        <th>Number of Adverse Events</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="drug in drugCharSummaryList">
                         <td ng-if="$index == 0" rowspan="{{drugCharSummaryList.length}}" style="padding-top:{{drugCharSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
                         <td>{{drug.characterizationId == 1 ? 'Suspect drug' : drug.characterizationId == 2 ? 'Concomitant drug' : drug.characterizationId == 3 ? 'Interacting drug' : ''}}</td>
-                        <td><span class="">{{drug.eventCount}}</span></td>
+                        <td><span class="">{{drug.eventCount | number}}</span></td>
                     </tr>
                 </tbody>
             </table>

@@ -38,7 +38,7 @@ angular.module('jDeriveApp')
       };
 
       services.getDrugRecall = function (substance) {
-          var url = '{0}{1}'.format('https://api.fda.gov/drug/enforcement.json?search=openfda.substance_name:', substance)
+          var url = '{0}{1}{2}'.format('https://api.fda.gov/drug/enforcement.json?search=openfda.substance_name:', substance,'&limit=100')
           var deferred = $q.defer();
           $http.get(url)
               .success(function (data) {
@@ -105,7 +105,7 @@ angular.module('jDeriveApp')
       services.getEventCount = function (searchCriteria, category) {
           var url = '{0}/{1}?{2}'.format(configService.apiUrl, 'drugs/eventcount', searchCriteria);
           if (category && category === 'month') {
-              url = '{0}/{1}?{2}'.format(configService.apiUrl, 'drugs/eventcount/month', searchCriteria);
+              url = '{0}/{1}?{2}'.format(configService.apiUrl, 'drugs/drugeventcount/month', searchCriteria);
           }
           var deferred = $q.defer();
           $http.get(url)

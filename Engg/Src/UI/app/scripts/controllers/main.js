@@ -10,11 +10,6 @@
 angular.module('jDeriveApp')
   .controller('MainCtrl', function ($scope, basicService, $filter, $interval, configService) {
       var moment = window.moment;
-      $scope.awesomeThings = [
-        'HTML5 Boilerplate',
-        'AngularJS',
-        'Karma'
-      ];
 
       $scope.demo1 = {
           min: 0,
@@ -57,18 +52,11 @@ angular.module('jDeriveApp')
              console.log(data);
          });
 
-      //basicService.getDrugsList()
-      //   .then(function (data) {
-      //       $scope.drugsList = data.drugList;
-      //   }, function (data) {
-      //       console.log(data);
-      //   });
-
       $scope.drugfocus = function () {
           //console.log($scope.search.selectedDrug);
-          if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
-              $scope.$broadcast('angucomplete-alt:clearInput');
-          }
+          //if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
+          //    $scope.$broadcast('angucomplete-alt:clearInput');
+          //}
       }
 
       $scope.weightGroups = [];
@@ -81,48 +69,19 @@ angular.module('jDeriveApp')
 
       $scope.search = { searchAnywhere: true };
 
-      //$scope.search.fromDate = new Date('01/01/2014');
-
-      //$scope.search.toDate = new Date();
-
-      //$scope.$watch($scope.search, function (newValue, oldValue) {
-      //    loadData();
-      //});
-
-      //loadData();
-
       $scope.loadEventData = function (searchCriteria) {
           $scope.chartLoading = true;
           basicService.getEventCount(searchCriteria, 'month')
          .then(function (data) {
-
-             //var eventsCount = data.drugSummaryList;
-             //$scope.dataResult = data.drugSummaryList;
 
              $scope.dataResult = [];
              var eventsCount = data.drugSummaryByMonthList;
              $scope.dataResult = data.drugSummaryByMonthList;
 
              var eventData = [];
-             //$scope.monthData = d3.nest().key(function (a) {
-             //    return moment(a.eventDate).format('YYYYMM');
-             //}).rollup(function (a) {
-             //    return d3.sum(a, function (a) {
-             //        return a.eventCount
-             //    })
-             //}).entries(eventsCount);
-
-             //$scope.monthData.map(function (a) {
-             //    if (currentVal < parseInt(a.eventCount)) {
-             //        currentVal = a.eventCount;
-             //        maxCountObject = a;
-             //    }
-             //    eventData.push({ 'time': new Date(moment(a.key, 'YYYYMM')), 'count': a.values });
-             //});
              var currentVal = 0;
 
              $scope.dataResult.map(function (a) {
-                 //console.log(currentVal, a.eventCount);
                  if (currentVal < parseInt(a.eventCount)) {
                      currentVal = a.eventCount;
                      $scope.maxCountObject = a;
@@ -132,12 +91,16 @@ angular.module('jDeriveApp')
 
              if (eventData.length > 0) {
                  $('#eventGraphPanel').show();
-                 var minDate = new Date(moment(eventData[0].time));
-                 var maxDate = new Date(moment(eventData[eventData.length - 1].time));
-
-                 $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
-
+                 var minDate = new Date(moment(eventData[0].time).format('YYYY-MM-DD'));
+                 var maxDate = new Date(moment(eventData[eventData.length - 1].time.format('YYYY-MM-DD')));
+                 console.log(eventData[0].time,minDate, maxDate);
+                 if (minDate === maxDate) {
+                     $("#dateSlider").dateRangeSlider("bounds", minDate, new Date(moment(maxDate).add(moment.duration(1, 'M'))));
+                 } else {
+                     $("#dateSlider").dateRangeSlider("bounds", minDate, maxDate);
+                 }
                  $("#dateSlider").dateRangeSlider("min", minDate);
+                 $("#dateSlider").dateRangeSlider("max", maxDate);
 
                  $("#dateSlider").dateRangeSlider("values", minDate, maxDate);
                  $('#noDataLabel').hide();
@@ -199,19 +162,10 @@ angular.module('jDeriveApp')
           }
       });
 
-      //$("#dateSlider").dateRangeSlider("values", new Date(2012, 0, 1), new Date(2012, 0, 31));
-      //$('#eventGraphPanel').hide();
       $scope.search.apiDataPoint = 'local';
       $scope.loadEventData('');
-      //if ($scope.search.apiDataPoint == 'local') {
-
-      //} else {
-      //    //loadData();
-      //}
-
       $scope.allSpikes = ['2013-04-25', '2013-04-28'];
 
-      /*Random Data Generator */
       function loadData(searchText) {
           $scope.chartLoading = true;
           var eventsCount = [];
@@ -244,18 +198,8 @@ angular.module('jDeriveApp')
                   })
               }).entries(eventsCount);
 
-              //console.log(monthData);
-
               var currentVal = 0;
               var maxCountObject = {};
-
-              //$scope.monthData = d3.nest().key(function (a) {
-              //    return moment(a.eventDate).format('YYYYMM');
-              //}).rollup(function (a) {
-              //    return d3.sum(a, function (a) {
-              //        return a.eventCount
-              //    })
-              //}).entries(eventsCount);
 
               $scope.monthData.map(function (a) {
                   if (currentVal < parseInt(a.values)) {
@@ -377,7 +321,8 @@ angular.module('jDeriveApp')
                           // outer-bottom
                       },
                       tick: {
-                          fit: true
+                          fit: true,
+                          format: d3.format("d")
                       }
                   }
               },
@@ -439,10 +384,15 @@ angular.module('jDeriveApp')
 
           var searchUrl = '';
 
+          if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
+              $scope.$broadcast('angucomplete-alt:clearInput');
+          }
+
           if ($scope.search) {
               searchUrl += $scope.search.selectedDrug ? '&drugId=' + $scope.search.selectedDrug.id : '';
 
               if ($scope.search.selectedDrug) {
+                  $scope.recallInformation = [];
                   basicService.getDrugSubstance($scope.search.selectedDrug.name)
                     .then(function (data) {
                         if (data) {
@@ -484,6 +434,9 @@ angular.module('jDeriveApp')
                   basicService.getDrugEventSpikes($scope.search.selectedDrug.id)
                     .then(function (data) {
                         $scope.drugEventSpikeList = data.drugEventSpikeList;
+                        if ($scope.drugEventSpikeList && $scope.drugEventSpikeList.length > 0) {
+                            $scope.showSpikeInformatrion($scope.drugEventSpikeList[0].spikeDate);
+                        }
                     }, function (data) {
                         console.log('spike', data)
                     });
@@ -569,23 +522,22 @@ angular.module('jDeriveApp')
       }
 
       $scope.showSpikeInformatrion = function (date) {
-          angular.element('#spikeInformation').show();
-          angular.element('#eventInformation').hide();
-          angular.element('#spikelabel').show();
-          angular.element('#adverselabel').hide();
+          //angular.element('#spikeInformation').show();
+          //angular.element('#eventInformation').hide();
+          //angular.element('#spikelabel').show();
+          //angular.element('#adverselabel').hide();
 
           //bindGroupCharts();
           $scope.getSpikeChartSummary($scope.search.selectedDrug.id, date);
       };
 
       $scope.hideSpikeInformatrion = function () {
-          angular.element('#spikeInformation').hide();
-          angular.element('#eventInformation').show();
+          //angular.element('#spikeInformation').hide();
+          //angular.element('#eventInformation').show();
 
-          angular.element('#spikelabel').hide();
-          angular.element('#adverselabel').show();
+          //angular.element('#spikelabel').hide();
+          //angular.element('#adverselabel').show();
       };
-      //angular.element("#slider").dateRangeSlider();
 
       $scope.getDischargeSummary = function (drugid) {
           $scope.dischargeSummaryList = [];
@@ -612,11 +564,10 @@ angular.module('jDeriveApp')
       $scope.SpikeChartSummary = [];
 
       $scope.getSpikeChartSummary = function (drugid, date) {
-          $scope.chartLoading = true;
+          $scope.spikeChartLoading = true;
           $scope.SpikeChartSummary = [];
           basicService.getSpikeChartSummary(drugid, moment(date).unix())
             .then(function (data) {
-                //$scope.SpikeChartSummary = data.dimensionResponse;
                 bindGroupCharts(data.dimensionResponse);
             }, function (data) {
                 console.log('getSpikeChartSummary', data);
@@ -645,53 +596,18 @@ angular.module('jDeriveApp')
                   weightGroupData.push([value.type, value.eventCount]);
               });
           }
-
-          //var ageGroupData = [
-          //  ['Child', 30],
-          //  ['Adult', 120],
-          //  ['Old', 300]
-          //];
-
-          //var weightGroupData = [
-          // ['Under 50', 200],
-          // ['51 - 70', 60],
-          // ['Over 70', 300]
-          //];
-
-          //var genderData = [
-          //    ['Unknown', 60],
-          //    ['Male', 100],
-          //    ['Female', 70]
-          //];
-
-          //var countryData = [
-          //    ['US', 60],
-          //    ['IN', 100],
-          //    ['GB', 70],
-          //    ['CA', 20]
-          //];
-          $scope.chartLoading = false;
+          $scope.spikeChartLoading = false;
           bindGraph('#ageGroupPie', 'donut', ageGroupData, 'Age Group');
           bindGraph('#wightGroupPie', 'donut', weightGroupData, 'Weight Group(in Kg)');
           bindGraph('#genderGroupPie', 'donut', genderData, 'Gender');
-          //bindGraph('#countryPie', 'donut', countryData, 'Country');
       };
 
       var bindGraph = function (divId, type, data, title) {
           c3.generate({
               bindto: divId,
               data: {
-                  // iris data from R
                   columns: data,
                   type: type
-              },
-              pie: {
-                  //label:{
-                  //    format:function(x){
-                  //        return x;
-                  //    }
-                  //},
-                  title: 'Test'
               },
               tooltip: {
                   format: {
@@ -702,6 +618,11 @@ angular.module('jDeriveApp')
               },
               donut: {
                   title: title
+              },
+              legend: {
+                  item: {
+                      onclick: function (id) { return false; }
+                  }
               }
           });
       };
@@ -712,7 +633,6 @@ angular.module('jDeriveApp')
               $scope.reactionsLoading = true;
 
               $scope.reactionSkip += $scope.reactionCount;
-              //var results = loadReactions($scope.reactionSkip, $scope.reactionCount);
 
               basicService.getDrugReaction($scope.search.selectedDrug.id, $scope.reactionSkip, $scope.reactionCount + 1)
               .then(function (data) {
@@ -731,5 +651,4 @@ angular.module('jDeriveApp')
               });
           }
       };
-
   });
