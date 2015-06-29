@@ -9,4 +9,5 @@ pig -param input=$1 drugsummary.pig
 pig -param input=$1 drugreactionsummary.pig
 pig -param input=$1 drugcharsummary.pig
 pig -param input=$1 drugsummarybymonth.pig
+pig -param input=$1 drugonlysummarybymonth.pig
 echo " ------------------- Completed ------------------------"

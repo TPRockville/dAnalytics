@@ -20,6 +20,6 @@ TODO: project description goes here
     `cd PigUdf` <br />
     `ant`
 4. Run the shell [pigscripts.sh](https://github.com/TPRockville/dAnalytics/blob/master/Engg/Src/Batch/Pig/pigscripts.sh) with parameter as path of the input csv in hdfs as /user/[username]/[INPUT.CSV]
-5. Run sqoop commands from the attached file. Mariadb connection configuration for each script needs to be changed.<br />
+5. Run sqoop commands from Sqoop Commands.txt file. Mariadb connection configuration for each script needs to be changed.<br />
     Eg: <br />
     `sqoop export --connect jdbc:mysql://[IP]:3306/[schema] --username [username] --password [password] --table drug_list --columns "drug_id,drug_name"  --export-dir /user/[username]/CompleteDS/druglist/part-* --verbose`
