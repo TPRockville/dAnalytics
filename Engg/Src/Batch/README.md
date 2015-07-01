@@ -1,6 +1,10 @@
-# dAnalytics Bacth Process- Hadoop, Pig & Sqoop
+# dAnalytics Batch Process- Hadoop, Pig & Sqoop
 
-TODO: project description goes here
+Apache Hadoop is used to process the large set of adverse reports data that is provided by FDA into dAnalytics relational database
+
+PIG is used for data summarize the adverse report data and store in a start schema for adverse report analysis. 
+
+Apache Scoop is used to efficiently transfer the summarized data into the mariaDB relational database. 
 
 ## Components
     - XML Parser (Java based tool to converts input XML to CSV)
@@ -9,7 +13,7 @@ TODO: project description goes here
     - Sqoop Scripts (Dumps the data to Star schema in MariaDB)
 
 ## Installation
-    TODO: Installation details goes here
+    Please refer to the installation details in [dAnalytics Deloyment Documentation](https://github.com/TPRockville/dAnalytics/blob/master/Engg/Release/dAnalytics-deployment%20document.docx)
 
 ## Usage
 1. Build the [XML Parser](https://github.com/pradeepkumardv/jDerive/tree/master/Engg/Src/Batch/XMLParser) and run the below command to convert input XML to CSV. <br/> 
