@@ -1,9 +1,6 @@
 # dAnalytics Batch Process- Hadoop, Pig & Sqoop
 
-Apache Hadoop is used to process the large set of adverse reports data that is provided by FDA into dAnalytics relational database
-
-PIG is used for data summarize the adverse report data and store in a start schema for adverse report analysis. 
-
+Apache Hadoop is used to process the large set of adverse reports data that is provided by FDA into dAnalytics relational database. PIG is used for data summarize the adverse report data and store in a start schema for adverse report analysis.
 Apache Scoop is used to efficiently transfer the summarized data into the mariaDB relational database. 
 
 ## Components
