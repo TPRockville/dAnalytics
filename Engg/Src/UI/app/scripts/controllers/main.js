@@ -296,7 +296,7 @@ angular.module('jDeriveApp')
                           fit: true
                       },
                       label: {
-                          text: 'Received Date',
+                          text: 'Received Months',
                           position: 'inner-center'
                           // inner-right : default
                           // inner-center
@@ -308,7 +308,7 @@ angular.module('jDeriveApp')
                   },
                   y: {
                       label: {
-                          text: 'Count',
+                          text: 'Adverse event count',
                           position: 'outer-top'
                           // inner-top : default
                           // inner-middle

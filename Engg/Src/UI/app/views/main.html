@@ -9,7 +9,7 @@
 <ng-include src="'views/tpl/filter.html'"></ng-include>
 <div class="row">
     <div class="col-md-12">
-        <div class="text-center" id="adverselabel" title="Zero event count is not considered for plotting the graph."><b>Adverse Event {{selectedSearch === '' ? 'report' : 'reported'}} {{selectedSearch}}</b></div>
+        <div class="text-center" id="adverselabel" title="Zero event count is not considered for plotting the graph."><b>{{search.apiDataPoint === 'local' ? 'Adverse event report using offline data' : 'Adverse event report from online FDA API (*The graph may very as the FDA API may be using different algorithm to correlate drugs and event.)'}} {{selectedSearch}}</b></div>
     </div>
 </div>
 <div class="row">
@@ -34,6 +34,22 @@
     <div class="text-center" id="spikelabel" style="" title="Monthly adverse event distribution by Age, Weight and Gender"><b>Monthly adverse event distribution by Age, Weight and Gender</b></div>
 </div>
 <div class="row" ng-if="selectedSearch !== '' && search.selectedDrug">
+    <div class="col-md-2">
+        <div class="row text-center">
+            <strong>Adverse event spike from offline data</strong>
+            <div style="font-size:9px" class="text-primary">Please click on the link for distribution by Age, Weight and Gender.</div>
+        </div>
+        <br />
+        <div style="max-height:350px;overflow-y:auto">
+            <div class="list-group">
+                <a style="cursor:pointer;text-decoration:underline" class="list-group-item {{$index === spikeSelectedIndex ? 'active':''}}" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4" ng-click="showSpikeInformatrion(spike.spikeDate, $index);">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}<label class="badge">{{spike.eventCount | number}}</label> </a>
+                <a class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <small>*for the period 2004 to 2014</small>
+        </div>
+    </div>
     <div class="col-md-10">
         <div id="spikeInformation">
             <div class="row">
@@ -52,23 +68,7 @@
         <div class="text-center chart-loading" ng-if="spikeChartLoading">
             <img src="/assets/images/loading.gif" /> Loading...
         </div>
-    </div>
-    <div class="col-md-2">
-        <div class="row text-center">
-            <strong>Adverse event spike</strong>
-            <div style="font-size:9px" class="text-primary">Please click on the link for distribution by Age, Weight and Gender.</div>
-        </div>
-        <br />
-        <div style="max-height:350px;overflow-y:auto">
-            <div class="list-group">
-                <a style="cursor:pointer;text-decoration:underline" class="list-group-item {{$index === spikeSelectedIndex ? 'active':''}}" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4" ng-click="showSpikeInformatrion(spike.spikeDate, $index);">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}<label class="badge">{{spike.eventCount | number}}</label> </a>
-                <a class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></a>
-            </div>           
-        </div>
-        <div class="row text-center">
-            <small>*for the period 2004 to 2014</small>
-        </div>
-    </div>
+    </div>    
 </div>
 
 <div ng-if="selectedSearch !== '' && search.selectedDrug">
@@ -88,4 +88,11 @@
 <div class="container" ng-cloak style="padding-top:20px">
     <p><b style="font-size:12px">Disclaimer:</b> <span style="font-size:12px">The charts and reports displayed on this site are created using data obtained from the <a href=" https://open.fda.gov/" target="_blank">Open FDA</a> API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA API's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
     <p style="font-size:12px;font-style:italic">Developed by <a href="http://tpgsi.com/" target="_blank">TurningPoint Global Solutions LLC</a></p>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <a href="#/" class=" pull-right" title="">
+            <img src="/assets/images/tplogo.jpg" alt="aAnalytics logo" />
+        </a>
+    </div>
 </div>
