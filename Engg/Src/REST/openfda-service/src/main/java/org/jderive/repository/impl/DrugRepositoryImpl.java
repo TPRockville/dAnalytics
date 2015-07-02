@@ -96,6 +96,20 @@ public class DrugRepositoryImpl implements DrugRepository {
         query.addEntity(DrugDomain.class);
         return query.list();
     }
+    
+    @Override
+	public DrugDomain findByExactName(String drugName) {
+        String queryByName = "SELECT * FROM drug_list WHERE drug_name = '" + drugName + "'";
+        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(queryByName);
+        query.addEntity(DrugDomain.class);
+        List<DrugDomain> drugDomains = query.list();
+        DrugDomain drugDomain = null;
+        if(drugDomains != null && !drugDomains.isEmpty())
+        {
+        	drugDomain = (DrugDomain)query.list().get(0);
+        }
+        return drugDomain;
+    }
 
     @Override
     public List<DrugEventSpikeDomain> eventSpikeCount(Long drugId) {
@@ -245,4 +259,26 @@ public class DrugRepositoryImpl implements DrugRepository {
         List<String> drugIndictions = (List<String>) query.list();
         return drugIndictions;
     }
+
+	@Override
+	public List<Object[]> getTopOrBottomDrugs(int drugcount, String order) {
+		
+		
+		 String queryByName = "select sum(event_count) as ec,drug_id from drug_summary_month group by drug_id order by ec "+order+" limit "+ drugcount+";";
+	        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(
+	                queryByName);
+	        List<Object[]> drugByEventCount = (List<Object[]>) query.list();
+	        DrugDomain drugDomain = null;
+	       
+	        for (Object[] objects : drugByEventCount) {
+				
+	        	drugDomain = findById(Long.parseLong(objects[1].toString()));
+	        	objects[1] = drugDomain.getName();
+			}
+	        
+	        
+		return drugByEventCount;
+	}
+
+	
 }

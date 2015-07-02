@@ -120,4 +120,17 @@ public class DrugServiceImpl implements DrugService {
         }
         return drugOnlyMonthSummaryDomains;
     }
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object[]> getTopOrBottomDrugs(int drugcount, String order) {
+		
+		return drugRepository.getTopOrBottomDrugs(drugcount,order);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public DrugDomain findByExactName(String drugName) {
+		return drugRepository.findByExactName(drugName);
+	}
 }

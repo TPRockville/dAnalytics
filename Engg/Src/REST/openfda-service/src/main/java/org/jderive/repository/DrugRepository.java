@@ -32,4 +32,8 @@ public interface DrugRepository {
 	List<DischargeSummaryDomain> getDischargeSummary(String drugId);
 
     List<DrugOnlyMonthSummaryDomain> drugOnlySummaryMonth(Long drugId) throws JDeriveException;
+
+	List<Object[]> getTopOrBottomDrugs(int drugcount,String isAscending);
+
+	DrugDomain findByExactName(String drugName);
 }

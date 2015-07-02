@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.jderive.api.Dimension;
 import org.jderive.api.JDeriveResponse;
+import org.jderive.api.TopDrugs;
 import org.jderive.domain.*;
 import org.jderive.dto.*;
 import org.jderive.exception.JDeriveException;
@@ -92,6 +93,25 @@ public class DrugController {
     public ResponseEntity<JDeriveResponse> get(@PathVariable("id") String id) throws Exception {
         try {
             DrugDomain drugDomain = drugService.findById(NumberUtil.isNumeric(id) ? NumberUtil.parseLong(id) : null);
+            if (drugDomain != null) {
+                JDeriveResponse jDeriveResponse = JDeriveResponse.builder().withStatusCode(HttpStatus.OK.toString())
+                        .withDrugList(ImmutableList.of(DrugDTO.drug(drugDomain))).build();
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+            } else {
+                JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                        .withStatusCode(HttpStatus.OK.toString()).build();
+                return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            throw new JDeriveException(EXCEPTION_MESSAGE, e);
+        }
+    }
+    
+    
+    @RequestMapping(value = "/drugname/{drugname}", method = RequestMethod.GET)
+    public ResponseEntity<JDeriveResponse> getDrugByName(@PathVariable("drugname") String drugName) throws Exception {
+        try {
+            DrugDomain drugDomain = drugService.findByExactName(drugName);
             if (drugDomain != null) {
                 JDeriveResponse jDeriveResponse = JDeriveResponse.builder().withStatusCode(HttpStatus.OK.toString())
                         .withDrugList(ImmutableList.of(DrugDTO.drug(drugDomain))).build();
@@ -405,6 +425,27 @@ public class DrugController {
                     .build();
             return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
         }
+    	}catch (Exception e) {
+            throw new JDeriveException(EXCEPTION_MESSAGE, e);
+        }
+        
+    }
+    
+    
+    @RequestMapping(value = "topdrugs/{drugcount}/order/{order}", method = RequestMethod.GET) 
+    public ResponseEntity<JDeriveResponse> topdrugs(@PathVariable("drugcount") int drugcount,@PathVariable("order") String order) throws Exception {
+    	
+    	try
+    	{
+    	List<Object[]> dischargeSummaryDomains = drugService.getTopOrBottomDrugs(drugcount,order);
+    	
+    	List<TopDrugs> topDrugs = TopDrugsDTO.toTopDrugs(dischargeSummaryDomains);
+    	
+    	JDeriveResponse jDeriveResponse = JDeriveResponse.builder()
+                .withStatusCode(HttpStatus.OK.toString()).withTopDrugs(topDrugs)
+                .build();
+        return new ResponseEntity<JDeriveResponse>(jDeriveResponse, HttpStatus.OK);
+        
     	}catch (Exception e) {
             throw new JDeriveException(EXCEPTION_MESSAGE, e);
         }

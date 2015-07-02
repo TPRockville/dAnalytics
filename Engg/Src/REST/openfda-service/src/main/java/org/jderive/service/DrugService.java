@@ -33,4 +33,8 @@ public interface DrugService {
 
     List<DrugOnlyMonthSummaryDomain> drugOnlySummaryMonth(Long drugId) throws JDeriveException;
 
+	List<Object[]> getTopOrBottomDrugs(int drugcount, String order);
+
+	DrugDomain findByExactName(String drugName);
+
 }
