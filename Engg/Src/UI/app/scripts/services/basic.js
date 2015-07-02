@@ -210,5 +210,31 @@ angular.module('jDeriveApp')
           return deferred.promise;
       };
 
+      services.getDrugIdByName = function (drugName) {
+          var url = '{0}/drugs/drugname/{1}'.format(configService.apiUrl, drugName);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
+      services.getDrugTopChart = function (drugCount, order) {
+          var url = '{0}/drugs/topdrugs/{1}/order/{2}'.format(configService.apiUrl, drugCount, order);
+          var deferred = $q.defer();
+          $http.get(url)
+              .success(function (data) {
+                  deferred.resolve(data);
+              })
+              .error(function (data) {
+                  deferred.reject(data);
+              });
+          return deferred.promise;
+      };
+
       return services;
   });

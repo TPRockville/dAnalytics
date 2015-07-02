@@ -38,6 +38,7 @@ public class JDeriveResponse {
     private  List<ERSummary> eRSummary;
     private  List<DischargeSummary> dischargeSummary;
 	private Map<String, List<Dimension>> dimensionResponse;
+	private List<TopDrugs> topDrugs;
 
 
     protected JDeriveResponse(Builder builder) {
@@ -55,6 +56,7 @@ public class JDeriveResponse {
 		this.eRSummary = builder.eRSummary;
 		this.dischargeSummary = builder.dischargeSummary;
 		this.dimensionResponse = builder.dimensionResponse;
+		this.topDrugs = builder.topDrugs;
     }
 
     public static Builder builder() {
@@ -76,7 +78,7 @@ public class JDeriveResponse {
         private List<ERSummary> eRSummary;
         private List<DischargeSummary> dischargeSummary;
     	private Map<String, List<Dimension>> dimensionResponse;
-
+    	private List<TopDrugs> topDrugs;
 
         public JDeriveResponse build() {
             return new JDeriveResponse(this);
@@ -148,6 +150,11 @@ public class JDeriveResponse {
 		
 		public Builder withDimensionResponse(Map<String, List<Dimension>> input) {
             this.dimensionResponse = input;
+            return this;
+        }  
+		
+		public Builder withTopDrugs(List<TopDrugs> input) {
+            this.topDrugs = input;
             return this;
         }  
     }

@@ -296,7 +296,7 @@ angular.module('jDeriveApp')
                           fit: true
                       },
                       label: {
-                          text: 'Received Date',
+                          text: 'Received Months',
                           position: 'inner-center'
                           // inner-right : default
                           // inner-center
@@ -308,7 +308,7 @@ angular.module('jDeriveApp')
                   },
                   y: {
                       label: {
-                          text: 'Count',
+                          text: 'Adverse event count',
                           position: 'outer-top'
                           // inner-top : default
                           // inner-middle
@@ -371,20 +371,43 @@ angular.module('jDeriveApp')
           $scope.selectedSearch = '';
           $scope.loadEventData('');
           $scope.search.apiDataPoint = 'local';
+          $scope.drugInputStr = '';
       };
       $scope.recallNotfound = false;
       $scope.recallInformation = [];
+      $scope.drugInputStr = '';
+      $scope.drugInputChanged = function (str) {
+          $scope.search.selectedDrug = null;
+          $scope.drugInputStr = str;
+      };
 
       $scope.searchEvents = function () {
           $scope.hideSpikeInformatrion();
+
+          if ((!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) && $scope.drugInputStr !== '') {
+              //$scope.$broadcast('angucomplete-alt:clearInput');
+              basicService.getDrugIdByName($scope.drugInputStr)
+            .then(function (data) {
+                if (data.drugList && data.drugList.length > 0) {
+                    $scope.search.selectedDrug = data.drugList[0];
+                    searchComplete();
+                } else {
+                    $scope.$broadcast('angucomplete-alt:clearInput');
+                    alert('No drug found with this name.');
+                }
+            }, function (data) {
+                $scope.$broadcast('angucomplete-alt:clearInput');
+                alert('No drug found with this name.');
+            });
+          } else {
+              searchComplete();
+          }
+      };
+
+      function searchComplete() {
           var search = $scope.search;
 
           var searchUrl = '';
-
-          if (!$scope.search.selectedDrug || ($scope.search.selectedDrug && $scope.search.selectedDrug === null)) {
-              $scope.$broadcast('angucomplete-alt:clearInput');
-          }
-
           if ($scope.search) {
               searchUrl += $scope.search.selectedDrug ? '&drugId=' + $scope.search.selectedDrug.id : '';
 
@@ -506,8 +529,7 @@ angular.module('jDeriveApp')
           } else {
               loadData($scope.remoteSearch);
           }
-
-      };
+      }
 
       function loadReactions(skip, count) {
           basicService.getDrugReaction($scope.search.selectedDrug.id, skip, count)
@@ -647,4 +669,43 @@ angular.module('jDeriveApp')
               });
           }
       };
+
+      $scope.getDrugIdByName = function (drugName) {
+          basicService.getDrugIdByName(drugName)
+             .then(function (data) {
+                 if (data.drugList) {
+                     var drugDetails = data.drugList;
+                 } else {
+                     alert('No drug found with this name.');
+                 }
+             }, function (data) {
+
+             });
+      };
+      $scope.getTopDrugs = function () {
+          $scope.loadingTop = true;
+          basicService.getDrugTopChart(10, 'desc')
+             .then(function (data) {
+                 $scope.topDrugs = data.topDrugs;
+                 $scope.loadingTop = false;
+             }, function (data) {
+
+             });
+      };
+
+      $scope.getBottomDrugs = function () {
+          $scope.loadingBottom = true;
+          basicService.getDrugTopChart(10, 'asc')
+             .then(function (data) {
+                 $scope.bottomDrugs = data.topDrugs;
+                 $scope.loadingBottom = false;
+             }, function (data) {
+
+             });
+      };
+
+      $scope.getTopDrugs();
+
+      $scope.getBottomDrugs();
+
   });
