@@ -264,7 +264,7 @@ public class DrugRepositoryImpl implements DrugRepository {
 	public List<Object[]> getTopOrBottomDrugs(int drugcount, String order) {
 		
 		
-		 String queryByName = "select sum(event_count) as ec,drug_id from drug_summary_month group by drug_id order by ec "+order+" limit "+ drugcount+";";
+		 String queryByName = "select sum(event_count) as ec,drug_id from drug_only_summary_month group by drug_id order by ec "+order+" limit "+ drugcount+";";
 	        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(
 	                queryByName);
 	        List<Object[]> drugByEventCount = (List<Object[]>) query.list();
