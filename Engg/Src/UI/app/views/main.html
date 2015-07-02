@@ -23,8 +23,8 @@
                 <div class="text-left" style="font-size:9px;margin-left:50px;margin-top:-10px"><i>* Please adjust dates on the slider to focus on the graph</i></div>
             </div>
         </div>
-        <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>      
-        
+        <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
+
         <div class="text-center chart-loading" ng-if="chartLoading">
             <img src="/assets/images/loading.gif" /> Loading...
         </div>
@@ -64,11 +64,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="text-center chart-loading" ng-if="spikeChartLoading">
             <img src="/assets/images/loading.gif" /> Loading...
         </div>
-    </div>    
+    </div>
 </div>
 
 <div ng-if="selectedSearch !== '' && search.selectedDrug">
@@ -79,6 +79,11 @@
     <br />
     <ng-include src="'views/tpl/emergencyinformation.html'"></ng-include>
 
+</div>
+
+<div ng-if="!(selectedSearch !== '' && search.selectedDrug)">
+    <br />
+    <ng-include src="'views/tpl/topDrugs.html'"></ng-include>
 </div>
 
 <div ng-if="!search.selectedDrug" class="row text-primary text-center">
