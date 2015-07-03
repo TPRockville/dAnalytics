@@ -13,7 +13,7 @@ angular.module('jDeriveApp')
           protocol: 'http',
           host: '52.24.0.121',
           port: '8080',
-          contextRoot: 'dAnalytics'
+          contextRoot: 'danalytics'
       };
       if (service.port && service.port !== '') {
           service.apiUrl = '{0}://{1}:{2}/{3}'.format(service.protocol, service.host, service.port, service.contextRoot);

@@ -2,5 +2,5 @@
   "protocol": "http",
   "host": "52.24.0.121",
   "port": "8080",
-  "contextRoot": "dAnalytics"
+  "contextRoot": "danalytics"
 }
