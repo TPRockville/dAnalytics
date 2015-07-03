@@ -13,17 +13,18 @@
         </div>
         <div class="table-responsive" ng-if="ERSummaryList.length > 0">
             <div style="max-height:300px;overflow-y:auto">
-                <table class="table table-bordered table-condensed" name="ERSummaryList">
+                <table class="table table-bordered table-condensed" name="ERSummaryList" summary="This table provides count of patients who have visited Emergency room  for which selected drug may have been prescribed.">
+				<caption>Emergency Room (Specific to state of New York for 2012)</caption>
                     <thead>
                         <tr>
-                            <th>Similar adverse event</th>
-                            <th>Total ER Visits</th>
+                            <th scope="col" id="a1">Similar adverse event</th>
+                            <th scope="col" id="a2">Total ER Visits</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="reac in ERSummaryList">
-                            <td>{{reac.episodeDiseaseCategory}}</td>
-                            <td>{{reac.sumTotalERVisits | number}}</td>
+                            <td headers="a1">{{reac.episodeDiseaseCategory}}</td>
+                            <td headers="a2">{{reac.sumTotalERVisits | number}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -47,19 +48,20 @@
         </div>
         <div class="table-responsive" ng-if="dischargeSummaryList.length > 0">
             <div style="max-height:300px;overflow-y:auto">
-                <table class="table table-bordered table-condensed" name="dischargeSummaryList">
+                <table class="table table-bordered table-condensed" name="dischargeSummaryList" summary="This table provides count of patients have been Admitted / Discharged for which selected drug may have been prescribed.">
+				<caption>Patient discharge data (Specific to state of NY for the 2009 to 2014 )</caption>
                     <thead>
                         <tr>
-                            <th>Year</th>
-                            <th>Similar adverse event</th>
-                            <th>Number of Patient Discharges</th>
+                            <th scope="col" id="b1">Year</th>
+                            <th scope="col" id="b2">Similar adverse event</th>
+                            <th scope="col" id="b3">Number of Patient Discharges</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="dis in dischargeSummaryList">
-                            <td>{{dis.year}}</td>
-                            <td>{{dis.aprdrgdescription}}</td>
-                            <td>{{dis.totalCount | number}}</td>
+                            <td headers="b1">{{dis.year}}</td>
+                            <td headers="b2">{{dis.aprdrgdescription}}</td>
+                            <td headers="b3">{{dis.totalCount | number}}</td>
                         </tr>
                     </tbody>
                 </table>

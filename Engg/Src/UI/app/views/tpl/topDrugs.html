@@ -6,7 +6,7 @@
                 Loading Drugs list...
             </div>
             <div class="list-group">
-                <a class="list-group-item" ng-repeat="drug in topDrugs">{{drug.drugName}}<label class="badge">{{drug.count | number}}</label></a>
+                <a href="#" class="list-group-item" ng-repeat="drug in topDrugs" title="{{drug.drugName}}: {{drug.count | number}}">{{drug.drugName}}<label class="badge">{{drug.count | number}}</label></a>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
                 Loading Drugs list...
             </div>
             <div class="list-group">
-                <a class="list-group-item" ng-repeat="drug in bottomDrugs">{{drug.drugName}}<label class="badge">{{drug.count | number}}</label></a>
+                <a href="#" class="list-group-item" ng-repeat="drug in bottomDrugs" title="{{drug.drugName}}: {{drug.count | number}}">{{drug.drugName}}<label class="badge">{{drug.count | number}}</label></a>
             </div>
         </div>
     </div>

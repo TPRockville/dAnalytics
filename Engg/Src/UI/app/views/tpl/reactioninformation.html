@@ -2,27 +2,28 @@
     <div class="col-md-6">
         <div class="row text-info">
             <div class="col-md-12">
-                <label><b>Adverse reaction reported for the selected drug</b> <i class="glyphicon glyphicon-info-sign" title="This table provides the details of reaction based on the drug selected with its respective counts."></i></label>
+                <label title="Adverse reaction reported for the selected drug"><b>Adverse reaction reported for the selected drug</b> <i class="glyphicon glyphicon-info-sign" title="This table provides the details of reaction based on the drug selected with its respective counts."></i></label>
             </div>
         </div>
 
         <div class="table-responsive" ng-show="drugReactionSummaryList && drugReactionSummaryList.length > 0"  when-scroll-ends="loadMoreReactions()" style="max-height:150px;overflow-y:auto;">
-            <table class="table table-bordered table-condensed" name="drugReactions">
+            <table class="table table-bordered table-condensed" name="drugReactions" summary="This table provides the details of reaction based on the drug selected with its respective counts.">
+				<caption>Adverse reaction reported for the selected drug</caption>
                 <thead>
                     <tr>
-                        <th>Drug Name</th>
-                        <th>Drug Reaction</th>
-                        <th>Number of Adverse Events</th>
+                        <th scope="col" id="c1">Drug Name</th>
+                        <th scope="col" id="c2">Drug Reaction</th>
+                        <th scope="col" id="c3">Number of Adverse Events</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="reac in drugReactionSummaryList">
-                        <td ng-if="$index == 0" rowspan="{{drugReactionSummaryList.length}}"  style="padding-top:{{drugReactionSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
-                        <td>{{reac.reactionName}}</td>
-                        <td>{{reac.eventCount | number}}</td>
+                        <td ng-if="$index == 0" rowspan="{{drugReactionSummaryList.length}}" headers="c1" style="padding-top:{{drugReactionSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
+                        <td headers="c2">{{reac.reactionName}}</td>
+                        <td headers="c3">{{reac.eventCount | number}}</td>
                     </tr>
                     <tr ng-if="reactionsLoading">
-                        <td colspan="3" class="text-center">
+                        <td colspan="3" class="text-center" headers="c1 c2 c3">
                             Loading more reactions
                         </td>
                     </tr>
@@ -39,23 +40,24 @@
     <div class="col-md-6">
         <div class="row text-info">
             <div class="col-md-12">
-                <label><b>FDA Drug Characterization Details</b> <i class="glyphicon glyphicon-info-sign" title=" This table details the 3 different type Characterization of a Drug along with its respective counts"></i></label>
+                <label title="FDA Drug Characterization Details"><b>FDA Drug Characterization Details</b> <i class="glyphicon glyphicon-info-sign" title=" This table details the 3 different type Characterization of a Drug along with its respective counts"></i></label>
             </div>
         </div>
         <div class="table-responsive" ng-show="drugCharSummaryList && drugCharSummaryList.length > 0" style="max-height:220px;overflow-y:auto">
-            <table class="table table-bordered table-condensed" name="drugCharSummaryList">
+            <table class="table table-bordered table-condensed" name="drugCharSummaryList" summary="This table details the 3 different type Characterization of a Drug along with its respective counts">
+				<caption>FDA Drug Characterization Details</caption>
                 <thead>
                     <tr>
-                        <th>Drug Name</th>
-                        <th>FDA drug Characterization</th>
-                        <th>Number of Adverse Events</th>
+                        <th scope="col" id="d1">Drug Name</th>
+                        <th scope="col" id="d2">FDA drug Characterization</th>
+                        <th scope="col" id="d3">Number of Adverse Events</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="drug in drugCharSummaryList">
-                        <td ng-if="$index == 0" rowspan="{{drugCharSummaryList.length}}" style="padding-top:{{drugCharSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
-                        <td>{{drug.characterizationId == 1 ? 'Suspect drug' : drug.characterizationId == 2 ? 'Concomitant drug' : drug.characterizationId == 3 ? 'Interacting drug' : ''}}</td>
-                        <td><span class="">{{drug.eventCount | number}}</span></td>
+                        <td ng-if="$index == 0" rowspan="{{drugCharSummaryList.length}}" headers="d1" style="padding-top:{{drugCharSummaryList.length * 14}}px">{{search.selectedDrug.name}}</td>
+                        <td headers="d2">{{drug.characterizationId == 1 ? 'Suspect drug' : drug.characterizationId == 2 ? 'Concomitant drug' : drug.characterizationId == 3 ? 'Interacting drug' : ''}}</td>
+                        <td headers="d3"><span class="">{{drug.eventCount | number}}</span></td>
                     </tr>
                 </tbody>
             </table>

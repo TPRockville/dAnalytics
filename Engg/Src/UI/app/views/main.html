@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="topPara">
-            <p style="font-size:14px;line-height:1;">dAnalytics compiles drug adverse event data from the U.S. Food and Drug Administration (<a href="https://open.fda.gov" title="openFDA">https://open.fda.gov</a>).  We have analyzed about 10 million drug adverse events from the last 10 years, between 2004 and 2014. Use filter criteria below to drill down into adverse event data.</p>
+            <p style="font-size:14px;line-height:1;">dAnalytics compiles drug adverse event data from the U.S. Food and Drug Administration (<a href="https://open.fda.gov" title="Open FDA">https://open.fda.gov</a>).  We have analyzed about 10 million drug adverse events from the last 10 years, between 2004 and 2014. Use filter criteria below to drill down into adverse event data.</p>
         </div>
     </div>
 </div>
@@ -23,13 +23,13 @@
                     <div id="eventChart"></div>
                 </div>
                 <div id="dateSlider" class="colored-rangeslider slider-xs valuelabel-blue silder-blue ui-rangeSlider ui-rangeSlider-withArrows" style="margin-top:-20px;margin-left:50px;"></div>
-                <div class="text-left" style="font-size:9px;margin-left:50px;margin-top:-10px"><i>* Please adjust dates on the slider to focus on the graph</i></div>
+                <div class="text-left" style="font-size:9px;margin-left:50px;margin-top:-10px"><i title="Please adjust dates on the slider to focus on the graph">* Please adjust dates on the slider to focus on the graph</i></div>
             </div>
         </div>
         <div id="noDataLabel" class="text-center" style="position:relative;top:-250px;display:none">No events found for this criteria</div>
 
         <div class="text-center chart-loading" ng-if="chartLoading">
-            <img src="/assets/images/loading.gif" /> Loading...
+            <img src="/assets/images/loading.gif" alt="Loading" title="Loading" /> Loading...
         </div>
     </div>
 </div>
@@ -45,8 +45,8 @@
         <br />
         <div style="max-height:350px;overflow-y:auto">
             <div class="list-group">
-                <a style="cursor:pointer;text-decoration:underline" class="list-group-item {{$index === spikeSelectedIndex ? 'active':''}}" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4" ng-click="showSpikeInformatrion(spike.spikeDate, $index);">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}<label class="badge">{{spike.eventCount | number}}</label> </a>
-                <a class="list-group-item" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0" title="{{search.selectedDrug ? 'No data found' : 'Select Drug to list spikes'}}"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></a>
+                <a style="cursor:pointer;text-decoration:underline" title="{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}} : {{spike.eventCount | number}}" class="list-group-item {{$index === spikeSelectedIndex ? 'active':''}}" ng-repeat="spike in drugEventSpikeList" ng-if="$index <= 4" ng-click="showSpikeInformatrion(spike.spikeDate, $index);">{{ spike.spikeDate | timezoneFormat:'MMM YYYY'}}<label class="badge">{{spike.eventCount | number}}</label></a>
+                <a class="list-group-item" title="" ng-if="!drugEventSpikeList || drugEventSpikeList.length <= 0"><span ng-if="!search.selectedDrug">Select Drug to list spikes</span><span ng-if="search.selectedDrug">No data found</span></a>
             </div>
         </div>
         <div class="row text-center">
@@ -69,7 +69,7 @@
         </div>
 
         <div class="text-center chart-loading" ng-if="spikeChartLoading">
-            <img src="/assets/images/loading.gif" /> Loading...
+            <img src="/assets/images/loading.gif" alt="Loading" title="Loading" /> Loading...
         </div>
     </div>
 </div>
@@ -100,7 +100,7 @@
 <div class="row">
     <div class="col-xs-12">
         <a href="http://tpgsi.com" class=" pull-right" title="TurningPoint Global Solutions LLC">
-            <img src="/assets/images/tplogo.jpg" height="" width="" title="TurningPoint Global Solutions LLC" alt="TurningPoint Global Solutions LLC" />
+            <img src="/assets/images/tplogo.jpg" height="58" width="182" title="TurningPoint Global Solutions LLC" alt="TurningPoint Global Solutions LLC" />
         </a>
     </div>
 </div>
