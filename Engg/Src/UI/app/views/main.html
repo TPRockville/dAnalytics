@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="topPara">
-            <p style="font-size:14px;line-height:1;">dAnalytics compiles drug adverse event data from the U.S. Food and Drug Administration (<a href="https://open.fda.gov" title="Open FDA">https://open.fda.gov</a>).  We have analyzed about 10 million drug adverse events from the last 10 years, between 2004 and 2014. Use filter criteria below to drill down into adverse event data.</p>
+            <p style="font-size:14px;line-height:1;">dAnalytics application provides an easy to understand information about the "Adverse Events of Drug Usage" based on the data from U. S. Food and Drug Administration.  Application analyzes the data collected over 10 year period from 2004 - 2014. Use the Drug name selection to see if a specific Drug has any Recall or any Adverse Events reported.</p>
         </div>
     </div>
 </div>
@@ -11,7 +11,7 @@
     <div class="col-md-12">
         <div class="text-center" id="adverselabel" title="Zero event count is not considered for plotting the graph.">
             <b>{{search.apiDataPoint === 'local' ? 'Adverse event report using offline data' : 'Adverse event report from online FDA API'}} {{selectedSearch}}</b>
-            <div ng-if="search.apiDataPoint === 'local'" style="color:#989797"><small>*The graph may vary as the FDA API may be using different algorithm to correlate drugs and event.</small></div>
+            <div ng-if="search.apiDataPoint !== 'local'" style="color:#989797"><small>*The graph may vary as the FDA API may be using different algorithm to correlate drugs and event.</small></div>
         </div>
     </div>
 </div>
@@ -94,7 +94,7 @@
 </div>
 
 <div class="container" ng-cloak style="padding-top:20px">
-    <p><b style="font-size:12px">Disclaimer:</b> <span style="font-size:12px">The charts and reports displayed on this site are created using data obtained from the <a href=" https://open.fda.gov/" title="Open FDA" target="_blank">Open FDA</a> API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA API's some fields or data may not display as intended, when this occurs data may not be returned from an API query. Please visit the <a href=" https://open.fda.gov/" title="Open FDA" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
+    <p><b style="font-size:12px">Disclaimer:</b> <span style="font-size:12px">The charts and reports displayed on this site are created using data obtained from the <a href=" https://open.fda.gov/" title="Open FDA" target="_blank">Open FDA</a> API endpoints. This tool may not display all available fields or data. Since the tool dynamically calls the openFDA API's some fields or data may not display as intended. Please visit the <a href=" https://open.fda.gov/" title="Open FDA" target="_blank">open.fda.gov</a> website to review their disclaimer and to understand the API specifications, data limitations and warnings of their API and data. This website is not affiliated with the FDA or openFDA project.</span></p>
     <p style="font-size:12px;font-style:italic">Developed by <a href="http://tpgsi.com/" title="TurningPoint Global Solutions LLC" target="_blank">TurningPoint Global Solutions LLC</a></p>
 </div>
 <div class="row">
