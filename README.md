@@ -2,7 +2,7 @@
 
 http://danalytics.tpgsi.com
 
-The paragraphs below describe the tailored approach that our team leveraged in response to the Agile Delivery Services RFQ (4QTFHS150004) to design and build the dAnalytics prototype. dAnalytics is based on the Adverse Events, Enforcement Reports data available on openFDA (https://open.fda.gov/). 
+The paragraphs below describe the tailored approach that the TurningPoint team leveraged in response to the Agile Delivery Services RFQ (4QTFHS150004) to design and build the dAnalytics prototype. dAnalytics is based on the Adverse Events, Enforcement Reports data available on openFDA (https://open.fda.gov/). 
 
 Upon project initiation, TurningPoint assembled a small, focused team that included a Product Manager, Architect, Requirements analysts and DevOps engineers.  The Product Owner (Project Manager) was given complete and final authority over the scope of the project and features to be implemented, and was ultimately responsible for how well the solution meets the needs of its users. His responsibilities included ensuring that features were built correctly, managing feature and bug backlogs, as well as budget management. Each team member was selected based on their experience in modern digital services, Big Data Analytics technology stack, and DevOps techniques, such as continuous integration and continuous deployment.  The team was divided into a Requirements team and a DevOps team, which was then subdivided into Rest API, Hadoop and UI teams. To maximize productivity, team members were split between two shifts.
 
@@ -17,7 +17,9 @@ We employed Agile development to reduce risk and allow working software to be de
 
 Code was developed outside of the master code base, to reduce risks of defects or bugs by enabling a code review before merging the software with the master code base.  We added features iteratively throughout the development period to deliver an innovative, scalable, mobile and desktop digital service.   
 Our dAnalytics prototype is a publically accessible portal that consumes, modifies, remixes, and displays the FDA’s Drug Adverse Event dataset.  The prototype identifies spikes in the drug adverse event reported dataset and correlates this to any drug recalls.  dAnalytics also allows users to filter data by weight, gender, and age so that they can have a more personalized and meaningful user experience.  
+
 We developed dAnalytics to work in an ‘Online’ and an ‘Offline’ mode to increase availability of the prototype and enhance the flexibility of the prototype for future iterations.  In the online mode, the OpenFDA API data is queried, while in Offline mode, we query the same data which has been downloaded in our database.  The offline mode enables dAnalytics to run independently of the OpenFDA API, making it available even when the OpenFDA API is offline. The offline mode also gives us the flexibility to develop new APIs in the future using the downloaded data. 
+
 We used modern, platform independent, open source technologies to reduce cost and enhance flexibility and interoperability.  We used GitHub as the source code repository, for documenting user stories and defect tracking.  Our technology stack also included Java 1.8, Apache Hadoop, MariaDB, Spring Boot, Angular JS, jQuery, Twitter Bootstrap, Apache Sqoop and Gradle. For the complete technology stack and architecture please refer to the dAnalytics design document.  Some of the benefits for our selection of technologies include:
 
 •	Ability to process large datasets in a distributed environment, enabled by Apache Hadoop, which is used in the first step to preprocess the downloaded data. 
