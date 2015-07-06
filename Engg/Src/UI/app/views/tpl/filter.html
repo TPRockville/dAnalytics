@@ -1,4 +1,4 @@
-﻿<div class="row">
+<div class="row">
     <div class="col-md-12">
         <form class="form-horizontal" ng-submit="searchEvents();">
             <div class="panel panel-primary" ng-show="searchAdvanced">
@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="inputDrug" class="col-md-2 col-sm-3 control-label" title="Select Drug">Select Drug</label>
+                                <label for="searchDrug" class="col-md-2 col-sm-3 control-label" title="Select Drug">Select Drug</label>
                                 <div class="col-md-10 col-sm-10">
                                     <div>
                                         <angucomplete-alt id="searchDrug"
@@ -24,7 +24,7 @@
                                                           input-changed="drugInputChanged" />
                                     </div>
                                     <div>
-                                    <label style="font-weight:normal"><input type="checkbox" ng-model="search.searchAnywhere" title="Select to search anywhere in drug name" />Starts with</label>
+                                        <label style="font-weight:normal" for="Searchstartswith" title="Select to search anywhere in drug name"><input type="checkbox" id="Searchstartswith" ng-model="search.searchAnywhere" title="Select to search anywhere in drug name" /> Starts with</label>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-md-2 control-label" title="Select FDA Data">FDA Data</label>
+                                <label class="col-md-2 control-label" title="Select FDA Data" for="dataPoints1">FDA Data</label>
                                 <div class="col-md-8">
                                     <div class="radio">
                                         <label>
