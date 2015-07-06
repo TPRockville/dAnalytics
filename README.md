@@ -12,6 +12,7 @@ Based on discussions with the end users and research we performed to better unde
 We employed Agile development to reduce risk and allow working software to be delivered as soon as possible.  By leveraging Agile development, we also handled task management more efficiently and with fewer handoffs.  The DevOps team continuously integrated, tested and deployed every day to verify application performance.  To proactively track risks and progress, and ensure communication between shifts we held twice-a-day standup meetings beginning of the day and end of shift one with a hand off to the second shift.  During the twice daily standup meetings, we
 
 •	Reviewed new development as a part of the deployment, and 
+
 •	Prioritized features to be developed or modified for the next day.  
 
 Code was developed outside of the master code base, to reduce risks of defects or bugs by enabling a code review before merging the software with the master code base.  We added features iteratively throughout the development period to deliver an innovative, scalable, mobile and desktop digital service.   
